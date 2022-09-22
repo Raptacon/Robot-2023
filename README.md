@@ -2,11 +2,11 @@
 
 ![Build link](https://github.com/Raptacon/Robot-2022/actions/workflows/robot_ci.yml)
 
-## Welcome to Robot 2022
+## Welcome to Robot 2023
 
 Please take a look at the [wiki](https://github.com/Raptacon/Robot-2022/wiki) for the most up to date documenation
 
-Also make sure to check out the [Kanban board](https://github.com/Raptacon/Robot-2022/projects/1)
+Also make sure to check out the [Kanban board](https://github.com/Raptacon/Robot-2023/projects/1)
 test
 
 # Installation
