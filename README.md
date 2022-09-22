@@ -1,10 +1,10 @@
 ![Raptacon (Team 3200) CI Pipeline](https://github.com/Raptacon/Robot-2023/workflows/Raptacon%20(Team%203200)%20CI%20Pipeline/badge.svg)
 
-![Build link](https://github.com/Raptacon/Robot-2022/actions/workflows/robot_ci.yml)
+![Build link](https://github.com/Raptacon/Robot-2023/actions/workflows/robot_ci.yml)
 
 ## Welcome to Robot 2023
 
-Please take a look at the [wiki](https://github.com/Raptacon/Robot-2022/wiki) for the most up to date documenation
+Please take a look at the [wiki](https://github.com/Raptacon/Robot-2023/wiki) for the most up to date documenation
 
 Also make sure to check out the [Kanban board](https://github.com/Raptacon/Robot-2023/projects/1)
 test
@@ -26,7 +26,7 @@ once you have that completed you may install the Make system for windows by doin
 ```powershell
 choco install make
 ```
-after make has been installed, you can simply just go to the root of the Robot-2022 source and type in ```make``` and it should create a venv and install the required packages for building the robot code.
+after make has been installed, you can simply just go to the root of the Robot-2023 source and type in ```make``` and it should create a venv and install the required packages for building the robot code.
 # Use
 #Windows setup from cmd
 python -m venv raptaconVenv
