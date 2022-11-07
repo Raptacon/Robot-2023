@@ -2,9 +2,6 @@
 
 import typing
 import wpilib
-import commands2
-
-import ctre
 
 from swerve import swerveModule
 
