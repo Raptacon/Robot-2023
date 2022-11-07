@@ -1,8 +1,8 @@
 import wpilib
 
-from wpilib.interfaces import GenericHID
+#from wpilib.interfaces import Gene1ricHID
 
-import commands2
+#import commands2
 #import commands2.button
 
 from subsystem.swerveDriveTrain import Drivetrain
