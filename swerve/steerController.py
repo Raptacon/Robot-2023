@@ -50,7 +50,7 @@ class SteerController ():
         '''
         gets current postion in radians
         '''
-        motorAngleRadians = self.module.getSteerMotor() * self.module.getSteerSensorPositionCoefficient()
+        motorAngleRadians = self.module.getSteerMotor().getSelectedSensorPosition() * self.module.getSteerSensorPositionCoefficient()
         motorAngleRadians %= 2.0 * math.pi
         if motorAngleRadians < 0.0:
             motorAngleRadians += 2.0 * math.pi

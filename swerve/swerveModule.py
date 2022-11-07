@@ -1,6 +1,7 @@
 
 import math
 import ctre
+import wpimath.geometry
 
 from .steerController import SteerController
 
@@ -91,17 +92,20 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
     kSteerPID = (0.2, 0.0, 0.1)
     kCanStatusFrameMs = 10
 
-    def __init__(self, location : tuple[float, float], channelBase: int, encoderCal: float = 0):
+    def __init__(self, location : tuple[float, float, str], channelBase: int, encoderCal: float = 0):
         '''
         Creates a new swerve module at location in robot. With channesl channelBase = drive
         channelBase + 1 = steer
         channelBase + 2 = cancoder
         and the encoders rotated by encoderCal.
+        location [x (trackbase + is left side), y (wheelbase + is front), name]
         '''
         self.consts = SwerveModuleMk4L1Consts()
         self.driveId = channelBase + 0
         self.steerId = channelBase + 1
         self.cancoderId = channelBase + 2
+        self.name = location[2]
+        self.translation = wpimath.geometry.Translation2d(location[0], location[1])
 
         #create can encoder
         self.encoder = ctre.WPI_CANCoder(self.cancoderId)
@@ -230,7 +234,7 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
         self.setDriveVoltage(driveVoltage)
         self.steerController.setReferenceAngle(steerAngle)
 
-    def getSteerMotor(self):
+    def getSteerMotor(self) -> ctre.WPI_TalonFX:
         '''gets the motor for steering'''
         return self.steerMotor
     def getSteerSensorPositionCoefficient(self):
@@ -242,3 +246,8 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
     def getSteerController(self) -> SteerController:
         '''returns the steer controller'''
         return self.steerController
+    def getTranslation(self) -> wpimath.geometry.Translation2d:
+        return self.translation
+
+    def getPosition(self) -> [float, float]:
+        return [self.getDriveVelocity(), self.getSteerAngle()]

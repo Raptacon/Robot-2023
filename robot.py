@@ -6,7 +6,7 @@ import commands2
 
 from swerve import swerveModule
 
-#from robotcontainer import RobotContainer
+from robotswerve import RobotSwerve
 
 
 class MyRobot(commands2.TimedCommandRobot):
@@ -27,11 +27,7 @@ class MyRobot(commands2.TimedCommandRobot):
         # Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         # autonomous chooser on the dashboard.
         #self.container = RobotContainer()
-        self.swerveModules = []
-        self.swerveModules.append(swerveModule.SwerveModuleMk4L1FalcFalcCanCoder((0.5461,0.5461), 50, 0))
-        self.swerveModules.append(swerveModule.SwerveModuleMk4L1FalcFalcCanCoder((0.5461,0.5461), 53, 0))
-        self.swerveModules.append(swerveModule.SwerveModuleMk4L1FalcFalcCanCoder((0.5461,0.5461), 56, 0))
-        self.swerveModules.append(swerveModule.SwerveModuleMk4L1FalcFalcCanCoder((0.5461,0.5461), 59, 0))
+        self.container = RobotSwerve()
 
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""
@@ -68,7 +64,7 @@ class MyRobot(commands2.TimedCommandRobot):
         pass
     def testPeriodic(self) -> None:
         print("testing")
-        #self.frontLeft.driveMotor.set(ctre.WPI_TalonFX
+
 
 
 if __name__ == "__main__":
