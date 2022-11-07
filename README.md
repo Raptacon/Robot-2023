@@ -34,3 +34,10 @@ raptaconVenv\Scripts\activate.bat
 pip install -r requirements.txt
 
 
+# Enable Power shell
+Power shell does not allow sccripts on windows now by default
+
+* run power shell as admin
+* run `set-executionpolicy remotesigned`
+* Select A when prompted
+
