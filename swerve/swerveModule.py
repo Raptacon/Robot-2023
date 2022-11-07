@@ -219,7 +219,7 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
 
         #If the difference is greater than 90 deg or less than -90 deg the drive can be inverted so the total
         #movement of the module is less than 90 deg
-        if (steerDiff < math.pi / 2.0)) or (steerDiff < (-math.pi / 2.0)):
+        if (steerDiff < math.pi / 2.0) or (steerDiff < (-math.pi / 2.0)):
             steerAngle += math.pi
             driveVoltage *= -1.0
 

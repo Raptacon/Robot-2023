@@ -2,6 +2,7 @@
 
 import typing
 import wpilib
+import commands2
 
 from swerve import swerveModule
 
