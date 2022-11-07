@@ -1,7 +1,6 @@
 import navx
 from swerve.swerveModule import SwerveModuleMk4L1FalcFalcCanCoder as SwerveModule
 
-import wpilib
 import commands2
 import wpimath.kinematics
 from wpimath.geometry import Rotation2d
