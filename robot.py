@@ -4,8 +4,6 @@ import typing
 import wpilib
 import commands2
 
-from swerve import swerveModule
-
 from robotswerve import RobotSwerve
 
 

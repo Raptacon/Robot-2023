@@ -3,7 +3,7 @@ import wpilib
 from wpilib.interfaces import GenericHID
 
 import commands2
-import commands2.button
+#import commands2.button
 
 from subsystem.swerveDriveTrain import Drivetrain
 
@@ -16,7 +16,7 @@ class RobotSwerve:
     """
 
     def __init__(self) -> None:
-         self.driveController = wpilib.XboxController(kDriveControllerIdx)
-         self.driveTrain = Drivetrain()
+        self.driveController = wpilib.XboxController(kDriveControllerIdx)
+        self.driveTrain = Drivetrain()
 
 
