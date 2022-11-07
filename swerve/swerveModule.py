@@ -27,6 +27,7 @@ class SwerveModuleConsts():
     _moduleType = None
 
     def __init__():
+        '''pass'''
         pass
 
     def getWheelDiameter(self) -> float:
@@ -62,6 +63,7 @@ class SwerveModuleMk4L1Consts(SwerveModuleConsts):
     wheelDiameter, driveDreuction, driveInverted, steerReduction, steerInverted
         '''
     def __init__(self) -> None:
+        '''init Mk4L1 values'''
         self._wheelDiameter = 0.10033
         self._driveReduction = (14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0)
         self._driveInverted = True
@@ -71,6 +73,9 @@ class SwerveModuleMk4L1Consts(SwerveModuleConsts):
 
 
 class SwerveModuleMk4L1FalcFalcCanCoder() :
+    '''
+    Module for Mk4L1 with 2 faclon 500 and a cancoder swerve drive
+    '''
     driveId : int
     steerId: int
     cancoderId: int
@@ -88,6 +93,12 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
     kCanStatusFrameMs = 10
 
     def __init__(self, location : tuple[float, float], channelBase: int, encoderCal: float = 0):
+        '''
+        Creates a new swerve module at location in robot. With channesl channelBase = drive
+        channelBase + 1 = steer
+        channelBase + 2 = cancoder
+        and the encoders rotated by encoderCal.
+        '''
         self.consts = SwerveModuleMk4L1Consts()
         self.driveId = channelBase + 0
         self.steerId = channelBase + 1
@@ -178,14 +189,21 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
         return angle
 
     def setDriveVoltage(self, voltage : float):
+        '''sets module drive voltage (speed)'''
         self.driveMotor.set(ctre.TalonFXControlMode.PercentOutput, voltage / self.kNominalVoltage)
 
     def getDriveVelocity(self):
+        '''gets module drive voltage (speed)'''
         return self.driveMotor.getSelectedSensorVelocity() * self.driveSensorVelocityCoefficient
     def getSteerAngle(self):
+        '''gets current angle in deg of module setpoint'''
         return self.steerController.getStateAngle()
 
     def set(self, driveVoltage: float, steerAngleDeg: float):
+        '''
+        Sets the modules drive voltage and steer angle.
+        Trys to prevent 180 degree turns on module if can rotate closer one direction
+        '''
         #convert to radians
         steerAngle = steerAngleDeg % (2*0 * math.pi)
         if steerAngle < 0.0:
@@ -214,10 +232,14 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
         self.steerController.setReferenceAngle(steerAngle)
 
     def getSteerMotor(self):
+        '''gets the motor for steering'''
         return self.steerMotor
     def getSteerSensorPositionCoefficient(self):
+        '''gets sensor to postion conversion'''
         return self.steerSensorPositionCoefficient
     def getSteerSensorVelocityCoefficient(self):
+        '''gets the steer veleocy to sensor coeffiecent'''
         return self.steerSensorVelocityCoefficient
     def getSteerController(self) -> SteerController:
+        '''returns the steer controller'''
         return self.steerController

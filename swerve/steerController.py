@@ -1,6 +1,8 @@
 import math
+import ctre
 
 class SteerController ():
+    """Controller for sterring a swerve drive module. Cancoder and FX500 only"""
     kEncoderResetIterations = 500
     kEncoderResetMaxAngVel = math.radians(0.5)
 
@@ -11,6 +13,7 @@ class SteerController ():
 
 
     def getReferenceAngle(self):
+        """Gets current set angle in radians"""
         return self.referenceAngleRadians
 
     def setReferenceAngle(self, referenceAngleRadians : float):
@@ -45,6 +48,9 @@ class SteerController ():
         self.referenceAngleRadians = referenceAngleRadians
 
     def getStateAngle(self) -> float:
+        '''
+        gets current postion in radians
+        '''
         motorAngleRadians = self.module.getSteerMotor() * self.module.getSteerSensorPositionCoefficient()
         motorAngleRadians %= 2.0 * math.pi
         if motorAngleRadians < 0.0:
