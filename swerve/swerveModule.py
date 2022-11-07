@@ -1,7 +1,6 @@
 
 import math
 import ctre
-import wpilib
 
 from .steerController import SteerController
 
@@ -169,7 +168,7 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
         self.steerMotor.setSensorPhase(True)
         self.steerMotor.setInverted(self.consts.getSteerInverted())
         self.steerMotor.setNeutralMode(ctre.NeutralMode.Brake)
-        status = self.steerMotor.setSelectedSensorPosition(self.getAbsoluteAngle() / steerSensorPositionCoefficient, 0, 250)
+        status = self.steerMotor.setSelectedSensorPosition(self.getAbsoluteAngle() / self.steerSensorPositionCoefficient, 0, 250)
         if status != ctre.ErrorCode.OK:
             raise RuntimeError(f"Failed to configure Steer Motor position on id {self.steerId}. Error {status}")
 

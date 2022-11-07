@@ -19,7 +19,6 @@ class SteerController ():
     def setReferenceAngle(self, referenceAngleRadians : float):
         '''https://github.com/SwerveDriveSpecialties/swerve-lib/blob/f6f4de65808d468ed01cc5ca39bf322383838fcd/src/main/java/com/swervedrivespecialties/swervelib/ctre/Falcon500SteerControllerFactoryBuilder.java#L181'''
         motor = self.module.getSteerMotor()
-        sensorPositionCoefficient = self.module.getSteerSensorPositionCoefficient()
         motorEncoderVelocityCoefficient = self.module.getSteerSensorVelocityCoefficient()
         motorEncoderPositionCoefficient = self.module.getSteerSensorPositionCoefficient()
         currentAngleRadians = motor.getSelectedSensorPosition() * motorEncoderPositionCoefficient
