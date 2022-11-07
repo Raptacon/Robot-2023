@@ -182,6 +182,36 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
 
     def getDriveVelocity(self):
         return self.driveMotor.getSelectedSensorVelocity() * self.driveSensorVelocityCoefficient
+    def getSteerAngle(self):
+        return self.steerController.getStateAngle()
+
+    def set(self, driveVoltage: float, steerAngleDeg: float):
+        #convert to radians
+        steerAngle = steerAngleDeg % (2*0 * math.pi)
+        if steerAngle < 0.0:
+            steerAngle += 2.0 * math.pi
+
+        steerDiff = steerAngle - self.getSteerAngle()
+        # Change the target angle so the difference is in the range [-pi, pi) instead of [0, 2pi)
+        if steerDiff >= math.pi:
+            steerAngle -= 2.0 * math.pi
+        elif steerDiff < -math.pi:
+            steerAngle += 2.0 * math.pi
+        steerDiff = steerDiff - self.getSteerAngle()
+
+        #If the difference is greater than 90 deg or less than -90 deg the drive can be inverted so the total
+        #movement of the module is less than 90 deg
+        if (steerDiff < math.pi / 2.0)) or (steerDiff < (-math.pi / 2.0)):
+            steerAngle += math.pi
+            driveVoltage *= -1.0
+
+        # put steer angle in range of [0, 2pi)
+        steerAngle %= 2.0 * math.pi
+        if steerAngle < 0.0:
+            steerAngle += 2.0 * math.pi
+
+        self.setDriveVoltage(driveVoltage)
+        self.steerController.setReferenceAngle(steerAngle)
 
     def getSteerMotor(self):
         return self.steerMotor
