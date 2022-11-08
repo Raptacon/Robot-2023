@@ -3,8 +3,6 @@ import wpilib
 #from wpilib.interfaces import Gene1ricHID
 import wpimath.filter
 import wpimath
-import wpiutil
-#import commands2
 import commands2.button
 
 from subsystem.swerveDriveTrain import Drivetrain
@@ -94,6 +92,6 @@ class RobotSwerve:
                 self.driveTrain.setSteer(wheelAngle)
             case "Wheels Drive":
                 self.driveTrain.setDrive(wheelSpeed)
-            case default:
+            case _:
                 print(f"Unknown {self.testChooser.getSelected()}")
 
