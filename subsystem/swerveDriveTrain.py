@@ -5,6 +5,7 @@ import commands2
 import wpimath.kinematics
 from wpimath.geometry import Rotation2d
 import math
+import wpilib
 
 class Drivetrain(commands2.SubsystemBase):
     kMaxVoltage = 12.0
@@ -41,22 +42,27 @@ class Drivetrain(commands2.SubsystemBase):
         )
 
         self.odometry = wpimath.kinematics.SwerveDrive4Odometry(self.kinematics, self.getHeading())
+        self.setFieldDriveRelative(False)
 
 
     def getHeading(self) -> Rotation2d:
         return Rotation2d.fromDegrees(self.imu.getFusedHeading())
 
     def drive(self, xSpeed: float, ySpeed: float, rot: float, fieldRelative: bool):
+        print(f"drive: x {xSpeed}, y {ySpeed}, rot {rot}, field {fieldRelative}")
         chassisSpeeds = None
-        if fieldRelative:
+        if not fieldRelative:
+            print("robot relative")
             chassisSpeeds = wpimath.kinematics.ChassisSpeeds(xSpeed, ySpeed, rot)
         else:
+            print("field relative")
             chassisSpeeds = wpimath.kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, self.getHeading())
+
         swerveModuleStates = self.kinematics.toSwerveModuleStates(chassisSpeeds)
-        self.kinematics.desaturateWheelSpeeds(swerveModuleStates)
+        self.kinematics.desaturateWheelSpeeds(swerveModuleStates, self.kMaxVelocityMPS)
 
         for mod, state in zip(self.swerveModules, swerveModuleStates):
-            mod.setDesiredState(state)
+            mod.setSwerveModuleState(state, self.kMaxVelocityMPS)
 
     def updateOdometry(self):
         self.odometry.update(self.getHeading(),
@@ -64,3 +70,24 @@ class Drivetrain(commands2.SubsystemBase):
                              self.swerveModules[1].getPosition(),
                              self.swerveModules[2].getPosition(),
                              self.swerveModules[3].getPosition())
+    def disable(self, steer = True, drive = True):
+        for m in self.swerveModules:
+            m.disable(steer, drive)
+
+    def setSteer(self, angle : float):
+        angle %= 360
+        for m in self.swerveModules:
+            m.setSteerAngle(angle)
+
+    def setDrive(self, speedPercent: float):
+        if speedPercent> 100:
+            speedPercent = 100
+        for m in self.swerveModules:
+            m.setDrivePercent(speedPercent)
+
+    def setFieldDriveRelative(self, state: bool):
+        self.fieldRelative = state
+        wpilib.SmartDashboard.putBoolean("Field Relative", state)
+
+    def getFieldDriveRelative(self) -> bool:
+        return self.fieldRelative
