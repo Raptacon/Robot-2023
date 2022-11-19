@@ -106,8 +106,8 @@ class MyRobot(MagicRobot):
 
     def autonomousInit(self):
         """Run when autonomous is enabled."""
-        self.shooter.autonomousEnabled()
-        self.loader.stopLoading()
+        # self.shooter.autonomousEnabled()
+        # self.loader.stopLoading()
 
 
     def teleopInit(self):
@@ -137,7 +137,6 @@ class MyRobot(MagicRobot):
         self.buttonManager.registerButtonEvent(self.xboxMap.mech, XboxController.Button.kLeftBumper, ButtonEvent.kOnRelease, self.goToDist.stop)
         """
 
-
         self.driveTrain.setBraking(True)
 
         self.prevMechAState = False
@@ -156,7 +155,7 @@ class MyRobot(MagicRobot):
         driveRightY = expScale(self.xboxMap.getDriveRight(), self.sensitivityExponent)
         driveLeftX = expScale(self.xboxMap.getDriveLeftHoriz(), self.sensitivityExponent)
         driveRightX = expScale(self.xboxMap.getDriveRightHoriz(), self.sensitivityExponent)
-        ##mechLeftX = expScale(self.xboxMap.getMechLeftHoriz(), 2.3)
+        mechLeftX = expScale(self.xboxMap.getMechLeftHoriz(), 2.3)
 
         Axes = [driveLeftX, driveLeftY, driveRightX, driveRightY]
 
@@ -173,7 +172,6 @@ class MyRobot(MagicRobot):
 
 
         self.prevMechAState = self.xboxMap.getMechA()
-
 
 
     def testInit(self):
