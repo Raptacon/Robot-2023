@@ -1,4 +1,4 @@
-from tests.DriveTrain import DriveTrain
+from tests.driveTrain import DriveTrain
 
 class DriveTrainHandler():
     """

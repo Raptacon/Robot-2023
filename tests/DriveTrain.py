@@ -26,7 +26,7 @@ class DriveTrain():
         self.creeperMode = False
         log.info("DriveTrain setup completed")
 
-    def setMotorSpeeds(self, motorSpeedInfo:dict):
+    def setMotors(self, motorSpeedInfo:dict):
         self.motorSpeedInfo = motorSpeedInfo
 
     def setBraking(self, braking:bool):

@@ -1,6 +1,6 @@
 from wpimath.geometry import Translation2d, Rotation2d
 from wpilib import kinematics
-from tests import UnitEnums
+from tests import unitEnums
 import math
 
 
@@ -46,7 +46,7 @@ class movementKinematics:
 
         counter = 0
         for moduleState in moduleStates:
-            currentAngle = Rotation2d(self.rotationMotors[motorNames[counter]].getPosition(0, UnitEnums.positionUnits.kRotations)*2*math.pi/gearRatio)
+            currentAngle = Rotation2d(self.rotationMotors[motorNames[counter]].getPosition(0, unitEnums.positionUnits.kRotations)*2*math.pi/gearRatio)
             optimizedStates.append(kinematics.SwerveModuleState.optimize(moduleState,currentAngle))
             counter += 1
 

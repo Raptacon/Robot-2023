@@ -1,4 +1,4 @@
-from utils import configMapper
+from tests import configMapper
 from wpilib import XboxController, Joystick
 from wpilib.interfaces import GenericHID
 
