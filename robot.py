@@ -4,18 +4,18 @@ from wpilib import XboxController, DriverStation, SerialPort, CameraServer
 from magicbot import MagicRobot, tunable
 
 # Component imports:
-from tests.axesXYR import AxesTransforms, AxesXYR
-from tests.buttonManager import ButtonManager, ButtonEvent
-from tests.driveTrain import DriveTrain
-from tests.driveTrainHandler import DriveTrainHandler
+from tests.AxesXYR import AxesTransforms, AxesXYR
+from tests.ButtonManager import ButtonManager, ButtonEvent
+from tests.DriveTrain import DriveTrain
+from tests.DriveTrainHandler import DriveTrainHandler
 from tests.XYRDrive import XYRDrive
 import os
 
 # Other imports:
 from robotMap import RobotMap, XboxMap
 from networktables import NetworkTables
-from tests.motorHelper import createMotor
-from tests.math import expScale
+from tests.MotorHelper import createMotor
+from tests.Math import expScale
 
 # Test imports:
 

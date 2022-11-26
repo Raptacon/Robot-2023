@@ -1,10 +1,10 @@
 from shutil import move
 from tests.XYRVector import XYRVector
-from tests.motorEnums import Tank, Swerve, TwoMotorTank
+from tests.MotorEnums import Tank, Swerve, TwoMotorTank
 import logging as log
-from tests.driveTrainHandler import DriveTrainHandler
-from tests.driveTrain import DriveTrain
-from tests.kinematics import movementKinematics
+from tests.DriveTrainHandler import DriveTrainHandler
+from tests.DriveTrain import DriveTrain
+from tests.Kinematics import movementKinematics
 import math
 
 class TankDrive:
