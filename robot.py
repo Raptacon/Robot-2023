@@ -27,7 +27,6 @@ class MyRobot(MagicRobot):
     xyrDrive: XYRDrive
     buttonManager: ButtonManager
     driveTrainHandler: DriveTrainHandler
-    xyrDrive: XYRDrive
     allianceColor: DriverStation.Alliance
     axesXYR: AxesXYR
 
