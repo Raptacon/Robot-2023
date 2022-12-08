@@ -76,7 +76,7 @@ class DriveTrain():
         speedInfoKeys = sorted(dict(self.motorSpeedInfo).keys())
         driveTrainKeys = sorted(self.motors_driveTrain.keys())
         if speedInfoKeys != driveTrainKeys:
-            print("not matching")
+            print("not Matching")
             self.stop()
             speedInfoKeys = sorted(dict(self.motorSpeedInfo).keys())
 

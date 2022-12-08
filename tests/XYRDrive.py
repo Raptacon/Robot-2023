@@ -80,9 +80,7 @@ class XYRDrive:
         """
         Pass in self as requestSource
         """
-
         transformKey = self.driveTrainType
-
         if transformKey in self.transformDict.keys():
             transformer = self.transformDict[transformKey]
             self.driveTrainHandler.setDriveTrain(requestSource, transformer.MotorDrive(vector.getX(), vector.getY(), vector.getR()))

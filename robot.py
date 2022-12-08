@@ -165,10 +165,9 @@ class MyRobot(MagicRobot):
 
         self.controlmode = self.chooser.getSelected()
         # If the drivers have any input outside deadzone, take control.
-        if abs(driveRightY) + abs(driveLeftY) + abs(driveRightX) != 0:
-            vector = self.axesXYR.transform(self.controlmode, Axes)
-            self.xyrDrive.xyrdrive(self, vector)
-
+        vector = self.axesXYR.transform(self.controlmode, Axes)
+        self.xyrDrive.xyrdrive(self, vector)
+        # if abs(driveRightY) + abs(driveLeftY) + abs(driveRightX) != 0:
 
         self.prevMechAState = self.xboxMap.getMechA()
 
