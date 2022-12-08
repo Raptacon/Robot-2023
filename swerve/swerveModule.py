@@ -186,10 +186,12 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
 
     def getAbsoluteAngle(self) -> float:
         """gets the last abs angle encoder value radians"""
-        angle = math.radians(self.encoder.getAbsolutePosition())
+        angle_deg = self.encoder.getAbsolutePosition()
+        angle = math.radians(angle_deg)
         angle %= 2.0 * math.pi
         if angle < 0.0:
             angle += 2.0 * math.pi
+        print(f"{self.cancoderId}: {angle_deg} - {angle}")
         return angle
 
     def setDriveVoltage(self, voltage : float):
@@ -205,6 +207,8 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
     def getSteerAngle(self):
         '''gets current angle in deg of module setpoint'''
         return self.steerController.getStateAngle()
+    def getCurrentAngle(self):
+        return self.encoder.getAbsolutePosition()
 
     def setSteerAngle(self, angle: float):
         self.steerController.setReferenceAngle(math.radians(angle))
@@ -212,6 +216,7 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
     def setSwerveModuleState(self, state: wpimath.kinematics.SwerveModuleState, maxSpeedMps: float):
         speed = state.speed / maxSpeedMps * self.kNominalVoltage
         steer = state.angle.radians()
+        print(f"Steer {steer} {state.angle.degrees}")
         self.set(speed, steer)
 
     def set(self, driveVoltage: float, steerAngleDeg: float):
@@ -225,13 +230,16 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
             steerAngle += 2.0 * math.pi
 
         steerDiff = steerAngle - self.getSteerAngle()
+        #print(f"steer deg {steerAngleDeg}, steerAngle {steerAngle} diff {steerDiff}")
         # Change the target angle so the difference is in the range [-pi, pi) instead of [0, 2pi)
         if steerDiff >= math.pi:
             steerAngle -= 2.0 * math.pi
         elif steerDiff < -math.pi:
             steerAngle += 2.0 * math.pi
-        steerDiff = steerDiff - self.getSteerAngle()
+        steerDiff1 = steerDiff - self.getSteerAngle()
 
+        #print(f"steer deg {steerAngleDeg}, steerAngle {steerAngle} diff {steerDiff}, {steerDiff1}")
+        steerDiff = steerDiff1
         #If the difference is greater than 90 deg or less than -90 deg the drive can be inverted so the total
         #movement of the module is less than 90 deg
         if (steerDiff < math.pi / 2.0) or (steerDiff < (-math.pi / 2.0)):
@@ -243,7 +251,7 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
         if steerAngle < 0.0:
             steerAngle += 2.0 * math.pi
 
-        self.setDriveVoltage(driveVoltage)
+        #self.setDriveVoltage(driveVoltage)
         self.steerController.setReferenceAngle(steerAngle)
 
     def getSteerMotor(self) -> ctre.WPI_TalonFX:

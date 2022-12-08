@@ -84,6 +84,8 @@ class RobotSwerve:
     def testPeriodic(self) -> None:
         wheelAngle = wpilib.SmartDashboard.getNumber("Wheel Angle", 0)
         wheelSpeed = wpilib.SmartDashboard.getNumber("Wheel Speed", 0)
+
+        self.driveTrain.getCurrentAngles()
         match self.testChooser.getSelected():
             case "Drive Disable":
                 print("Drive Disable")

@@ -15,12 +15,23 @@ class Drivetrain(commands2.SubsystemBase):
     kMaxAngularVelocityRadPS = kMaxVelocityMPS / math.hypot(kWheelBaseMeters / 2.0, kTrackBaseMeters / 2.0)
 
     kModuleProps = [
+            {"name": "frontLeft", "channel": 50, "encoderCal": 65.8, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
+            {"name": "frontRight", "channel": 53, "encoderCal": 334.2, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
+            {"name": "rearLeft", "channel": 56, "encoderCal": 304.2, "trackbase": kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 },
+            {"name": "rearRight", "channel": 59, "encoderCal": 209.6, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 }
+    ]
+    kModulePropsNoCal = [
             {"name": "frontLeft", "channel": 50, "encoderCal": 0.0, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
             {"name": "frontRight", "channel": 53, "encoderCal": 0.0, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
             {"name": "rearLeft", "channel": 56, "encoderCal": 0.0, "trackbase": kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 },
-            {"name": "readRight", "channel": 59, "encoderCal": 0.0, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 }
+            {"name": "rearRight", "channel": 59, "encoderCal": 0.0, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 }
     ]
 
+
+#52 - -181.2
+#58 -  128.0
+#55 - -294.4
+#61 - -273.4 
     def __init__(self):
         super().__init__()
         self.swerveModules = []
@@ -38,24 +49,37 @@ class Drivetrain(commands2.SubsystemBase):
             self.swerveModules[0].getTranslation(),
             self.swerveModules[1].getTranslation(),
             self.swerveModules[2].getTranslation(),
-            self.swerveModules[3].getTranslation()
+            self.swerveModules[2].getTranslation()
         )
 
         self.odometry = wpimath.kinematics.SwerveDrive4Odometry(self.kinematics, self.getHeading())
         self.setFieldDriveRelative(False)
+        self.ang = 0
 
 
     def getHeading(self) -> Rotation2d:
         return Rotation2d.fromDegrees(self.imu.getFusedHeading())
 
     def drive(self, xSpeed: float, ySpeed: float, rot: float, fieldRelative: bool):
-        print(f"drive: x {xSpeed}, y {ySpeed}, rot {rot}, field {fieldRelative}")
+        #print(f"drive: x {xSpeed}, y {ySpeed}, rot {rot}, field {fieldRelative}")
+        xSpeed = 0.0
+        ySpeed = 0.0
+        #rot = self.ang
+        rot = rot * 360
+        self.ang += 1.0
+        #rot = int(rot) % 360
+        
+        for mod in self.swerveModules:
+            mod.set(xSpeed, rot)
+    
+        return
+        
         chassisSpeeds = None
         if not fieldRelative:
-            print("robot relative")
+            #print("robot relative")
             chassisSpeeds = wpimath.kinematics.ChassisSpeeds(xSpeed, ySpeed, rot)
         else:
-            print("field relative")
+            #print("field relative")
             chassisSpeeds = wpimath.kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, self.getHeading())
 
         swerveModuleStates = self.kinematics.toSwerveModuleStates(chassisSpeeds)
@@ -78,6 +102,15 @@ class Drivetrain(commands2.SubsystemBase):
         angle %= 360
         for m in self.swerveModules:
             m.setSteerAngle(angle)
+
+    def getCurrentAngles(self):
+        angles = []
+        for m in self.swerveModules:
+            angle = m.getCurrentAngle()
+            wpilib.SmartDashboard.putNumber(f"{m.cancoderId}Pos", angle)
+            angles.append(angle)
+        return angles
+
 
     def setDrive(self, speedPercent: float):
         if speedPercent> 100:
