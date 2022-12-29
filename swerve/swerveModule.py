@@ -216,7 +216,7 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
     def setSwerveModuleState(self, state: wpimath.kinematics.SwerveModuleState, maxSpeedMps: float):
         speed = state.speed / maxSpeedMps * self.kNominalVoltage
         steer = state.angle.radians()
-        print(f"Steer {steer} {state.angle.degrees}")
+        #print(f"Steer {steer} {state.angle.degrees}")
         self.set(speed, steer)
 
     def set(self, driveVoltage: float, steerAngleDeg: float):
@@ -277,3 +277,14 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
             self.driveMotor.disable()
         if steer:
             self.steerMotor.disable()
+
+    def setCal(self, enable):
+        if enable:
+            self.driveMotor.setNeutralMode(ctre.NeutralMode.Coast)
+            encoderConfig = ctre.CANCoderConfiguration()
+            encoderConfig.absoluteSensorRange = ctre.AbsoluteSensorRange.Unsigned_0_to_360
+            encoderConfig.magnetOffsetDegrees = 0
+            encoderConfig.sensorDirection = True
+            status = self.encoder.configAllSettings(encoderConfig, 250)
+        else:
+            self.driveMotor.setNeutralMode(ctre.NeutralMode.Brake)
