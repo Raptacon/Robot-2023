@@ -15,10 +15,10 @@ class Drivetrain(commands2.SubsystemBase):
     kMaxAngularVelocityRadPS = kMaxVelocityMPS / math.hypot(kWheelBaseMeters / 2.0, kTrackBaseMeters / 2.0)
 
     kModuleProps = [
-            {"name": "frontLeft", "channel": 50, "encoderCal": 67.4, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
-            {"name": "frontRight", "channel": 53, "encoderCal": 150, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
-            {"name": "rearLeft", "channel": 56, "encoderCal": 301, "trackbase": kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 },
-            {"name": "rearRight", "channel": 59, "encoderCal": 35.5, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 }
+            {"name": "frontLeft", "channel": 50, "encoderCal": 66.0, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
+            {"name": "frontRight", "channel": 53, "encoderCal": 331.0, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
+            {"name": "rearLeft", "channel": 56, "encoderCal": 298.0, "trackbase": kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 },
+            {"name": "rearRight", "channel": 59, "encoderCal": 212.7, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 }
     ]
     kModulePropsNoCal = [
             {"name": "frontLeft", "channel": 50, "encoderCal": 0.0, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
@@ -31,7 +31,7 @@ class Drivetrain(commands2.SubsystemBase):
 #52 - -181.2
 #58 -  128.0
 #55 - -294.4
-#61 - -273.4 
+#61 - -273.4
     def __init__(self):
         super().__init__()
         self.swerveModules = []
@@ -55,25 +55,33 @@ class Drivetrain(commands2.SubsystemBase):
         self.odometry = wpimath.kinematics.SwerveDrive4Odometry(self.kinematics, self.getHeading())
         self.setFieldDriveRelative(False)
         self.ang = 0
+        self.iteration = 0
 
 
     def getHeading(self) -> Rotation2d:
         return Rotation2d.fromDegrees(self.imu.getFusedHeading())
 
     def drive(self, xSpeed: float, ySpeed: float, rot: float, fieldRelative: bool):
+        #convert to proper units
+        rot = rot * 180.0
+
         #print(f"drive: x {xSpeed}, y {ySpeed}, rot {rot}, field {fieldRelative}")
-        xSpeed = 0.0
-        ySpeed = 0.0
-        rot = self.ang
-        rot = rot * 360
-        self.ang += 1.0
-        rot = int(rot) % 180
-        
-        for mod in self.swerveModules:
-            mod.set(xSpeed * self.kMaxVoltage, rot)
-    
+        #xSpeed = 0.0
+        #ySpeed = 0.0
+        #rot = self.ang
+        #rot = rot * 360
+        #self.ang += 1.0
+        #rot = int(rot) % 180
+        #self.iteration += 1
+        #if(self.iteration % 100 == 0):
+        #    print(f"drive: x {xSpeed}, y {ySpeed}, rot {rot}, field {fieldRelative}, speed {xSpeed * self.kMaxVoltage}")
+
+
+        #for mod in self.swerveModules:
+        #    mod.set(xSpeed * self.kMaxVoltage, rot)
+
         #return
-        
+
         chassisSpeeds = None
         if not fieldRelative:
             #print("robot relative")
@@ -83,10 +91,10 @@ class Drivetrain(commands2.SubsystemBase):
             chassisSpeeds = wpimath.kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, self.getHeading())
 
         swerveModuleStates = self.kinematics.toSwerveModuleStates(chassisSpeeds)
-        self.kinematics.desaturateWheelSpeeds(swerveModuleStates, 1)
+        self.kinematics.desaturateWheelSpeeds(swerveModuleStates, self.kMaxVelocityMPS)
 
         for mod, state in zip(self.swerveModules, swerveModuleStates):
-            mod.setSwerveModuleState(state, 1)
+            mod.setSwerveModuleState(state, self.kMaxVelocityMPS)
 
     def updateOdometry(self):
         self.odometry.update(self.getHeading(),

@@ -215,8 +215,8 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
 
     def setSwerveModuleState(self, state: wpimath.kinematics.SwerveModuleState, maxSpeedMps: float):
         speed = state.speed / maxSpeedMps * self.kNominalVoltage
-        steer = state.angle.radians()
-        #print(f"Steer {steer} {state.angle.degrees}")
+        steer = state.angle.degrees()
+        #print(f"Speed {speed} Steer {steer} {state.angle.degrees}")
         self.set(speed, steer)
 
     def set(self, driveVoltage: float, steerAngleDeg: float):
@@ -225,7 +225,7 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
         Trys to prevent 180 degree turns on module if can rotate closer one direction
         '''
         #convert to radians
-        steerAngle = math.radians(steerAngleDeg % 360)
+        steerAngle = math.radians(steerAngleDeg)
         if steerAngle < 0.0:
             steerAngle += 2.0 * math.pi
 
@@ -251,7 +251,7 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
         if steerAngle < 0.0:
             steerAngle += 2.0 * math.pi
 
-        #self.setDriveVoltage(driveVoltage)
+        self.setDriveVoltage(driveVoltage)
         self.steerController.setReferenceAngle(steerAngle)
 
     def getSteerMotor(self) -> ctre.WPI_TalonFX:

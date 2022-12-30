@@ -23,8 +23,9 @@ class SteerController ():
         motor = self.module.getSteerMotor()
         motorEncoderVelocityCoefficient = self.module.getSteerSensorVelocityCoefficient()
         motorEncoderPositionCoefficient = self.module.getSteerSensorPositionCoefficient()
+        currentAngleRadians = motor.getSelectedSensorPosition() * motorEncoderPositionCoefficient
         #print(f"ang {referenceAngleRadians} ({math.degrees(referenceAngleRadians)}), vel: {motorEncoderVelocityCoefficient} , pos {motorEncoderPositionCoefficient}")
-        currentAngleRadians = math.radians(motor.getSelectedSensorPosition()) * motorEncoderPositionCoefficient
+        #currentAngleRadians = math.radians(motor.getSelectedSensorPosition()) * motorEncoderPositionCoefficient
         '''
         if motor.getSelectedSensorVelocity() * motorEncoderVelocityCoefficient < self.kEncoderResetMaxAngVel:
             self.resetIteration +=1

@@ -22,4 +22,5 @@ class DefaultDrive(commands2.CommandBase):
         self.addRequirements([self.driveTrain])
 
     def execute(self) -> None:
+        #print(f"self.forward() {self.forward():1.2f} , self.translation() {self.translation():1.2f} , self.rotation() {self.rotation():1.2f}")
         self.driveTrain.drive(self.forward(), self.translation(), self.rotation(), self.field())

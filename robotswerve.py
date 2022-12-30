@@ -22,21 +22,21 @@ class RobotSwerve:
         self.driveController = wpilib.XboxController(kDriveControllerIdx)
         self.driveTrain = Drivetrain()
 
-        self.driveController = wpilib.XboxController(0)
+        #self.driveController = wpilib.XboxController(0)
 
         self.xLimiter = wpimath.filter.SlewRateLimiter(3)
         self.yLimiter = wpimath.filter.SlewRateLimiter(3)
         self.rotLimiter = wpimath.filter.SlewRateLimiter(3)
 
         commands2.button.JoystickButton(self.driveController, 1).whenPressed(ToggleFieldDrive(self.driveTrain))
-        '''
         self.driveTrain.setDefaultCommand(DefaultDrive(
             self.driveTrain,
             lambda: -self.xLimiter.calculate(wpimath.applyDeadband(self.driveController.getLeftY(), 0.02)),
             lambda: self.yLimiter.calculate(wpimath.applyDeadband(self.driveController.getLeftX(), 0.02)),
-            lambda: -self.xLimiter.calculate(wpimath.applyDeadband(self.driveController.getRightX(), 0.02)),
+            lambda: -self.rotLimiter.calculate(wpimath.applyDeadband(self.driveController.getRightX(), 0.02)),
             lambda: self.driveTrain.getFieldDriveRelative()
         ))
+
         '''
         self.driveTrain.setDefaultCommand(DefaultDrive(
             self.driveTrain,
@@ -44,7 +44,7 @@ class RobotSwerve:
             lambda: self.driveController.getLeftX(),
             lambda: -self.driveController.getRightX(),
             lambda: self.driveTrain.getFieldDriveRelative()
-        ))
+        ))'''
 
 
     def disabledInit(self) -> None:
@@ -99,7 +99,7 @@ class RobotSwerve:
             case "Drive Disable":
                 print("Drive Disable")
                 self.calEn = False
-                self.calDis = False                
+                self.calDis = False
                 self.driveTrain.disable()
             case "Wheels Select":
                 self.driveTrain.setSteer(wheelAngle)
