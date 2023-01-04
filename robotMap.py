@@ -1,5 +1,5 @@
 from wpilib import XboxController, Joystick
-from utils import yaml
+import yaml
 from wpilib.interfaces import GenericHID
 import logging as log
 from pprint import pprint
