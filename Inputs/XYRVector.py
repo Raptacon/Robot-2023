@@ -1,15 +1,9 @@
-from tests.XYRVector import XYRVector
-from enum import Enum, auto
-
-class AxesTransforms(Enum):
-    """Enum for axes input interpretation."""
-    kTank = auto()
-    kArcade = auto()
-    kSwerve = auto()
+from Inputs.InputXYR import XYRJoystick
+from utils.AxesEnums import AxesTransforms
 
 class transform:
     def transform(self, Axes):
-        return XYRVector(0, 0, 0)
+        return XYRJoystick(0, 0, 0)
 
 class transformTank(transform):
     def transform(self, Axes):
@@ -17,7 +11,7 @@ class transformTank(transform):
         # Axes[3] # Axis 4
 
         l = Axes[1]
-        r = Axes[3]
+        r = Axes[2]
 
         # I'm so sorry
         # https://www.desmos.com/calculator/dw1hoo9lnp
@@ -54,7 +48,7 @@ class transformTank(transform):
         else:
             R = min(R1, R2)
 
-        return XYRVector(0, Y, R)
+        return XYRJoystick(0, Y, R)
 
 class transformArcade(transform):
     def transform(self, Axes):
@@ -64,7 +58,7 @@ class transformArcade(transform):
         Y = (Axes[1])
         R = (Axes[2])
 
-        return XYRVector(0, Y, R)
+        return XYRJoystick(0, Y, R)
 
 class transformSwerve(transform):
     def transform(self, Axes):
@@ -76,7 +70,7 @@ class transformSwerve(transform):
         R = (Axes[2])
         X = (Axes[0])
 
-        return XYRVector(X, Y, R)
+        return XYRJoystick(X, Y, R)
 
 class AxesXYR:
     transTank = transformTank()
@@ -95,7 +89,7 @@ class AxesXYR:
             transformer = self.transformDict[transformKey]
             return transformer.transform(Axes)
         else:
-            return XYRVector(0, 0, 0)
+            return XYRJoystick(0, 0, 0)
 
     def execute(self):
         pass

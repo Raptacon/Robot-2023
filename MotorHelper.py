@@ -1,7 +1,7 @@
 import rev
 import ctre
 import logging as log
-from tests.UnitEnums import positionUnits, velocityUnits
+from utils.UnitEnums import positionUnits, velocityUnits
 
 def createMotor(motorDescp, motors = {}):
     '''This is where all motors are set up.

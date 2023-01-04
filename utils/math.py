@@ -1,3 +1,4 @@
+
 def expScale(initVal, exp):
     """
     Applies an exponent exp to a value initVal and returns value.

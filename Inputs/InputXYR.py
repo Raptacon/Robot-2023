@@ -1,7 +1,7 @@
+from Inputs.Input import JoystickMap
 from cmath import sqrt
 
-
-class XYRVector:
+class XYRJoystick():
     """
     3 values ranging from -1 to 1
     X: Translation to the left and right (right being positive)
@@ -9,10 +9,10 @@ class XYRVector:
     R: Rotation along the horizontal (counterclockwise is positive)
     """
 
-    def __init__(self, X, Y, R):
-        self.X = X
-        self.Y = Y
-        self.R = R
+    def __init__(self, x, y, r):
+        self.X = x
+        self.Y = y
+        self.R = r
 
     def getMagnitudeTranslation(self):
         magnitude = sqrt(self.X **2 , self.Y **2)

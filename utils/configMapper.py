@@ -1,5 +1,5 @@
+from utils import yaml
 import logging as log
-from tests import yaml
 from pprint import pprint
 import os
 from pathlib import Path
@@ -69,8 +69,10 @@ class ConfigMapper(object):
         lifter.beltMotors.groups=motors
         calling getTypeDict("lifter", "motors")
         returns all motors in intakeMotors and beltMotors
+
         calling getTypeDict("lifter", "motors", "beltMotors")
         returns all motors in beltMotors
+
         calling getTypeDict("lifter", "sensor")
         returns all sensors
         """
@@ -80,14 +82,6 @@ class ConfigMapper(object):
             data.pop("groups")
 
         return data
-
-    def __loadFile(self, filename):
-        """
-        Loads a yaml or yml file and returns the contents as dictionary
-        """
-        with open(self.configDir + os.path.sep + filename) as file:
-            values = yaml.load(file, yaml.FullLoader)
-            return values
 
     def getTypesDict(self, subsystem, typeNames, name = None):
         """
@@ -140,6 +134,14 @@ class ConfigMapper(object):
                     retVal[key] = data[key]
         return retVal
 
+    def __loadFile(self, filename):
+        """
+        Loads a yaml or yml file and returns the contents as dictionary
+        """
+        with open(self.configDir + os.path.sep + filename) as file:
+            values = yaml.load(file, yaml.FullLoader)
+            return values
+
     def __convertToSubsystems(self, inputData, defSubsystem):
         """
         Takes a dictionary and searchs for subsystem types to create leafs of a new tree.
@@ -191,7 +193,7 @@ def findConfig():
     This will tell the robot to use robotCfg file remove the () and use file name file.
     Files should be configs dir
     """
-    configPath = os.path.dirname(__file__) + os.path.sep + ".." +os.path.sep + "tests" + os.path.sep
+    configPath = os.path.dirname(__file__) + os.path.sep + ".." +os.path.sep + "configs" + os.path.sep
     home = str(Path.home()) + os.path.sep
     defaultConfig = "doof.yml"
     robotConfigFile = home + "robotConfig"
@@ -219,7 +221,7 @@ def findConfig():
 
 
 if __name__ == "__main__":
-    mapper = ConfigMapper("doof.yml", "tests")
+    mapper = ConfigMapper("doof.yml", "configs")
     print("Subsystem driveTrain:", mapper.getSubsystem("driveTrain"))
 
     print("driveTrain Motors")

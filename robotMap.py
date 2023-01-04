@@ -1,188 +1,253 @@
-from tests import configMapper
 from wpilib import XboxController, Joystick
+from utils import yaml
 from wpilib.interfaces import GenericHID
+import logging as log
+from pprint import pprint
+import os
+from pathlib import Path
 
 
-class RobotMap():
+class RobotMap(object):
     """
     Robot map gathers all the hard coded values needed to interface with
     hardware into a single location
     """
     def __init__(self):
         """intilize the robot map"""
-        configFile, configPath = configMapper.findConfig()
-        self.configMapper = configMapper.ConfigMapper(configFile, configPath)
+        configFile, configPath = findConfig()
+        self.configMapper = self.InitlizeConfigs(configFile, configPath)
 
-class XboxMap():
-    """
-    Holds the mappings to TWO Xbox controllers, one for driving, one for mechanisms
-    """
-    def __init__(self, Xbox1: XboxController, Xbox2: XboxController):
-        self.drive = Xbox1
-        self.mech = Xbox2
-        self.controllerInput()
-        #Button mappings
+    def InitlizeConfigs(self, filename, configDir):
+        self.configDir = configDir
+        initialData = self.__loadFile(filename)
+        log.debug("Intial data %s", initialData)
+        self.subsystems = self.__convertToSubsystems(initialData, "/")
+        root = self.subsystems["/"]
+        if "compatibility" not in root:
+            log.warning("No Compatibility string found. Matching all")
+            self.subsystems["compatibility"] = ["any"]
+        if not isinstance(root["compatibility"], list):
+            root["compatibility"] = [root["compatibility"]]
 
-    def controllerInput(self):
+        root["compatibility"] = [x.lower() for x in root["compatibility"]]
+
+    def getCompatibility(self):
+        return self.subsystems["/"]["compatibility"][0]
+
+    def getSubsystem(self, subsystem):
         """
-        Collects all controller values and puts them in an easily readable format
-        (Should only be used for axes while buttonManager has no equal for axes)
+        returns the complete config for specified subsystem or none if not
+        found
         """
-        #Drive Controller inputs
-        self.driveLeft = self.drive.getRawAxis(XboxController.Axis.kLeftY)
-        self.driveRight = self.drive.getRawAxis(XboxController.Axis.kRightY)
-        self.driveLeftHoriz = self.drive.getRawAxis(XboxController.Axis.kLeftX)
-        self.driveRightHoriz = self.drive.getRawAxis(XboxController.Axis.kRightX)
-        self.driveRightTrig = self.drive.getRawAxis(XboxController.Axis.kRightTrigger)
-        self.driveLeftTrig = self.drive.getRawAxis(XboxController.Axis.kLeftTrigger)
-        self.driveDPad = self.drive.getPOV()
-        self.driveA = self.drive.getAButton()
-        self.driveX = self.drive.getXButton()
-        #Mechanism controller inputs
-        self.mechLeft = self.mech.getRawAxis(XboxController.Axis.kLeftY)
-        self.mechRight = self.mech.getRawAxis(XboxController.Axis.kRightY)
-        self.mechLeftHoriz = self.mech.getRawAxis(XboxController.Axis.kLeftX)
-        self.mechRightHoriz = self.mech.getRawAxis(XboxController.Axis.kRightX)
-        self.mechRightTrig = self.mech.getRawAxis(XboxController.Axis.kRightTrigger)
-        self.mechLeftTrig = self.mech.getRawAxis(XboxController.Axis.kLeftTrigger)
-        self.mechX = self.mech.getXButton()
-        self.mechA = self.mech.getAButton()
-        self.mechDPad = self.mech.getPOV()
-        self.mechLeftBumper = self.mech.getLeftBumper()
+        # gives the values.
 
-    def getDriveController(self):
-        return self.drive
+        if subsystem in self.subsystems:
+            return self.subsystems[subsystem]
+        return None
 
-    def getMechController(self):
-        return self.mech
+    def checkCompatibilty(self, compatString):
+        """
+        Checks if a string is marked as compatible in the config
+        """
+        compatString = [x.lower() for x in compatString]
 
-    def getDriveLeft(self):
-        return self.driveLeft
+        root = self.getSubsystem("/")
+        if root == "all" or "all" in compatString:
+            return True
+        for string in root["compatibility"]:
+            if string in compatString:
+                return True
+        return False
 
-    def getDriveRight(self):
-        return self.driveRight
+    def getSubsystems(self):
+        subsystems = list(self.subsystems.keys())
+        subsystems.remove("/")
+        return subsystems
 
-    def getDriveLeftHoriz(self):
-        return self.driveLeftHoriz
+    def getGroupDict(self, subsystem, groupName, name = None):
+        """
+        returns a dictonary with data from a subsystem matching the groups and
+        if given then name.
+        i.e.
+        if you have a lifter with
+        lifter.sensors.groups=sensor
+        lifter.intakeMotors.groups=motors
+        lifter.beltMotors.groups=motors
+        calling getTypeDict("lifter", "motors")
+        returns all motors in intakeMotors and beltMotors
+        calling getTypeDict("lifter", "motors", "beltMotors")
+        returns all motors in beltMotors
+        calling getTypeDict("lifter", "sensor")
+        returns all sensors
+        """
+        data = self.getSubsystem(subsystem)
+        data =  self.__getGroups(data, groupName, name)
+        if "groups" in data:
+            data.pop("groups")
 
-    def getDriveRightHoriz(self):
-        return self.driveRightHoriz
+        return data
 
-    def getDriveRightTrig(self):
-        return self.driveRightTrig
+    def getTypesDict(self, subsystem, typeNames, name = None):
+        """
+        returns a dictonary with data from a subsystem matching the type(s) and
+        Once a type is found in an entry it is not searched any deeper
+        """
+        if not isinstance(typeNames, list):
+            typeNames = [typeNames]
+        data = self.getSubsystem(subsystem)
+        data = self.__getTypes(data, typeNames, name)
+        return data
 
-    def getDriveLeftTrig(self):
-        return self.driveLeftTrig
+    def __getGroups(self, data, groupName, name):
+        """
+        internal call, recusivley search the data for entries with
+        groups in "types" and if a name is given only types inside key with name
+        """
 
-    def getDriveDPad(self):
-        return self.driveDPad
+        retVal = {}
+        for key in data:
+            if isinstance(data[key], dict):
+                recusiveDict = self.__getGroups(data[key], groupName, name)
+                retVal.update(recusiveDict)
 
-    def getDriveA(self):
-        return self.driveA
+            if isinstance(data[key], dict) and "groups" in data[key]:
+                if name and not key == name:
+                    continue
 
-    def getDriveX(self):
-        return self.driveX
+                if groupName in data[key]["groups"]:
+                    retVal.update(data[key])
+        return retVal
 
-    def getMechLeft(self):
-        return self.mechLeft
+    def __getTypes(self, data, typeNames, name):
+        """
+        internal call, recusivley search the data for entries with
+        typeName in ["types"] and if a name is given only types
+        inside key with name
+        """
+        retVal = {}
+        for key in data:
+            if isinstance(data[key], dict):
+                recusiveDict = self.__getTypes(data[key], typeNames, name)
+                retVal.update(recusiveDict)
 
-    def getMechRight(self):
-        return self.mechRight
+            if isinstance(data[key], dict) and "type" in data[key]:
+                if name and not key == name:
+                    continue
 
-    def getMechLeftHoriz(self):
-        return self.mechLeftHoriz
+                if data[key]["type"] in typeNames:
+                    retVal[key] = data[key]
+        return retVal
 
-    def getMechRightHoriz(self):
-        return self.mechRightHoriz
+    def __loadFile(self, filename):
+        """
+        Loads a yaml or yml file and returns the contents as dictionary
+        """
+        with open(self.configDir + os.path.sep + filename) as file:
+            values = yaml.load(file, yaml.FullLoader)
+            return values
 
-    def getMechRightTrig(self):
-        return self.mechRightTrig
+    def __convertToSubsystems(self, inputData, defSubsystem):
+        """
+        Takes a dictionary and searchs for subsystem types to create leafs of a new tree.
+        Loads files as "file" is encountered
+        """
+        if "subsystem" in inputData:
+            subsystem = inputData["subsystem"]
+        else:
+            subsystem = defSubsystem
 
-    def getMechLeftTrig(self):
-        return self.mechLeftTrig
+        processedData = {}
+        processedData[subsystem] = {}
 
-    def getMechDPad(self):
-        return self.mechDPad
+        for key in inputData:
 
-    def getMechLeftBumper(self):
-        return self.mechLeftBumper
+            # if file, load file and walk
+            if isinstance(inputData[key], dict) and "file" in inputData[key]:
+                fileName = inputData[key].pop("file")
+                fileType = inputData[key].pop("type")
+                if not fileType == "yaml":
+                    log.error("Unknown file type fileType. Trying Yaml")
+                log.info("Loading %s into entry %s", fileName, key)
+                data = self.__loadFile(fileName)
+                # Flatten the root node of newly loaded yaml file.
+                for loadedKey in data:
+                    if isinstance(data[loadedKey], dict):
+                        inputData[key].update(data[loadedKey])
+                    else:
+                        inputData[key][loadedKey] = data[loadedKey]
 
-    def getMechX(self):
-        return self.mechX
+            # if subsystem, walk subsystem
+            if "subsystem" in inputData[key] and isinstance(inputData[key], dict):
+                log.info("Walking subsystem")
+                # make a new subsystem
+                print(inputData[key])
+                print(inputData[key]["subsystem"])
+                processedData[inputData[key]["subsystem"]] = self.__convertToSubsystems(inputData[key], inputData[key]["subsystem"])
 
-    def getMechA(self):
-        return self.mechA
+            # copy field over if no special processing
+            processedData[subsystem][key] = inputData[key]
 
-class JoystickMap():
+        return processedData
+
+
+def findConfig():
     """
-    Holds the mappings for a generic joystick
+    Will determine the correct yml file for the robot.
+    Please run 'echo (robotCfg.yml) > robotConfig' on the robot.
+    This will tell the robot to use robotCfg file remove the () and use file name file.
+    Files should be configs dir
     """
-    def __init__(self, joystick1: Joystick):
-        #initializes joysticks
-        self.drive = joystick1
-        self.JoystickInput()
-        
-    def JoystickInput(self):
-        self.driveX = self.drive.getX()
-        self.driveY = self.drive.getY()
-        self.driveZ = self.drive.getZ()
-        self.trigger = Joystick.getTrigger()
-        self.button2 = GenericHID.getRawButton(2)
-        self.button3 = GenericHID.getRawButton(3)
-        self.button4 = GenericHID.getRawButton(4)
-        self.button5 = GenericHID.getRawButton(5)
-        self.button6 = GenericHID.getRawButton(6)
-        self.button7 = GenericHID.getRawButton(7)
-        self.button8 = GenericHID.getRawButton(8)
-        self.button9 = GenericHID.getRawButton(9)
-        self.button10 = GenericHID.getRawButton(10)
-        self.button11 = GenericHID.getRawButton(11)
-        self.POV = GenericHID.getPOV()
+    configPath = os.path.dirname(__file__) + os.path.sep + "configs" + os.path.sep
+    home = str(Path.home()) + os.path.sep
+    defaultConfig = "doof.yml"
+    robotConfigFile = home + "robotConfig"
 
-    def getDriveJoystick(self):
-        return self.drive
+    if not os.path.isfile(robotConfigFile):
+        log.error("Could not find %s. Using default", robotConfigFile)
+        robotConfigFile = configPath + "default"
+    try:
+        file = open(robotConfigFile)
+        configFileName = file.readline().strip()
+        file.close()
+        configFile = configPath + configFileName
+        if os.path.isfile(configFile):
+            log.info("Using %s config file", configFile)
+            return configFileName, configPath
+        log.error("No config? Can't find %s", configFile)
+        log.error("Using default %s", defaultConfig)
+    except Exception as e:
+        log.error("Could not find %s", robotConfigFile)
+        log.error(e)
+        log.error("Please run `echo <robotcfg.yml> > ~/robotConfig` on the robot")
+        log.error("Using default %s", defaultConfig)
 
-    def getDriveXAxis(self):
-        return self.driveX
+    return defaultConfig, configPath
 
-    def getDriveYAxis(self):
-        return self.driveY
 
-    def getDriveZAxis(self):
-        return self.driveZ
+if __name__ == "__main__":
+    mapper = RobotMap("doof.yml", "configs")
+    print("Subsystem driveTrain:", mapper.getSubsystem("driveTrain"))
 
-    def getTrigger(self):
-        return self.trigger
+    print("driveTrain Motors")
+    pprint(mapper.getGroupDict("driveTrain", "motors"))
 
-    def getButton2(self):
-        return self.button2
-    
-    def getButton3(self):
-        return self.button3
+    print("Shooter motors:")
+    pprint(mapper.getGroupDict("shooter", "motors", "loaderMotors"))
 
-    def getButton4(self):
-        return self.button4
+    print("All motors:")
+    mapper.getGroupDict("/", "motors")
+    # print()
+    pprint(mapper.getGroupDict("/", "motors"))
 
-    def getButton5(self):
-        return self.button5
+    print("CANTalonFXFollower motors:")
+    data = mapper.getTypesDict("/", "CANTalonFXFollower")
+    # print()
+    pprint(data)
 
-    def getButton6(self):
-        return self.button6
+    compatTest = ["Dog", "all", "doof", "minibot", "DOOF"]
+    for item in compatTest:
+        compat = mapper.checkCompatibilty(item)
+        print(f"{item} is {compat}")
 
-    def getButton7(self):
-        return self.button7
+    print("Subsystems: ", mapper.getSubsystems())
 
-    def getButton8(self):
-        return self.button8
-
-    def getButton9(self):
-        return self.button9
-
-    def getButton10(self):
-        return self.button10
-
-    def getButton11(self):
-        return self.button11
-
-    def getPOV(self):
-        return self.POV

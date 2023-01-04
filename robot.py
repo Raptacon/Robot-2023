@@ -1,21 +1,21 @@
 # Module imports:
 import wpilib
-from wpilib import XboxController, DriverStation, SerialPort, CameraServer
+from wpilib import Joystick, DriverStation, SerialPort, CameraServer
 from magicbot import MagicRobot, tunable
 
 # Component imports:
-from tests.AxesXYR import AxesTransforms, AxesXYR
-from tests.ButtonManager import ButtonManager, ButtonEvent
-from tests.DriveTrain import DriveTrain
-from tests.DriveTrainHandler import DriveTrainHandler
-from tests.XYRDrive import XYRDrive
+from Inputs.XYRVector import AxesTransforms, AxesXYR
+from DriveTrain import DriveTrain
+from Inputs.VectorDrive import XYRDrive
+from MotorHelper import createMotor
 import os
 
 # Other imports:
-from robotMap import RobotMap, XboxMap
+from robotMap import RobotMap
 from networktables import NetworkTables
-from tests.MotorHelper import createMotor
-from tests.Math import expScale
+from Inputs.InputXYR import JoystickMap
+#from tests.MotorHelper import createMotor
+from utils.math import expScale
 
 # Test imports:
 
@@ -25,8 +25,6 @@ class MyRobot(MagicRobot):
     """
     driveTrain: DriveTrain
     xyrDrive: XYRDrive
-    buttonManager: ButtonManager
-    driveTrainHandler: DriveTrainHandler
     allianceColor: DriverStation.Alliance
     axesXYR: AxesXYR
 
@@ -49,11 +47,11 @@ class MyRobot(MagicRobot):
         Robot-wide initialization code should go here. Replaces robotInit
         """
         self.map = RobotMap()
-        self.xboxMap = XboxMap(XboxController(1), XboxController(0))
-        self.currentRobot = self.map.configMapper.getCompatibility()
+        self.joystickMap = JoystickMap(Joystick(0))
+        self.currentRobot = self.map.getCompatibility()
 
         try:
-            driveTrainSubsystem = self.map.configMapper.getSubsystem("driveTrain")['driveTrain']
+            driveTrainSubsystem = self.map.getSubsystem("driveTrain")['driveTrain']
         except TypeError:
             print("Robot does not have a drive train type")
             driveTrainSubsystem = None
@@ -99,7 +97,7 @@ class MyRobot(MagicRobot):
 
 
         # Check each component for compatibility
-        componentList = [DriveTrain, ButtonManager, DriveTrainHandler],
+        componentList = [DriveTrain]
         CameraServer.launch()
 
 
@@ -119,12 +117,12 @@ class MyRobot(MagicRobot):
         # self.buttonManager.registerButtonEvent(self.xboxMap.mech, XboxController.Button.kY, ButtonEvent.kOnPress, self.loader.stopLoading)
         # self.buttonManager.registerButtonEvent(self.xboxMap.mech, XboxController.Button.kY, ButtonEvent.kOnRelease, self.shooter.doneShooting)
         # self.buttonManager.registerButtonEvent(self.xboxMap.mech, XboxController.Button.kY, ButtonEvent.kOnRelease, self.loader.determineNextAction)
-        self.buttonManager.registerButtonEvent(self.xboxMap.drive, XboxController.Button.kLeftBumper, ButtonEvent.kOnPress, self.driveTrain.enableCreeperMode)
+        #self.buttonManager.registerButtonEvent(self.xboxMap.drive, XboxController.Button.kLeftBumper, ButtonEvent.kOnPress, self.driveTrain.enableCreeperMode)
         # self.buttonManager.registerButtonEvent(self.xboxMap.mech, XboxController.Button.kB, ButtonEvent.kOnPress, self.loader.stopLoading)
         # self.buttonManager.registerButtonEvent(self.xboxMap.mech, XboxController.Button.kB, ButtonEvent.kOnRelease, self.shooter.doneShooting)
         # self.buttonManager.registerButtonEvent(self.xboxMap.mech, XboxController.Button.kB, ButtonEvent.kOnRelease, self.loader.determineNextAction)
         # self.buttonManager.registerButtonEvent(self.xboxMap.mech, XboxController.Button.kB, ButtonEvent.kOnRelease, self.autoShoot.stop)
-        self.buttonManager.registerButtonEvent(self.xboxMap.drive, XboxController.Button.kLeftBumper, ButtonEvent.kOnRelease, self.driveTrain.disableCreeperMode)
+        #self.buttonManager.registerButtonEvent(self.xboxMap.drive, XboxController.Button.kLeftBumper, ButtonEvent.kOnRelease, self.driveTrain.disableCreeperMode)
 
         """
         self.buttonManager.registerButtonEvent(self.xboxMap.mech, XboxController.Button.kRightBumper, ButtonEvent.kOnPress, self.elevator.setRaise)
@@ -144,19 +142,18 @@ class MyRobot(MagicRobot):
         """
         Must include. Called repeatedly while running teleop.
         """
-        self.xboxMap.controllerInput()
+        self.joystickMap.JoystickInput()
 
         #This variable determines whether to use controller input for the drivetrain or not.
         #If we are using a command (such as auto align) that uses the drivetrain, we don't want to use the controller's input because it would overwrite
         #what the component is doing.
 
-        driveLeftY = expScale(self.xboxMap.getDriveLeft(), self.sensitivityExponent)
-        driveRightY = expScale(self.xboxMap.getDriveRight(), self.sensitivityExponent)
-        driveLeftX = expScale(self.xboxMap.getDriveLeftHoriz(), self.sensitivityExponent)
-        driveRightX = expScale(self.xboxMap.getDriveRightHoriz(), self.sensitivityExponent)
-        mechLeftX = expScale(self.xboxMap.getMechLeftHoriz(), 2.3)
+        driveX = expScale(self.joystickMap.getDriveXAxis(), self.sensitivityExponent)
+        driveY = expScale(self.joystickMap.getDriveYAxis(), self.sensitivityExponent)
+        driveZ = expScale(self.joystickMap.getDriveZAxis(), self.sensitivityExponent)
 
-        Axes = [driveLeftX, driveLeftY, driveRightX, driveRightY]
+
+        Axes = [driveX, driveY, driveZ]
 
         # deadzone clamping
         for i, axis in enumerate(Axes):
@@ -168,9 +165,6 @@ class MyRobot(MagicRobot):
         vector = self.axesXYR.transform(self.controlmode, Axes)
         self.xyrDrive.xyrdrive(self, vector)
         # if abs(driveRightY) + abs(driveLeftY) + abs(driveRightX) != 0:
-
-        self.prevMechAState = self.xboxMap.getMechA()
-
 
     def testInit(self):
         """
@@ -190,7 +184,7 @@ class MyRobot(MagicRobot):
         For each subsystem find all groupNames and call factory.
         Each one is saved to groupName_subsystem and subsystem_groupName
         """
-        config = self.map.configMapper
+        config = self.map
         containerName = "subsystem" + groupName[0].upper() + groupName[1:]
 
         if not hasattr(self, containerName):
