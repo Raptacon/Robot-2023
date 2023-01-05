@@ -5,9 +5,11 @@ from magicbot import MagicRobot, tunable
 
 # Component imports:
 from Inputs.XYRVector import AxesTransforms, AxesXYR
+from Inputs.Input import Input
+from utils.InputEnums import Inputs
 from DriveTrain import DriveTrain
 from Inputs.VectorDrive import XYRDrive
-from MotorHelper import createMotor
+from utils.MotorHelper import createMotor
 import os
 
 # Other imports:
@@ -27,6 +29,7 @@ class MyRobot(MagicRobot):
     xyrDrive: XYRDrive
     allianceColor: DriverStation.Alliance
     axesXYR: AxesXYR
+    input: Input
 
     # Test code:
     # If controller input is below this value, it will be set to zero.
@@ -39,6 +42,9 @@ class MyRobot(MagicRobot):
                     "Arcade": AxesTransforms.kArcade,
                     "Swerve": AxesTransforms.kSwerve}
     controlmode = AxesTransforms.kTank
+
+    controllerOptions = {"Joystick": Inputs.Joystick, "Xbox": Inputs.Xbox, "Keyboard": Inputs.Keyboard}
+    Controller = Inputs.Joystick
 
     robotDir = os.path.dirname(os.path.abspath(__file__))
 
@@ -91,10 +97,19 @@ class MyRobot(MagicRobot):
                 self.chooser.setDefaultOption(key, self.controlmode)
             self.chooser.addOption(key, item)
 
+
         wpilib.SmartDashboard.putData("Control Mode", self.chooser)
 
         self.instantiateSubsystemGroup("motors", createMotor)
 
+        self.controllerChooser = wpilib.SendableChooser()
+
+        for key, item in self.controllerOptions.items():
+            if item == self.Controller:
+                self.controllerChooser.setDefaultOption(key, self.Controller)
+            self.controllerChooser.addOption(key, item)
+
+        wpilib.SmartDashboard.putData("Controller Mode", self.controllerChooser)
 
         # Check each component for compatibility
         componentList = [DriveTrain]
@@ -147,11 +162,11 @@ class MyRobot(MagicRobot):
         #This variable determines whether to use controller input for the drivetrain or not.
         #If we are using a command (such as auto align) that uses the drivetrain, we don't want to use the controller's input because it would overwrite
         #what the component is doing.
+        driveX = expScale(self.input.ControllerChanger(self.Controller, 0), self.sensitivityExponent)
+        driveY = expScale(self.input.ControllerChanger(self.Controller, 2), self.sensitivityExponent)
+        driveZ = expScale(self.input.ControllerChanger(self.Controller, 3), self.sensitivityExponent)
 
-        driveX = expScale(self.joystickMap.getDriveXAxis(), self.sensitivityExponent)
-        driveY = expScale(self.joystickMap.getDriveYAxis(), self.sensitivityExponent)
-        driveZ = expScale(self.joystickMap.getDriveZAxis(), self.sensitivityExponent)
-
+        self.Controller = self.controllerChooser.getSelected()
 
         Axes = [driveX, driveY, driveZ]
 

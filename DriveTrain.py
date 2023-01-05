@@ -1,4 +1,4 @@
-from utils.motorHelper import WPI_TalonFXFeedback
+from utils.MotorHelper import WPI_TalonFXFeedback
 import ctre
 import logging as log
 from networktables import NetworkTables

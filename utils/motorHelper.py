@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
-
 import rev
 import ctre
 import logging as log
-from .UnitEnums import positionUnits, velocityUnits
+from utils.UnitEnums import positionUnits, velocityUnits
 
 def createMotor(motorDescp, motors = {}):
     '''This is where all motors are set up.
@@ -243,7 +241,6 @@ class WPI_TalonFXFeedback(ctre.WPI_TalonFX):
         """
         pidId: The ID of the pid config
         (0 for primary, 1 for auxilliary)
-
         Returns the integrated sensor's current position in
         encoder ticks (2048 per 1 rotation)
         """
@@ -262,7 +259,6 @@ class WPI_TalonFXFeedback(ctre.WPI_TalonFX):
         pidId: The ID of the pid config
         (0 for primary, 1 for auxilliary)
         units:
-
         Returns the integrated sensor's current velocity in
         encoder ticks / 100 ms (2048 encoder ticks per 1 rotation)
         """

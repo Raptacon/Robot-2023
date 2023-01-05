@@ -1,6 +1,7 @@
 from wpilib import Joystick, XboxController
 from wpilib.interfaces import GenericHID
 import typing
+from utils.InputEnums import Inputs
 
 class JoystickMap():
     """
@@ -31,13 +32,13 @@ class JoystickMap():
     def getDriveJoystick(self):
         return self.drive
 
-    def getDriveXAxis(self):
+    def getXAxis(self):
         return self.driveX
 
-    def getDriveYAxis(self):
+    def getYAxis(self):
         return self.driveY
 
-    def getDriveZAxis(self):
+    def getZAxis(self):
         return self.driveZ
 
     def getTrigger(self):
@@ -75,6 +76,9 @@ class JoystickMap():
 
     def getPOV(self):
         return self.POV
+
+    def getAxis(self, axis):
+        return self.drive.getRawAxis(axis)
 
 class XboxMap():
     """
@@ -176,8 +180,35 @@ class XboxMap():
     def getMechA(self):
         return self.mechA
 
+    def getAxis(self, axis):
+        return self.drive.getRawAxis(axis)
+
 class KeyboardMap():
     def keyboardInput(self):
         self.driveX = typing.Callable[[], float]
         self.driveY = typing.Callable[[], float]
         self.driveZ = typing.Callable[[], float]
+
+class Input():
+    Joystick = JoystickMap(Joystick(0))
+    Xbox = XboxMap(XboxController(0), XboxController(1))
+    Keyboard = KeyboardMap()
+
+
+    def __init__(self):
+        self.ControllerDict = {Inputs.Joystick: self.Joystick,
+                        Inputs.Xbox: self.Xbox,
+                        Inputs.Keyboard: self.Keyboard}
+
+    def ControllerChanger(self, transformKey: Inputs, axis: int):
+
+        if transformKey in self.ControllerDict.keys():
+            transformer = self.ControllerDict[transformKey]
+            self.axis : int = transformer.getAxis(axis)
+            return self.axis
+        print("TransformKey Not Matching")
+        return 0
+
+
+    def execute(self):
+        pass
