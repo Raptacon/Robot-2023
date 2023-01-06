@@ -1,4 +1,4 @@
-from Inputs.InputXYR import XYRJoystick
+from Inputs.InputXYR import XYRInput
 import DriveTrain
 from utils.motorEnums import Tank, Swerve, TwoMotorTank
 import logging as log
@@ -81,7 +81,7 @@ class XYRDrive:
 
     def __init__(self):
         self.transformDict = {"Tank":self.TankDrive, "Swerve":self.SwerveDrive, "TwoMotorTank":self.TwoMotorTankDrive}
-    def xyrdrive(self, requestSource, vector:XYRJoystick):
+    def xyrdrive(self, requestSource, vector:XYRInput):
         """
         Pass in self as requestSource
         """

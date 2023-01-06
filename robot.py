@@ -1,11 +1,11 @@
 # Module imports:
 import wpilib
-from wpilib import Joystick, DriverStation, SerialPort, CameraServer
+from wpilib import Joystick, DriverStation, SerialPort, CameraServer, XboxController
 from magicbot import MagicRobot, tunable
 
 # Component imports:
 from Inputs.XYRVector import AxesTransforms, AxesXYR
-from Inputs.Input import Input
+from Inputs.Input import Input, JoystickMap, XboxMap, KeyboardMap
 from utils.InputEnums import Inputs
 from DriveTrain import DriveTrain
 from Inputs.VectorDrive import XYRDrive
@@ -15,7 +15,6 @@ import os
 # Other imports:
 from robotMap import RobotMap
 from networktables import NetworkTables
-from Inputs.InputXYR import JoystickMap
 #from tests.MotorHelper import createMotor
 from utils.math import expScale
 
@@ -157,7 +156,12 @@ class MyRobot(MagicRobot):
         """
         Must include. Called repeatedly while running teleop.
         """
-        self.joystickMap.JoystickInput()
+        if self.Controller == Inputs.Joystick:
+            self.joystickMap = JoystickMap(Joystick(0))
+            self.joystickMap.JoystickInput()
+        elif self.Controller == Inputs.Xbox:
+            self.xboxMap = XboxMap(XboxController(0), XboxController(1))
+            self.xboxMap.controllerInput()
 
         #This variable determines whether to use controller input for the drivetrain or not.
         #If we are using a command (such as auto align) that uses the drivetrain, we don't want to use the controller's input because it would overwrite

@@ -1,7 +1,6 @@
-from Inputs.Input import JoystickMap
 from cmath import sqrt
 
-class XYRJoystick():
+class XYRInput():
     """
     3 values ranging from -1 to 1
     X: Translation to the left and right (right being positive)

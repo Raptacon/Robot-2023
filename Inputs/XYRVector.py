@@ -1,9 +1,9 @@
-from Inputs.InputXYR import XYRJoystick
+from Inputs.InputXYR import XYRInput
 from utils.AxesEnums import AxesTransforms
 
 class transform:
     def transform(self, Axes):
-        return XYRJoystick(0, 0, 0)
+        return XYRInput(0, 0, 0)
 
 class transformTank(transform):
     def transform(self, Axes):
@@ -48,7 +48,7 @@ class transformTank(transform):
         else:
             R = min(R1, R2)
 
-        return XYRJoystick(0, Y, R)
+        return XYRInput(0, Y, R)
 
 class transformArcade(transform):
     def transform(self, Axes):
@@ -58,7 +58,7 @@ class transformArcade(transform):
         Y = (Axes[1])
         R = (Axes[2])
 
-        return XYRJoystick(0, Y, R)
+        return XYRInput(0, Y, R)
 
 class transformSwerve(transform):
     def transform(self, Axes):
@@ -70,7 +70,7 @@ class transformSwerve(transform):
         R = (Axes[2])
         X = (Axes[0])
 
-        return XYRJoystick(X, Y, R)
+        return XYRInput(X, Y, R)
 
 class AxesXYR:
     transTank = transformTank()
@@ -89,7 +89,7 @@ class AxesXYR:
             transformer = self.transformDict[transformKey]
             return transformer.transform(Axes)
         else:
-            return XYRJoystick(0, 0, 0)
+            return XYRInput(0, 0, 0)
 
     def execute(self):
         pass
