@@ -7,18 +7,21 @@ from wpimath.geometry import Rotation2d
 import math
 import wpilib
 
+from networktables import NetworkTables
+
 class Drivetrain(commands2.SubsystemBase):
     kMaxVoltage = 12.0
     kWheelBaseMeters = 0.5461 # front to back distance
     kTrackBaseMeters = 0.5461 # left to right distance
-    kMaxVelocityMPS = 4.14528
+    #kMaxVelocityMPS = 4.14528
+    kMaxVelocityMPS = 1.0
     kMaxAngularVelocityRadPS = kMaxVelocityMPS / math.hypot(kWheelBaseMeters / 2.0, kTrackBaseMeters / 2.0)
 
     kModuleProps = [
-            {"name": "frontLeft", "channel": 50, "encoderCal": 66.0, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
-            {"name": "frontRight", "channel": 53, "encoderCal": 331.0, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
-            {"name": "rearLeft", "channel": 56, "encoderCal": 298.0, "trackbase": kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 },
-            {"name": "rearRight", "channel": 59, "encoderCal": 212.7, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 }
+            {"name": "frontLeft", "channel": 50, "encoderCal": 244.5, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
+            {"name": "frontRight", "channel": 53, "encoderCal": 334.0, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
+            {"name": "rearLeft", "channel": 56, "encoderCal": 121.5, "trackbase": kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 },
+            {"name": "rearRight", "channel": 59, "encoderCal": 211.5, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 }
     ]
     kModulePropsNoCal = [
             {"name": "frontLeft", "channel": 50, "encoderCal": 0.0, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
@@ -35,13 +38,18 @@ class Drivetrain(commands2.SubsystemBase):
     def __init__(self):
         super().__init__()
         self.swerveModules = []
+        NetworkTables.initialize()
+        self.table = NetworkTables.getTable("Drivetrain")
+        assert(self.table)
         for module in Drivetrain.kModuleProps:
             name = module["name"]
+            subTable = self.table.getSubTable(name)
+            assert(subTable)
             wheelbase = module["wheelbase"]
             trackbase = module["trackbase"]
             channel = module["channel"]
             encoderCal = module["encoderCal"]
-            self.swerveModules.append(SwerveModule((trackbase, wheelbase, name), channel, encoderCal))
+            self.swerveModules.append(SwerveModule((trackbase, wheelbase, name), channel, encoderCal, subTable))
 
         self.imu = navx.AHRS.create_spi()
 

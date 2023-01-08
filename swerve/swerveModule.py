@@ -3,8 +3,10 @@ import math
 import ctre
 import wpimath.geometry
 import wpimath.kinematics
+import wpilib
 
 from .steerController import SteerController
+import networktables
 
 '''
 This is a basic swerve drive module for a robot running
@@ -93,7 +95,7 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
     kSteerPID = (0.2, 0.0, 0.1)
     kCanStatusFrameMs = 10
 
-    def __init__(self, location : tuple[float, float, str], channelBase: int, encoderCal: float = 0):
+    def __init__(self, location : tuple[float, float, str], channelBase: int, encoderCal: float = 0, table = networktables.NetworkTable):
         '''
         Creates a new swerve module at location in robot. With channesl channelBase = drive
         channelBase + 1 = steer
@@ -106,6 +108,7 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
         self.steerId = channelBase + 1
         self.cancoderId = channelBase + 2
         self.name = location[2]
+        self.table = table
         self.translation = wpimath.geometry.Translation2d(location[0], location[1])
 
         #create can encoder
@@ -205,7 +208,7 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
         '''gets module drive voltage (speed)'''
         return self.driveMotor.getSelectedSensorVelocity() * self.driveSensorVelocityCoefficient
     def getSteerAngle(self):
-        '''gets current angle in deg of module setpoint'''
+        '''gets current angle in radians of module setpoint'''
         return self.steerController.getStateAngle()
     def getCurrentAngle(self):
         return self.encoder.getAbsolutePosition()
@@ -226,8 +229,10 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
         '''
         #convert to radians
         steerAngle = math.radians(steerAngleDeg)
-        if steerAngle < 0.0:
-            steerAngle += 2.0 * math.pi
+        #if steerAngle < 0.0:
+        #    steerAngle += 2.0 * math.pi
+
+        currVel, currAngle = self.getPosition()
 
         steerDiff = steerAngle - self.getSteerAngle()
         #print(f"steer deg {steerAngleDeg}, steerAngle {steerAngle} diff {steerDiff}")
@@ -254,6 +259,11 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
         self.setDriveVoltage(driveVoltage)
         self.steerController.setReferenceAngle(steerAngle)
 
+        if self.table:
+            self.table.putNumber("set steer deg", math.degrees(steerAngle))
+            self.table.putNumber("drive %", driveVoltage / self.kNominalVoltage)
+
+
     def getSteerMotor(self) -> ctre.WPI_TalonFX:
         '''gets the motor for steering'''
         return self.steerMotor
@@ -270,7 +280,12 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
         return self.translation
 
     def getPosition(self) -> [float, float]:
-        return [self.getDriveVelocity(), self.getSteerAngle()]
+        vel = self.getDriveVelocity()
+        ang = self.getSteerAngle()
+        if self.table:
+            self.table.putNumber("curr steer deg", math.degrees(ang))
+            self.table.putNumber("curr vel", vel)
+        return [vel, ang]
 
     def disable(self, drive = True, steer = True):
         if drive:
