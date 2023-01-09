@@ -2,14 +2,14 @@
 import wpilib
 from wpilib import Joystick, DriverStation, SerialPort, CameraServer, XboxController
 from magicbot import MagicRobot, tunable
-
 # Component imports:
 from Inputs.XYRVector import AxesTransforms, AxesXYR
-from Inputs.Input import Input, JoystickMap, XboxMap, KeyboardMap
+from Inputs.VectorDriveEdited import DriveTrain0 as DriveTrain
+from Inputs.Input import Input, JoystickMap, XboxMap
 from utils.InputEnums import Inputs
-from DriveTrain import DriveTrain
-from Inputs.VectorDrive import XYRDrive
-from utils.MotorHelper import createMotor
+# from DriveTrain import DriveTrain
+from Inputs.VectorDriveEdited import XYRDrive
+from utils.motorHelper import createMotor
 import os
 
 # Other imports:
@@ -42,7 +42,7 @@ class MyRobot(MagicRobot):
                     "Swerve": AxesTransforms.kSwerve}
     controlmode = AxesTransforms.kTank
 
-    controllerOptions = {"Joystick": Inputs.Joystick, "Xbox": Inputs.Xbox, "Keyboard": Inputs.Keyboard}
+    controllerOptions = {"Joystick": Inputs.Joystick, "Xbox": Inputs.Xbox}
     Controller = Inputs.Joystick
 
     robotDir = os.path.dirname(os.path.abspath(__file__))

@@ -1,11 +1,7 @@
-from utils.MotorHelper import WPI_TalonFXFeedback
+from utils.motorHelper import WPI_TalonFXFeedback
 import ctre
 import logging as log
 from networktables import NetworkTables
-
-
-from magicbot import tunable
-
 
 class DriveTrain():
     compatString = ["doof","teapot","greenChassis", "minibot"]

@@ -1,5 +1,5 @@
 from Inputs.InputXYR import XYRInput
-import DriveTrain
+from DriveTrain import DriveTrain
 from utils.motorEnums import Tank, Swerve, TwoMotorTank
 import logging as log
 import math
@@ -26,8 +26,8 @@ class TankDrive:
                 lmotor = -1*maximum
                 rmotor = dif
 
-        lmotor *= DriveTrain.DriveTrain.driveMotorsMultiplier
-        rmotor *= DriveTrain.DriveTrain.driveMotorsMultiplier
+        lmotor *= DriveTrain.driveMotorsMultiplier
+        rmotor *= DriveTrain.driveMotorsMultiplier
 
         return {Tank.FrontLeft.value : lmotor,
                 Tank.BackLeft.value : lmotor,
@@ -72,6 +72,7 @@ class SwerveDrive:
 class XYRDrive:
     driveTrainType: str
     TankDrive = TankDrive()
+    driveTrain = DriveTrain()
     SwerveDrive = SwerveDrive()
     TwoMotorTankDrive = TwoMotorTankDrive()
     Motorspeeds = {}
@@ -147,7 +148,7 @@ class XYRDrive:
             return False
 
     def execute(self):
-        DriveTrain.DriveTrain.setMotors(self, self.Motorspeeds)
+        self.driveTrain.setMotors(self, self.Motorspeeds)
 
         self.Motorspeeds = {}
 

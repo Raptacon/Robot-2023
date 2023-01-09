@@ -1,6 +1,5 @@
 from wpilib import Joystick, XboxController
 from wpilib.interfaces import GenericHID
-import typing
 from utils.InputEnums import Inputs
 
 class JoystickMap():
@@ -183,22 +182,13 @@ class XboxMap():
     def getAxis(self, axis):
         return self.drive.getRawAxis(axis)
 
-class KeyboardMap():
-    def keyboardInput(self):
-        self.driveX = typing.Callable[[], float]
-        self.driveY = typing.Callable[[], float]
-        self.driveZ = typing.Callable[[], float]
-
 class Input():
     Joystick = JoystickMap(Joystick(0))
     Xbox = XboxMap(XboxController(0), XboxController(1))
-    Keyboard = KeyboardMap()
-
 
     def __init__(self):
         self.ControllerDict = {Inputs.Joystick: self.Joystick,
-                        Inputs.Xbox: self.Xbox,
-                        Inputs.Keyboard: self.Keyboard}
+                        Inputs.Xbox: self.Xbox}
 
     def ControllerChanger(self, transformKey: Inputs, axis: int):
 
