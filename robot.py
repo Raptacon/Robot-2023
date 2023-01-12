@@ -4,7 +4,7 @@ from wpilib import Joystick, DriverStation, SerialPort, CameraServer, XboxContro
 from magicbot import MagicRobot, tunable
 # Component imports:
 from Inputs.XYRVector import AxesTransforms, AxesXYR
-from Inputs.VectorDriveEdited import DriveTrain0 as DriveTrain
+from Inputs.VectorDriveEdited import XYRDrive
 from Inputs.Input import Input, JoystickMap, XboxMap
 from utils.InputEnums import Inputs
 # from DriveTrain import DriveTrain
@@ -24,7 +24,6 @@ class MyRobot(MagicRobot):
     """
     Base robot class of Magic Bot Type
     """
-    driveTrain: DriveTrain
     xyrDrive: XYRDrive
     allianceColor: DriverStation.Alliance
     axesXYR: AxesXYR
@@ -34,7 +33,7 @@ class MyRobot(MagicRobot):
     # If controller input is below this value, it will be set to zero.
     # This avoids accidental input, as we are now overriding autonomous
     # components on controller input.
-    controllerDeadzone = .06
+    controllerDeadzone = 0.0
     sensitivityExponent = 1.8
     # Eventually have a way to change this based on dropdown menu
     controlModes = {"Tank": AxesTransforms.kTank,
@@ -111,7 +110,7 @@ class MyRobot(MagicRobot):
         wpilib.SmartDashboard.putData("Controller Mode", self.controllerChooser)
 
         # Check each component for compatibility
-        componentList = [DriveTrain]
+        componentList = [XYRDrive]
         CameraServer.launch()
 
 
@@ -148,7 +147,7 @@ class MyRobot(MagicRobot):
         self.buttonManager.registerButtonEvent(self.xboxMap.mech, XboxController.Button.kLeftBumper, ButtonEvent.kOnRelease, self.goToDist.stop)
         """
 
-        self.driveTrain.setBraking(True)
+        self.xyrDrive.setBraking(True)
 
         self.prevMechAState = False
 
@@ -167,9 +166,8 @@ class MyRobot(MagicRobot):
         #If we are using a command (such as auto align) that uses the drivetrain, we don't want to use the controller's input because it would overwrite
         #what the component is doing.
         driveX = expScale(self.input.ControllerChanger(self.Controller, 0), self.sensitivityExponent)
-        driveY = expScale(self.input.ControllerChanger(self.Controller, 2), self.sensitivityExponent)
-        driveZ = expScale(self.input.ControllerChanger(self.Controller, 3), self.sensitivityExponent)
-
+        driveY = expScale(self.input.ControllerChanger(self.Controller, 1), self.sensitivityExponent)
+        driveZ = expScale(self.input.ControllerChanger(self.Controller, 2), self.sensitivityExponent)
         self.Controller = self.controllerChooser.getSelected()
 
         Axes = [driveX, driveY, driveZ]
@@ -178,6 +176,7 @@ class MyRobot(MagicRobot):
         for i, axis in enumerate(Axes):
             if abs(axis) < self.controllerDeadzone:
                 Axes[i] = 0
+                print("Controller In deadzone")
 
         self.controlmode = self.chooser.getSelected()
         # If the drivers have any input outside deadzone, take control.
@@ -233,7 +232,7 @@ class MyRobot(MagicRobot):
         What the robot runs on disabled start
         NEVER RUN ANYTHING THAT MOVES ANYTHING HERE
         """
-        self.driveTrain.setBraking(False)
+        self.xyrDrive.setBraking(False)
 
     def disabledPeriodic(self):
         """

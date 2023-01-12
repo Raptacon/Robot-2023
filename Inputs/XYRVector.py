@@ -10,8 +10,8 @@ class transformTank(transform):
         # Axes[1] # Axis 2
         # Axes[3] # Axis 4
 
-        l = Axes[1]
-        r = Axes[2]
+        l = Axes[0]
+        r = Axes[1]
 
         # I'm so sorry
         # https://www.desmos.com/calculator/dw1hoo9lnp
@@ -47,7 +47,6 @@ class transformTank(transform):
             R = max(R3, R4)
         else:
             R = min(R1, R2)
-
         return XYRInput(0, Y, R)
 
 class transformArcade(transform):
@@ -57,7 +56,7 @@ class transformArcade(transform):
 
         Y = (Axes[1])
         R = (Axes[2])
-
+        print(Y)
         return XYRInput(0, Y, R)
 
 class transformSwerve(transform):

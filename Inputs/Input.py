@@ -180,6 +180,10 @@ class XboxMap():
         return self.mechA
 
     def getAxis(self, axis):
+        if(axis == 1):
+            axis = 4
+        elif axis == 0:
+            axis = 1
         return self.drive.getRawAxis(axis)
 
 class Input():
