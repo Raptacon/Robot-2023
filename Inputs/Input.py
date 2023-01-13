@@ -180,8 +180,15 @@ class XboxMap():
         return self.mechA
 
     def getAxis(self, axis):
-        if(axis == 1):
+        """
+        Right Now this is set up to a mapped controller
+        To enable this just click map controller at the top where it displays the controller (In the sim)
+        To revert this just change what axis it equates to.
+        """
+        if(axis == 2):
             axis = 4
+        elif(axis == 1):
+            axis = 5
         elif axis == 0:
             axis = 1
         return self.drive.getRawAxis(axis)

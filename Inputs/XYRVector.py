@@ -47,16 +47,16 @@ class transformTank(transform):
             R = max(R3, R4)
         else:
             R = min(R1, R2)
+
         return XYRInput(0, Y, R)
 
 class transformArcade(transform):
     def transform(self, Axes):
-        Axes[1] # Axis 2
+        Axes[0] # Axis 1
         Axes[2] # Axis 3
 
-        Y = (Axes[1])
+        Y = (Axes[0])
         R = (Axes[2])
-        print(Y)
         return XYRInput(0, Y, R)
 
 class transformSwerve(transform):

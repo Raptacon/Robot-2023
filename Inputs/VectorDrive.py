@@ -1,11 +1,19 @@
 from Inputs.InputXYR import XYRInput
-from DriveTrain import DriveTrain
-from utils.motorEnums import Tank, Swerve, TwoMotorTank
+from utils.motorEnums import Tank, TwoMotorTank
 import logging as log
-import math
 from magicbot import AutonomousStateMachine, MagicRobot
+from networktables import NetworkTables
+from utils.motorHelper import WPI_TalonFXFeedback
+import ctre
 
 class TankDrive:
+
+    compatString = ["doof","teapot","greenChassis", "minibot"]
+    # Note - The way we will want to do this will be to give this component motor description dictionaries from robotmap and then creating the motors with motorhelper. After that, we simply call wpilib' differential drive
+    driveMotorsMultiplier = .7
+    creeperMotorsMultiplier = .25
+
+    smartDashTable = NetworkTables.getTable("SmartDashboard")
 
     def MotorDrive(self, x,y,r):
         maximum = max(abs(y),abs(r))
@@ -26,8 +34,8 @@ class TankDrive:
                 lmotor = -1*maximum
                 rmotor = dif
 
-        lmotor *= DriveTrain.driveMotorsMultiplier
-        rmotor *= DriveTrain.driveMotorsMultiplier
+        lmotor *= self.driveMotorsMultiplier
+        rmotor *= self.driveMotorsMultiplier
 
         return {Tank.FrontLeft.value : lmotor,
                 Tank.BackLeft.value : lmotor,
@@ -72,16 +80,17 @@ class SwerveDrive:
 class XYRDrive:
     driveTrainType: str
     TankDrive = TankDrive()
-    driveTrain = DriveTrain()
     SwerveDrive = SwerveDrive()
     TwoMotorTankDrive = TwoMotorTankDrive()
     Motorspeeds = {}
     currentSource = None
     prevSource = None
     controlMode = None
+    motors_driveTrain: dict
 
     def __init__(self):
         self.transformDict = {"Tank":self.TankDrive, "Swerve":self.SwerveDrive, "TwoMotorTank":self.TwoMotorTankDrive}
+
     def xyrdrive(self, requestSource, vector:XYRInput):
         """
         Pass in self as requestSource
@@ -147,11 +156,103 @@ class XYRDrive:
         else:
             return False
 
-    def execute(self):
-        self.driveTrain.setMotors(self, self.Motorspeeds)
+    def setup(self):
+        self.motorSpeedInfo = {}
+        self.creeperMode = False
+        log.info("DriveTrain setup completed")
 
+    def setBraking(self, braking:bool):
+        """
+        This isn't incorporated into the handler
+        (I'm not sure if it should be)
+        """
+        if braking:
+            for motor in self.motors_driveTrain.keys():
+                if type(self.motors_driveTrain[motor]) == WPI_TalonFXFeedback:
+                    self.motors_driveTrain[motor].setNeutralMode(ctre.NeutralMode.Brake)
+        else:
+            for motor in self.motors_driveTrain.keys():
+                if type(self.motors_driveTrain[motor]) == WPI_TalonFXFeedback:
+                    self.motors_driveTrain[motor].setNeutralMode(ctre.NeutralMode.Coast)
+
+    def setMotors(self, motorSpeedInfo:dict):
+        """
+        DO NOT CALL THIS, ONLY THE HANDLER SHOULD HAVE CONTROL
+        Accepts motorSpeedInfo, a dictionary of motor names and speeds.
+        """
+        self.motorSpeedInfo = motorSpeedInfo
+
+    def getSpecificMotor(self, motorName):
+        """
+        returns object for motorName
+        if no object exists, returns nothing
+        """
+        try:
+            return self.motors_driveTrain[motorName].get()
+        except:
+            return
+
+    def enableCreeperMode(self):
+        """when left bumper is pressed, it sets the driveMotorsMultiplier to .25"""
+        if self.creeperMode:
+            return
+        self.prevMultiplier = self.driveMotorsMultiplier
+        self.driveMotorsMultiplier = self.creeperMotorsMultiplier
+        self.creeperMode = True
+
+    def disableCreeperMode(self):
+        """when left bumper is released, it sets the multiplier back to it's original value"""
+        if not self.creeperMode:
+            return
+        self.driveMotorsMultiplier = self.prevMultiplier
+        self.creeperMode = False
+
+    def stop(self):
+        self.motorSpeedInfo = {}
+        for key in self.motors_driveTrain.keys():
+            self.motorSpeedInfo[key] = 0
+
+    def getSpecificMotorDistTraveled(self, motorName):
+        """
+        Returns a specific motor's distance traveled
+        (Only works with Falcon 500s)
+        """
+        if type(self.motors_driveTrain[motorName]) == WPI_TalonFXFeedback:
+            # self.leftDistInch = (self.motors_driveTrain[motorName].getPosition(0, positionUnits.kRotations) / self.gearRatio) * self.wheelCircumference
+            if self.leftSideSensorInverted:
+                return -1 * self.leftDistInch
+            else:
+                return self.leftDistInch
+        return 0
+
+    def resetMotorsDistTraveled(self):
+        for motor in self.motors_driveTrain.keys():
+            if type(self.motors_driveTrain[motor]) == self.WPI_TalonFXFeedback:
+                motor.resetPosition()
+
+    def resetSpecificMotorDistTraveled(self, motorName):
+        if type(self.motors_driveTrain[motorName]) == self.WPI_TalonFXFeedback:
+            self.motors_driveTrain[motorName].resetPosition()
+
+    def execute(self):
+
+        self.setMotors(self.Motorspeeds)
+        self.run()
         self.Motorspeeds = {}
 
         # You must request control every frame.
         self.prevSource = self.currentSource
         self.currentSource = None
+
+    def run(self):
+        # Make sure motors are the same between parameter information and drivetrain
+        # then set motors
+        speedInfoKeys = sorted(dict(self.motorSpeedInfo).keys())
+        driveTrainKeys = sorted(self.motors_driveTrain.keys())
+        if speedInfoKeys != driveTrainKeys:
+            print("Not Matching!")
+            self.stop()
+            speedInfoKeys = sorted(dict(self.motorSpeedInfo).keys())
+
+        for key in speedInfoKeys:
+            self.motors_driveTrain[key].set(self.motorSpeedInfo[key])

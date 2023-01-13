@@ -4,11 +4,10 @@ from wpilib import Joystick, DriverStation, SerialPort, CameraServer, XboxContro
 from magicbot import MagicRobot, tunable
 # Component imports:
 from Inputs.XYRVector import AxesTransforms, AxesXYR
-from Inputs.VectorDriveEdited import XYRDrive
+from Inputs.VectorDrive import XYRDrive
 from Inputs.Input import Input, JoystickMap, XboxMap
 from utils.InputEnums import Inputs
 # from DriveTrain import DriveTrain
-from Inputs.VectorDriveEdited import XYRDrive
 from utils.motorHelper import createMotor
 import os
 
