@@ -195,7 +195,7 @@ def findConfig():
     """
     configPath = os.path.dirname(__file__) + os.path.sep + ".." +os.path.sep + "configs" + os.path.sep
     home = str(Path.home()) + os.path.sep
-    defaultConfig = "doof.yml"
+    defaultConfig = "greenChassis.yml"
     robotConfigFile = home + "robotConfig"
 
     if not os.path.isfile(robotConfigFile):

@@ -1,15 +1,10 @@
 from magicbot import AutonomousStateMachine, state, feedback, timed_state
 from components.Actuators.LowLevel.driveTrain import DriveTrain
 from components.Input.colorSensor import ColorSensor
-from components.Actuators.LowLevel.intakeMotor import IntakeMotor
-from components.Actuators.HighLevel.hopperMotor import HopperMotor
 from components.Actuators.LowLevel.shooterMotors import ShooterMotors
 from components.Actuators.LowLevel.turretThreshold import TurretThreshold
-from components.Actuators.AutonomousControl.turretTurn import TurretTurn
-from components.Actuators.HighLevel.turretCalibrate import CalibrateTurret
 from components.Input.breakSensors import Sensors, State
 from components.Input.navx import Navx
-from components.Actuators.AutonomousControl.turnToAngle import TurnToAngle
 import logging as log
 
 from utils.DirectionEnums import Direction
@@ -19,16 +14,11 @@ class SmokeTest(AutonomousStateMachine):
     MODE_NAME = "Smoke Test"
     DEFAULT = False
     driveTrain: DriveTrain
-    intakeMotor: IntakeMotor
     colorSensor: ColorSensor
-    hopperMotor: HopperMotor
     shooterMotors: ShooterMotors
-    turretCalibrate: CalibrateTurret
     turretThreshold: TurretThreshold
-    turretTurn: TurretTurn
     sensors: Sensors
     navx: Navx
-    turnToAngle: TurnToAngle
     dumbSpeed = .25
     dumbRPMs = 3000
     time = 2
