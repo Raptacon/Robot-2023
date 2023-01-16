@@ -1,10 +1,1 @@
-#cryptography==3.2.1
-#pyflakes
-#py2app
-#macholib
-#modulegraph
-flake8
-coverage
-#wheel
-
 robotpy[commands2,ctre,navx,rev,sim,pathplannerlib,photonvision,playingwithfusion] ==2023.*
