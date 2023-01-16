@@ -110,6 +110,8 @@ class MyRobot(MagicRobot):
 
         # Check each component for compatibility
         componentList = [XYRDrive]
+
+        # Start camera server for USB cameras
         CameraServer.launch()
 
 
