@@ -35,7 +35,8 @@ class MyRobot(commands2.TimedCommandRobot):
             case _:
                 raise Exception(f"Unknown Robot {robot_name}")
 
-        #
+        # Start camera server for USB cameras
+        CameraServer.launch()
 
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""
