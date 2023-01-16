@@ -82,13 +82,11 @@ class MyRobot(MagicRobot):
         self.xboxMap = XboxMap(XboxController(1), XboxController(0))
         self.currentRobot = self.map.configMapper.getCompatibility()
 
-        self.driverStation = DriverStation.getInstance()
 
-
-        self.allianceColor = self.driverStation.getAlliance()
-        if self.allianceColor == self.driverStation.Alliance.kBlue:
+        self.allianceColor = DriverStation.getAlliance()
+        if self.allianceColor == DriverStation.Alliance.kBlue:
             self.allianceColor = "blue"
-        elif self.allianceColor == self.driverStation.Alliance.kRed:
+        elif self.allianceColor == DriverStation.Alliance.kRed:
             self.allianceColor = "red"
         else:
             self.allianceColor = "???"
