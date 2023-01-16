@@ -4,11 +4,18 @@ import ctre
 import navx
 from subsystems.drivetrains.westcoast import Westcoast as Drivetrain
 from commands.tankDrive import TankDrive
+from commands.arcadeDrive import ArcadeDrive
 import wpimath.filter
 import wpimath
 
+import enum
+
 class GreenBot(commands2.TimedCommandRobot):
     config_name = "GreenBot"
+
+    class DrivetrainMode(enum.Enum):
+        ARCADE = enum.auto()
+        TANK = enum.auto()
 
 
     def __init__(self, period: float = 0.02) -> None:
@@ -25,9 +32,16 @@ class GreenBot(commands2.TimedCommandRobot):
         leftM = wpilib.MotorControllerGroup(motors['left'], motors['leftF'])
 
         self.driveTrain = Drivetrain(rightM, leftM, motors['left'], motors['right'], navx.AHRS.create_i2c())
-        self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kLeftY),
-                                   getStick(wpilib.XboxController.Axis.kRightY),
+        self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
+                                   getStick(wpilib.XboxController.Axis.kRightY, True),
                                    self.driveTrain)
+        self.arcadeDrive = ArcadeDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
+                                   getStick(wpilib.XboxController.Axis.kRightX, False),
+                                   self.driveTrain)
+
+        #self.driveModeSelect = commands2.SelectCommand(
+        #    self.DrivetrainMode.TANK
+        #)
 
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)
@@ -37,7 +51,8 @@ class GreenBot(commands2.TimedCommandRobot):
 
 
 #TODO move to a better way, demo purposes
-def getStick(axis: wpilib.XboxController.Axis):
+def getStick(axis: wpilib.XboxController.Axis, invert: bool = False):
+    sign = -1.0 if invert else 1.0
     slew = wpimath.filter.SlewRateLimiter(3)
-    return lambda: slew.calculate(wpimath.applyDeadband(-wpilib.XboxController(0).getRawAxis(axis), 0.1))
+    return lambda: slew.calculate(wpimath.applyDeadband(sign * wpilib.XboxController(0).getRawAxis(axis), 0.1))
 
