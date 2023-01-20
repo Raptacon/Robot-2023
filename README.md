@@ -16,6 +16,7 @@ There is a general setup that is needed for each OS before you can build the cod
 If you're using OSX you probably want to install python from python.org. Brew python has problems with Tk (simulator) where the widgets won't render correctly.
 
 ## Windows Users
+use your own credentials
 
 ### Initial Installation
 The easiest way to get things working is to install the package manager ![Chocolatey](https://chocolatey.org/) by going ![here](https://chocolatey.org/install) and going to Step 2 and following the directions OR just opening a PowerShell windows as Admin (yes...be careful) and doing:
