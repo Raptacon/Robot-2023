@@ -15,7 +15,8 @@ class Westcoast(commands2.SubsystemBase):
         ''' TODO update to be more generic, hard coding talons'''
         super().__init__()
 
-        assert(leftM and rightM, "Left and Right Motors must be provided")
+        if leftM is None or rightM is None:
+            raise Exception("Left and Right Motors must be provided")
         self.leftM = leftM
         self.rightM = rightM
         self.leftEncoder = leftEncoder

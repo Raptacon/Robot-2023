@@ -31,9 +31,9 @@ class GreenBot(commands2.TimedCommandRobot):
         rightM = wpilib.MotorControllerGroup(motors['right'], motors['rightF'])
         leftM = wpilib.MotorControllerGroup(motors['left'], motors['leftF'])
 
-        self.driveTrain = Drivetrain(rightM, leftM, motors['left'], motors['right'], navx.AHRS.create_i2c())
-        self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   getStick(wpilib.XboxController.Axis.kRightY, True),
+        self.driveTrain = Drivetrain(rightM, leftM, motors['left'], motors['right'], None)
+        self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kRightY, True),
+                                   getStick(wpilib.XboxController.Axis.kLeftY, False),
                                    self.driveTrain)
         self.arcadeDrive = ArcadeDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
                                    getStick(wpilib.XboxController.Axis.kRightX, False),
