@@ -4,7 +4,6 @@ import wpilib.drive
 import ctre
 import commands2
 
-
 class Westcoast(commands2.SubsystemBase):
     def __init__(self,
                  leftM: wpilib.interfaces._interfaces.MotorController,
@@ -19,11 +18,12 @@ class Westcoast(commands2.SubsystemBase):
             raise Exception("Left and Right Motors must be provided")
         self.leftM = leftM
         self.rightM = rightM
+
+        self.driveTrain = wpilib.drive.DifferentialDrive(leftM, rightM)
+
         self.leftEncoder = leftEncoder
         self.rightEncoder = rightEncoder
         self.gyro = gyro
-
-        self.driveTrain = wpilib.drive.DifferentialDrive(leftM, rightM)
 
         self.addChild("Drive", self.driveTrain)
         self.addChild("Left Encoder", self.leftEncoder)
@@ -47,11 +47,14 @@ class Westcoast(commands2.SubsystemBase):
             wpilib.SmartDashboard.putNumber("Gryo", self.gyro.getAngle())
 
 
-    def drive(self, left: float, right: float) -> None:
+    def tankDrive(self, left: float, right: float) -> None:
         '''
         Sets the left and right speed of robot
         '''
         self.driveTrain.tankDrive(left, right)
+
+    def arcadeDrive(self, speed: float, Rotation: float) -> None:
+        self.driveTrain.arcadeDrive(speed, Rotation)
 
     def getHeading(self) -> float:
         '''
@@ -65,7 +68,6 @@ class Westcoast(commands2.SubsystemBase):
         '''
         returns the average distance driven since last reset
         '''
-
         left = self.leftEncoder.getSensorCollection().getIntegratedSensorPosition() if self.leftEncoder else 0
         right = self.rightEncoder.getSensorCollection().getIntegratedSensorPosition if self.rightEncoder else 0
 

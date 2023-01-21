@@ -28,7 +28,7 @@ class TankDrive(commands2.CommandBase):
         left = self.left()
         right = self.right()
         print(f"l {left}, r {right}")
-        self.driveTrain.drive(left, right)
+        self.driveTrain.tankDrive(left, right)
 
     def end(self, interrupted: bool) -> None:
         '''

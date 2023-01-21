@@ -26,17 +26,13 @@ class ArcadeDrive(commands2.CommandBase):
         Called repeatably when this command is scheduled to run.
         '''
         speed = self.speed()
-        mix = self.mix()
-        left = speed * mix
-        right = speed * -mix
-        print(f"l {left}, r {right}")
-        self.driveTrain.drive(left, right)
+        rotation = self.mix()
+        self.driveTrain.arcadeDrive(speed,rotation )
 
     def end(self, interrupted: bool) -> None:
         '''
         Safe drive train when ending
         '''
-
         self.driveTrain.drive(0, 0)
 
     def isFinished(self) -> bool:

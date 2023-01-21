@@ -1,12 +1,9 @@
-#!/usr/bin/env python3
-
 import typing
 import wpilib
 import commands2
 from wpilib import CameraServer
 
 from robots.greenBot import GreenBot
-
 
 class MyRobot(commands2.TimedCommandRobot):
     """
@@ -25,8 +22,8 @@ class MyRobot(commands2.TimedCommandRobot):
         # Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         # autonomous chooser on the dashboard.
 
+        # To add another robot add a case to the match below
         #determine the robot based on the config file
-        #TODO
         robot_name = "GreenBot"
 
         match robot_name:
@@ -64,10 +61,11 @@ class MyRobot(commands2.TimedCommandRobot):
         self.container.autonomousPeriodic()
 
     def teleopInit(self) -> None:
-        # This makes sure that the autonomous stops running when
-        # teleop starts running. If you want the autonomous to
-        # continue until interrupted by another command, remove
-        # this line or comment it out.
+        """
+        This function is called at the start of the teleop mode
+        Stops any autonomous commands and then runs teleop.
+        """
+        #If you want the autonomous to continue until interrupted by another command, remove this line or comment it out.
         if self.autonomousCommand:
             self.autonomousCommand.cancel()
         self.container.teleopInit()
@@ -77,13 +75,17 @@ class MyRobot(commands2.TimedCommandRobot):
         self.container.teleopPeriodic()
 
     def testInit(self) -> None:
-        # Cancels all running commands at the start of test mode
+        """
+        Runs as the start of test mode and cancels all running commands
+        """
         commands2.CommandScheduler.getInstance().cancelAll()
         self.container.testInit()
 
     def testPeriodic(self) -> None:
+        """
+        Runs periodically during test mode
+        """
         self.container.testPeriodic()
-
 
 if __name__ == "__main__":
     wpilib.run(MyRobot)
