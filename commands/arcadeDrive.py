@@ -1,4 +1,3 @@
-import wpilib
 import commands2
 
 from typing import Callable
