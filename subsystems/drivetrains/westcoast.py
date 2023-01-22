@@ -28,7 +28,7 @@ class Westcoast(commands2.SubsystemBase):
         self.addChild("Drive", self.driveTrain)
         self.addChild("Left Encoder", self.leftEncoder)
         self.addChild("Right Encoder", self.rightEncoder)
-        self.addChild("Gyto", self.gyro)
+        self.addChild("Gyro", self.gyro)
 
     def log(self):
         '''
