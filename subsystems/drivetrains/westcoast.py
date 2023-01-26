@@ -53,6 +53,12 @@ class Westcoast(commands2.SubsystemBase):
         '''
         self.driveTrain.tankDrive(left, right)
 
+    def arcadeDrive(self, speed: float, turn: float) -> None:
+        '''
+        Sets the left and right speed of robot
+        '''
+        self.driveTrain.arcadeDrive(speed, turn)
+
     def getHeading(self) -> float:
         '''
         Returns the heading if known. If not returns NaN
