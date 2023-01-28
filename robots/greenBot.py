@@ -22,13 +22,11 @@ class GreenBot(commands2.TimedCommandRobot):
         """
         Here is where all the basic info for a motor is set up.
         """
-        def __init__(self, type, channel, usesPID, P, I, D, haslimits, CurrentLimit, triggerCurrent, triggerTime, invert, masterChannel):
+        def __init__(self, type, channel, usesPID, PID, haslimits, CurrentLimit, triggerCurrent, triggerTime, invert, masterChannel):
             self.motorType = type
             self.motorChannel = channel
             self.motorUsesPID = usesPID
-            self.motorP = P
-            self.motorI = I
-            self.motorD = D
+            self.PID = PID
             self.motorHasLimits = haslimits
             self.triggerThresholdCurrent = triggerCurrent
             self.triggerThresholdTime = triggerTime
@@ -36,16 +34,29 @@ class GreenBot(commands2.TimedCommandRobot):
             self.motorInvert = invert
             self.motorMasterChannel = masterChannel
 
+    class motorPID():
+        """
+        Use this to setup the basic variables for a motor using PID
+        """
+        def __init__(self, kP, kI, kD, kF, controlType, sensorPhase, kPreScale, feedbackDevice):
+            self.kP = kP
+            self.kI = kI
+            self.kD = kD
+            self.kF = kF
+            self.controlType = controlType
+            self.sensorPhase = sensorPhase
+            self.kPreScale = kPreScale
+            self.feedbackDevice = feedbackDevice
+
     def __init__(self, period: float = 0.02) -> None:
         super().__init__(period)
 
         #create the greenbot motors
-        type = "CANTalonFX"
         motors = {}
-        rightMotor = self.motorDescription("CANTalonFX", 30, False, 0, 0, 0, True, 40, 60, 50, False, 0)
-        rightMotorFront = self.motorDescription("CANTalonFX", 31, False, 0, 0, 0, True, 40, 60, 50, False, 0)
-        leftMotor = self.motorDescription("CANTalonFX", 20, False, 0, 0, 0, True, 40, 60, 50, False, 0)
-        leftMotorFront = self.motorDescription("CANTalonFX", 21, False, 0, 0, 0, True, 40, 60, 50, False, 0)
+        rightMotor = self.motorDescription("CANTalonFX", 30, False, None, True, 40, 60, 50, False, 0)
+        rightMotorFront = self.motorDescription("CANTalonFX", 31, False, None, True, 40, 60, 50, False, 0)
+        leftMotor = self.motorDescription("CANTalonFX", 20, False, None, True, 40, 60, 50, False, 0)
+        leftMotorFront = self.motorDescription("CANTalonFX", 21, False, None, True, 40, 60, 50, False,0)
 
         rightMotor = createMotor(rightMotor, motors)
         rightMotorFront = createMotor(rightMotorFront, motors)
