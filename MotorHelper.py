@@ -67,7 +67,7 @@ def createMotor(motorDescp, motors):
         print("Unknown Motor")
 
     if motorDescp.motorInvert:
-        motor.setInverted(motorDescp['inverted'])
+        motor.setInverted(motorDescp.motorInvert)
 
     return motor
 

@@ -1,6 +1,5 @@
 import wpilib
 import commands2
-import ctre
 import navx
 from subsystems.drivetrains.westcoast import Westcoast as Drivetrain
 from commands.tankDrive import TankDrive
@@ -74,20 +73,11 @@ class GreenBot(commands2.TimedCommandRobot):
                                    getStick(wpilib.XboxController.Axis.kRightX, False),
                                    self.driveTrain)
 
-        #self.driveModeSelect = commands2.SelectCommand(
-        #    self.DrivetrainMode.TANK
-        #)
-
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)
-
-
-
-
 
 #TODO move to a better way, demo purposes
 def getStick(axis: wpilib.XboxController.Axis, invert: bool = False):
     sign = -1.0 if invert else 1.0
     slew = wpimath.filter.SlewRateLimiter(3)
     return lambda: slew.calculate(wpimath.applyDeadband(sign * wpilib.XboxController(0).getRawAxis(axis), 0.1))
-
