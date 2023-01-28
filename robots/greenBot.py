@@ -10,7 +10,6 @@ import wpimath
 import typing
 
 import enum
-from enum import Enum, auto
 
 class GreenBot(commands2.TimedCommandRobot):
     config_name = "GreenBot"

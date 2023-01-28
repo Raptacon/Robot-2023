@@ -26,7 +26,7 @@ class ArcadeDrive(commands2.CommandBase):
         '''
         speed = self.speed()
         rotation = self.mix()
-        self.driveTrain.arcadeDrive(-speed, -rotation)
+        self.driveTrain.arcadeDrive(speed, rotation)
 
     def end(self, interrupted: bool) -> None:
         '''
