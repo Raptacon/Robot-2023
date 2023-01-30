@@ -8,8 +8,6 @@ from commands.arcadeDrive import ArcadeDrive
 import wpimath.filter
 import wpimath
 
-import enum
-
 import utils.configMapper
 
 class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):

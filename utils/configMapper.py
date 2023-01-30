@@ -29,7 +29,7 @@ class ConfigMapper(object):
         # gives the values.
 
         if subsystemName not in self.subsystems:
-            raise RuntimeError(f"Failed to find {subsystem} in config")
+            raise RuntimeError(f"Failed to find {subsystemName} in config")
 
         subsystem = self.subsystems[subsystemName]
 
