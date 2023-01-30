@@ -5,6 +5,7 @@ import wpilib
 import commands2
 from wpilib import CameraServer
 
+from robots.configBasedRobot import ConfigBaseCommandRobot
 from robots.greenBot import GreenBot
 
 
@@ -27,16 +28,8 @@ class MyRobot(commands2.TimedCommandRobot):
 
         #determine the robot based on the config file
         #TODO
-        robot_name = "GreenBot"
-
-        match robot_name:
-            case GreenBot.config_name:
-                self.container = GreenBot()
-            case _:
-                raise Exception(f"Unknown Robot {robot_name}")
-
-        # Start camera server for USB cameras
-        CameraServer.launch()
+        #self.container = ConfigBaseCommandRobot()
+        self.container = GreenBot()
 
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""

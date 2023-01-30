@@ -3,27 +3,43 @@ import wpilib.interfaces
 import wpilib.drive
 import ctre
 import commands2
+import logging
 
+log = logging.getLogger("westcoast")
 
 class Westcoast(commands2.SubsystemBase):
-    def __init__(self,
-                 leftM: wpilib.interfaces._interfaces.MotorController,
-                 rightM: wpilib.interfaces._interfaces.MotorController,
-                 leftEncoder: ctre.WPI_TalonFX = None,
-                 rightEncoder: ctre.WPI_TalonFX = None,
-                 gyro: wpilib.interfaces.Gyro = None):
-        ''' TODO update to be more generic, hard coding talons'''
+    def __init__(self, *kargs,
+                 **kwargs):
+        ''' TODO update to be more generic, hard coding talons
+            iff kargs is used
+            0 = leftM
+            1 = rightM
+            2 = leftEncoder = None
+            3 = rightEncoder = None
+            4 = gyro = None
+        '''
         super().__init__()
 
-        if leftM is None or rightM is None:
-            raise Exception("Left and Right Motors must be provided")
-        self.leftM = leftM
-        self.rightM = rightM
-        self.leftEncoder = leftEncoder
-        self.rightEncoder = rightEncoder
-        self.gyro = gyro
+        #leftM: wpilib.interfaces._interfaces.MotorController,
+        #rightM: wpilib.interfaces._interfaces.MotorController,
+        #leftEncoder: ctre.WPI_TalonFX = None,
+        #rightEncoder: ctre.WPI_TalonFX = None,
+        #gyro: wpilib.interfaces.Gyro = None
+        print(kargs)
+        print(kwargs)
 
-        self.driveTrain = wpilib.drive.DifferentialDrive(leftM, rightM)
+        #TODO remove support after refactoring to config or make better
+        if len(kargs) > 0:
+            self.leftM = kargs[0] if len(kargs) > 0 else None
+            self.rightM = kargs[1] if len(kargs) > 1 else None
+            self.leftEncoder = kargs[2] if len(kargs) > 2 else None
+            self.rightEncoder = kargs[3] if len(kargs) > 3 else None
+            self.gyro = kargs[4] if len(kargs) > 4 else None
+
+            if not (self.leftM and self.rightM):
+                raise Exception("Left and Right Motors must be provided")
+
+        self.driveTrain = wpilib.drive.DifferentialDrive(self.leftM, self.rightM)
 
         self.addChild("Drive", self.driveTrain)
         self.addChild("Left Encoder", self.leftEncoder)

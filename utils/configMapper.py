@@ -1,8 +1,11 @@
 from utils import yaml
-import logging as log
+import logging
 from pprint import pprint
 import os
 from pathlib import Path
+import importlib
+
+log = logging.getLogger("configMapper")
 
 class ConfigMapper(object):
     def __init__(self, filename, configDir):
@@ -16,46 +19,39 @@ class ConfigMapper(object):
         initialData = self.__loadFile(filename)
         log.debug("Intial data %s", initialData)
         self.subsystems = self.__convertToSubsystems(initialData, "/")
-        root = self.subsystems["/"]
-        if "compatibility" not in root:
-            log.warning("No Compatibility string found. Matching all")
-            self.subsystems["compatibility"] = ["any"]
-        if not isinstance(root["compatibility"], list):
-            root["compatibility"] = [root["compatibility"]]
 
-        root["compatibility"] = [x.lower() for x in root["compatibility"]]
 
-    def getCompatibility(self):
-        return self.subsystems["/"]["compatibility"][0]
-
-    def getSubsystem(self, subsystem):
+    def getSubsystem(self, subsystemName):
         """
         returns the complete config for specified subsystem or none if not
         found
         """
         # gives the values.
 
-        if subsystem in self.subsystems:
-            return self.subsystems[subsystem]
-        return None
+        if subsystemName not in self.subsystems:
+            raise RuntimeError(f"Failed to find {subsystem} in config")
 
-    def checkCompatibilty(self, compatString):
-        """
-        Checks if a string is marked as compatible in the config
-        """
-        compatString = [x.lower() for x in compatString]
+        subsystem = self.subsystems[subsystemName]
 
-        root = self.getSubsystem("/")
-        if root == "all" or "all" in compatString:
-            return True
-        for string in root["compatibility"]:
-            if string in compatString:
-                return True
-        return False
+        if "subsystem" not in subsystem:
+            raise RuntimeError(f"Failed to find `subsystem` in {subsystemName}. Found {subsystem}")
+
+        #load and create subsystem
+        subClass = importClassFromModule(subsystem["subsystem"])
+
+
+        if subClass == None:
+            if subsystem["required"]:
+                raise RuntimeError(f"Failed to create {subsystemName} from {subsystem['subsystem']} and is required")
+            else:
+                log.warn(f"Failed to create {subsystemName} from {subsystem['subsystem']} and is not required")
+                return None
+
+        return subClass(**subsystem)
+
 
     def getSubsystems(self):
         subsystems = list(self.subsystems.keys())
-        subsystems.remove("/")
         return subsystems
 
     def getGroupDict(self, subsystem, groupName, name = None):
@@ -147,55 +143,95 @@ class ConfigMapper(object):
         Takes a dictionary and searchs for subsystem types to create leafs of a new tree.
         Loads files as "file" is encountered
         """
-        if "subsystem" in inputData:
-            subsystem = inputData["subsystem"]
-        else:
-            subsystem = defSubsystem
+        print(inputData)
 
+        if "subsystems" not in inputData:
+            log.error("No Subsystems included in config")
+        subsystems = inputData["subsystems"]
         processedData = {}
-        processedData[subsystem] = {}
 
-        for key in inputData:
+        for name, subsystem in subsystems.items():
+            processedData[name] = {}
+            #add required data defaults
+            processedData[name]["required"] = True
 
-            # if file, load file and walk
-            if isinstance(inputData[key], dict) and "file" in inputData[key]:
-                fileName = inputData[key].pop("file")
-                fileType = inputData[key].pop("type")
-                if not fileType == "yaml":
-                    log.error("Unknown file type fileType. Trying Yaml")
-                log.info("Loading %s into entry %s", fileName, key)
-                data = self.__loadFile(fileName)
-                # Flatten the root node of newly loaded yaml file.
-                for loadedKey in data:
-                    if isinstance(data[loadedKey], dict):
-                        inputData[key].update(data[loadedKey])
-                    else:
-                        inputData[key][loadedKey] = data[loadedKey]
+            for key, value in subsystem.items():
+                # if file, load file and walk
+                if key == "file":
+                    file = "subsystems" + os.sep + value
+                    #TODO special handling for other types. Yaml only supproted type
+                    if "type" in subsystem and not subsystem["type"] == "yaml":
+                        log.error("Unknown file type fileType. Trying Yaml")
+                    log.info("Loading %s into entry %s", file, key)
+                    try:
+                        data = self.__loadFile(file)
+                    except FileNotFoundError as e:
+                        log.error(f"Failed to find file {file} for subsystem {subsystem}")
+                        data = {}
+                        data["error"] = e
+                    # Flatten the root node of newly loaded yaml file.
+                    processedData[name].update(data)
 
-            # if subsystem, walk subsystem
-            if "subsystem" in inputData[key] and isinstance(inputData[key], dict):
-                log.info("Walking subsystem")
-                # make a new subsystem
-                print(inputData[key])
-                print(inputData[key]["subsystem"])
-                processedData[inputData[key]["subsystem"]] = self.__convertToSubsystems(inputData[key], inputData[key]["subsystem"])
 
-            # copy field over if no special processing
-            processedData[subsystem][key] = inputData[key]
+                # if subsystem, walk subsystem
+                #TODO add nested subsystems
+                '''
+                if "subsystem" in subsystem[key] and isinstance(subsystem[key], dict):
+                    log.info("Walking subsystem")
+                    # make a new subsystem
+                    print(subsystem[key])
+                    print(subsystem[key]["subsystem"])
+                    processedData[subsystem[key]["subsystem"]] = self.__convertToSubsystems(inputData[key], inputData[key]["subsystem"])
+                '''
+
+                #skip special meanings
+                if key == "type" and "file" in subsystem:
+                    continue
+
+                if key == "file":
+                    continue
+
+                # copy field over if no special processing
+                processedData[name][key] = subsystem[key]
+
 
         return processedData
 
 
-def findConfig():
+def importClassFromModule(name: str, base : str = "subsystems"):
+    """
+    Imports a class from a given module
+
+    Args:
+        name (str): Name of class in module.path.Class format
+        base (str, optional): base module to load from. Defaults to "subsystems".
+
+    Returns:
+        _type_: Class or None
+    """
+    name = base + "." + name
+    moduleName, className = name.rsplit(".", 1)
+
+    log.info(f"Loading {name} as module {moduleName} and class {className}")
+
+    module = importlib.import_module(moduleName)
+    try:
+        return getattr(module, className)
+    except:
+        log.warning(f"Failed to find {className} in {module}")
+        return None
+
+
+def findConfig(defaultConfig = "greenbot.yml", configPath = None) -> tuple[dict, str]:
     """
     Will determine the correct yml file for the robot.
     Please run 'echo (robotCfg.yml) > robotConfig' on the robot.
     This will tell the robot to use robotCfg file remove the () and use file name file.
     Files should be configs dir
     """
-    configPath = os.path.dirname(__file__) + os.path.sep + ".." +os.path.sep + "configs" + os.path.sep
+    if not configPath:
+        configPath = os.path.dirname(__file__) + os.path.sep + ".." +os.path.sep + "configs" + os.path.sep
     home = str(Path.home()) + os.path.sep
-    defaultConfig = "doof.yml"
     robotConfigFile = home + "robotConfig"
 
     if not os.path.isfile(robotConfigFile):

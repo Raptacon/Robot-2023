@@ -1,0 +1,20 @@
+details: "Drive Train only robot with 4 talon SRX in tank drive"
+cameraServer: True #
+# Start camera server for USB cameras
+#CameraServer.launch()
+
+subsystems:
+    driveTrain:
+      required: true
+      type: yaml
+      file: "talonTankDrive.yml"
+    newSub:
+      type: newFile
+      file: "newSubsystem.yml"
+
+commands:
+    driveController:
+      name: "tankDrive"
+      subsystems:
+        - "driveTrain"
+      default-sub: "driveTrain"
