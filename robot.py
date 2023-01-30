@@ -3,7 +3,6 @@
 import typing
 import wpilib
 import commands2
-from wpilib import CameraServer
 
 from robots.configBasedRobot import ConfigBaseCommandRobot
 from robots.greenBot import GreenBot
@@ -30,6 +29,8 @@ class MyRobot(commands2.TimedCommandRobot):
         #TODO
         #self.container = ConfigBaseCommandRobot()
         self.container = GreenBot()
+        if False:
+            self.container = ConfigBaseCommandRobot()
 
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""
