@@ -1,5 +1,5 @@
 import cv2
-import pupil_apriltags
+import apriltagDetection
 
 
 LINE_LENGTH = 5
@@ -29,7 +29,7 @@ def plotText(image, center, color, text):
                        1, color, 3)
 
 # setup and the main loop
-detector = pupil_apriltags.Detector()
+detector = apriltagDetection()
 cam = cv2.VideoCapture(0)
 
 looping = True
@@ -43,6 +43,7 @@ while looping:
         print("Nothing")
     else:
 	    # found some tags, report them and update the camera image
+        print("detected")
         for detect in detections:
             print("tag_id: %s, center: %s" % (detect.tag_id, detect.center))
             image = plotPoint(image, detect.center, CENTER_COLOR)
@@ -60,3 +61,4 @@ while looping:
 # loop over; clean up and dump the last updated frame for convenience of debugging
 cv2.destroyAllWindows()
 cv2.imwrite("final.png", image)
+

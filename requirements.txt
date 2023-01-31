@@ -17,5 +17,5 @@ robotpy-rev == 2023.*
 robotpy-halsim-gui
 robotpy-wpilib-utilities == 2023.*
 pynetworktables
-cv2
-apriltags
+opencv-python
+pupil-apriltags
