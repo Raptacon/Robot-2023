@@ -4,7 +4,7 @@ CWD=${CURDIR}
 
 ifeq ($(OS), Windows_NT)
 VENV=.venv_windows
-PYTHON=py
+PYTHON=python
 VENVBIN=./${VENV}/Scripts
 else ifneq ("$(wildcard /.dockerenv)","")
 VENV=.venv_docker
@@ -41,7 +41,7 @@ coverage: setup_${VENV} test
 	${VENVBIN}/${PYTHON} robot.py coverage test
 
 setup_${VENV}: ${VENV}
-	${VENVBIN}/pip install --upgrade pip setuptools
+	${VENVBIN}/${PYTHON} -m pip install --upgrade pip setuptools
 	${VENVBIN}/pip install --pre -r ${CWD}/requirements.txt
 	$(file > setup_${VENV})
 
