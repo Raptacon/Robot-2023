@@ -4,6 +4,7 @@
 #macholib
 #modulegraph
 flake8
+pyyaml
 coverage
 #wheel
 pyfrc
