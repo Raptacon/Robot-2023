@@ -1,4 +1,4 @@
-from utils import yaml
+import yaml
 import logging
 from pprint import pprint
 import os
@@ -257,7 +257,12 @@ def findConfig(defaultConfig = "greenbot.yml", configPath = None) -> tuple[dict,
 
 
 if __name__ == "__main__":
-    mapper = ConfigMapper("doof.yml", "configs")
+    import os
+    import sys
+
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+    mapper = ConfigMapper("greenBot.yml", "configs")
     print("Subsystem driveTrain:", mapper.getSubsystem("driveTrain"))
 
     print("driveTrain Motors")
