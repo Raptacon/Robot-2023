@@ -1,9 +1,10 @@
-import yaml
+from . import yaml
 import logging
 from pprint import pprint
 import os
 from pathlib import Path
 import importlib
+from . import hardwareFactory
 
 log = logging.getLogger("configMapper")
 
@@ -19,6 +20,10 @@ class ConfigMapper(object):
         initialData = self.__loadFile(filename)
         log.debug("Intial data %s", initialData)
         self.subsystems = self.__convertToSubsystems(initialData, "/")
+        self.hwFact = hardwareFactory.getHardwareFactory()
+
+        for key, subsystem in self.subsystems.items():
+            self.hwFact.addConfig(key, subsystem)
 
 
     def getSubsystem(self, subsystemName):
@@ -194,7 +199,6 @@ class ConfigMapper(object):
                 # copy field over if no special processing
                 processedData[name][key] = subsystem[key]
 
-
         return processedData
 
 
@@ -263,7 +267,7 @@ if __name__ == "__main__":
     sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
     mapper = ConfigMapper("greenBot.yml", "configs")
-    print("Subsystem driveTrain:", mapper.getSubsystem("driveTrain"))
+    print("Subsystem driveTrain:", mapper.getSubsystem("drivetrain"))
 
     print("driveTrain Motors")
     pprint(mapper.getGroupDict("driveTrain", "motors"))

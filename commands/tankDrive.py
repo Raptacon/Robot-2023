@@ -1,7 +1,7 @@
 import commands2
-
+import logging
 from typing import Callable
-
+log = logging.getLogger(__name__)
 class TankDrive(commands2.CommandBase):
     '''
     Command for converting joystick input to drive train output
@@ -26,7 +26,7 @@ class TankDrive(commands2.CommandBase):
         '''
         left = self.left()
         right = self.right()
-        print(f"l {left}, r {right}")
+        log.debug(f"l {left}, r {right}")
         self.driveTrain.drive(left, right)
 
     def end(self, interrupted: bool) -> None:

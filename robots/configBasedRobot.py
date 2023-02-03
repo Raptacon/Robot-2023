@@ -28,18 +28,7 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
             subsystem = self.configMapper.getSubsystem(ssName)
             self.subsystems[ssName] = subsystem
 
-        assert False
-        #create the greenbot motors
-        motors = {}
-        motors['right'] = ctre.WPI_TalonFX(30)
-        motors['rightF'] = ctre.WPI_TalonFX(31)
-        motors['left'] = ctre.WPI_TalonFX(20)
-        motors['leftF'] = ctre.WPI_TalonFX(21)
-
-        rightM = wpilib.MotorControllerGroup(motors['right'], motors['rightF'])
-        leftM = wpilib.MotorControllerGroup(motors['left'], motors['leftF'])
-
-        self.driveTrain = Drivetrain(rightM, leftM, motors['left'], motors['right'], navx.AHRS.create_i2c())
+        self.driveTrain = self.subsystems["drivetrain"]
         self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kRightY, True),
                                    getStick(wpilib.XboxController.Axis.kLeftY, False),
                                    self.driveTrain)

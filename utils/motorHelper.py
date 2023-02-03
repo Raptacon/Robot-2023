@@ -3,7 +3,7 @@
 import rev
 import ctre
 import logging as log
-from .UnitEnums import positionUnits, velocityUnits
+from .UnitEnums import *
 
 def createMotor(motorDescp, motors = {}):
     '''This is where all motors are set up.
@@ -65,6 +65,7 @@ def createMotor(motorDescp, motors = {}):
 
     else:
         print("Unknown Motor")
+        return None
 
     if 'inverted' in motorDescp:
         motor.setInverted(motorDescp['inverted'])

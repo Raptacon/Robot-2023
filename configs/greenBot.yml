@@ -4,13 +4,14 @@ cameraServer: True #
 #CameraServer.launch()
 
 subsystems:
-    driveTrain:
+    drivetrain:
       required: true
       type: yaml
       file: "talonTankDrive.yml"
-    newSub:
-      type: newFile
-      file: "newSubsystem.yml"
+    #TODO flesh out support for non required and missing
+    #newSub:
+    #  type: newFile
+    #  file: "newSubsystem.yml"
 
 commands:
     driveController:

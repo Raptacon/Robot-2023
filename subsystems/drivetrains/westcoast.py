@@ -1,11 +1,15 @@
 import wpilib
 import wpilib.interfaces
 import wpilib.drive
-#import ctre
+import ctre
 import commands2
 import logging
+import utils
+hwFactory = utils.hardwareFactory.getHardwareFactory()
+
 
 log = logging.getLogger("westcoast")
+
 
 class Westcoast(commands2.SubsystemBase):
     def __init__(self, *kargs,
@@ -38,6 +42,13 @@ class Westcoast(commands2.SubsystemBase):
 
             if not (self.leftM and self.rightM):
                 raise Exception("Left and Right Motors must be provided")
+        else:
+            self.leftM = hwFactory.getHardwareComponet("drivetrain", "leftMotor")
+            self.rightM = hwFactory.getHardwareComponet("drivetrain", "rightMotor")
+
+            self.leftEncoder = self.leftM if isinstance(self.leftM, ctre.WPI_TalonFX) else None
+            self.rightEncoder = self.rightM if isinstance(self.rightM, ctre.WPI_TalonFX) else None
+            self.gyro = None #TODO fix me to use hardware factory
 
         self.driveTrain = wpilib.drive.DifferentialDrive(self.leftM, self.rightM)
 

@@ -27,8 +27,8 @@ class MyRobot(commands2.TimedCommandRobot):
 
         #determine the robot based on the config file
         #TODO
-        #self.container = ConfigBaseCommandRobot()
-        self.container = GreenBot()
+        self.container = ConfigBaseCommandRobot()
+        #self.container = GreenBot()
         if False:
             self.container = ConfigBaseCommandRobot()
 
