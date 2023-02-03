@@ -1,1 +1,1 @@
-from .hardwareFactory import getHardwareFactory, HardwareFactory #noqa: F401
+from .hardwareFactory import getHardwareFactory, HardwareFactory # noqa: F401
