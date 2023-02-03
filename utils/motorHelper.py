@@ -3,7 +3,7 @@
 import rev
 import ctre
 import logging as log
-from .UnitEnums import *
+from .UnitEnums import * # noqa: F405
 
 def createMotor(motorDescp, motors = {}):
     '''This is where all motors are set up.

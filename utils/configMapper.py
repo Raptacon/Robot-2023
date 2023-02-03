@@ -2,7 +2,7 @@ from . import yaml
 import logging
 from pprint import pprint
 import os
-from pathlib import Path
+import sysfrom pathlib import Path
 import importlib
 from . import hardwareFactory
 
@@ -261,8 +261,6 @@ def findConfig(defaultConfig = "greenbot.yml", configPath = None) -> tuple[dict,
 
 
 if __name__ == "__main__":
-    import os
-    import sys
 
     sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
