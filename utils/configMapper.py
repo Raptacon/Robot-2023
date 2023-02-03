@@ -2,7 +2,8 @@ from . import yaml
 import logging
 from pprint import pprint
 import os
-import sysfrom pathlib import Path
+import sys
+from pathlib import Path
 import importlib
 from . import hardwareFactory
 
