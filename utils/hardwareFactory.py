@@ -118,7 +118,7 @@ class HardwareFactory(object):
             #add names for later use
             self.componets[subsystem][name] = componet
         elif "required" in config and config["required"]:
-            raise RuntimeError(f("Failed to create {subsystem}.{name} {subtype}.{compType} and is required"))
+            raise RuntimeError(f"Failed to create {subsystem}.{name} {subtype}.{compType} and is required")
 
         return componet
 
