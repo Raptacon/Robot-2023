@@ -16,7 +16,7 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
 
         assert config, "Please configure default robotConfig. \n\
                         run 'echo (robotCfg.yml) > robotConfig' on roborio\n\
-                        where (robotCfg.yml) is the name of the file"
+                        where (robotCfg.yml) is the name of the file"    
 
         self.configMapper = utils.configMapper.ConfigMapper(config, configPath)
 
@@ -28,7 +28,7 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
 
         self.driveTrain = self.subsystems["drivetrain"]
         self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kRightY, True),
-                                   getStick(wpilib.XboxController.Axis.kLeftY, False),
+                                   getStick(wpilib.XboxController.Axis.kLeftY, True),
                                    self.driveTrain)
         self.arcadeDrive = ArcadeDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
                                    getStick(wpilib.XboxController.Axis.kRightX, False),
