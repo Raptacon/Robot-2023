@@ -27,8 +27,8 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
             self.subsystems[ssName] = subsystem
 
         self.driveTrain = self.subsystems["drivetrain"]
-        self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kRightY, True),
-                                   getStick(wpilib.XboxController.Axis.kLeftY, True),
+        self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
+                                   getStick(wpilib.XboxController.Axis.kRightY, True),
                                    self.driveTrain)
         self.arcadeDrive = ArcadeDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
                                    getStick(wpilib.XboxController.Axis.kRightX, False),

@@ -4,7 +4,7 @@ description: "All motors used in the drive train live here"
 rightMotor:
   channel: 30
   type: "motor.CANTalonFX"
-  inverted: True
+  inverted: False
   pid:
     kP: 0.001
     kI: 0
@@ -22,7 +22,7 @@ rightFollower:
   channel: 31
   masterChannel: 30
   type: "motor.CANTalonFXFollower"
-  inverted: True
+  inverted: False
   currentLimits:
     triggerThresholdCurrent: 60
     triggerThresholdTime: 50
