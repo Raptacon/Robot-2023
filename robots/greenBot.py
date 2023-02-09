@@ -6,9 +6,9 @@ from subsystems.drivetrains.westcoast import Westcoast as Drivetrain
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 from commands.Autonomous import Autonomous
-from robots.Input import Input
 
 import enum
+import wpimath
 
 class GreenBot(commands2.TimedCommandRobot):
     config_name = "GreenBot"
@@ -34,11 +34,11 @@ class GreenBot(commands2.TimedCommandRobot):
         leftM = wpilib.MotorControllerGroup(motors['left'], motors['leftF'])
 
         self.driveTrain = Drivetrain(rightM, leftM, motors['left'], motors['right'], navx.AHRS.create_i2c())
-        self.tankDrive = TankDrive(Input.getStickPS4(wpilib.PS4Controller.Axis.kLeftX, True),
-                                   Input.getStick(wpilib.XboxController.Axis.kLeftY, False),
+        self.tankDrive = TankDrive(getStick(wpilib.PS4Controller.Axis.kLeftX, True),
+                                   getStick(wpilib.XboxController.Axis.kLeftY, False),
                                    self.driveTrain)
-        self.arcadeDrive = ArcadeDrive(Input.getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   Input.getStick(wpilib.XboxController.Axis.kRightX, False),
+        self.arcadeDrive = ArcadeDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
+                                   getStick(wpilib.XboxController.Axis.kRightX, False),
                                    self.driveTrain)
         
         self.autonomousDrive = Autonomous(self.driveTrain)
@@ -58,3 +58,8 @@ class GreenBot(commands2.TimedCommandRobot):
         super().autonomousPeriodic()
         self.autonomousDrive.execute()
 
+def getStick(axis: wpilib.XboxController.Axis, invert: bool = False):
+         sign = -1.0 if invert else 1.0
+         slew = wpimath.filter.SlewRateLimiter(3)
+         return lambda: slew.calculate(wpimath.applyDeadband(sign * wpilib.XboxController(0).getRawAxis(axis), 0.1))
+         wpilib.PS4Controller(0)
