@@ -16,7 +16,7 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
 
         assert config, "Please configure default robotConfig. \n\
                         run 'echo (robotCfg.yml) > robotConfig' on roborio\n\
-                        where (robotCfg.yml) is the name of the file"    
+                        where (robotCfg.yml) is the name of the file"
 
         self.configMapper = utils.configMapper.ConfigMapper(config, configPath)
 
