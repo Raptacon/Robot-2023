@@ -1,0 +1,11 @@
+subsystem: "drivetrains.westcoast.Westcoast"
+description: "All motors used in the drive train live here"
+
+rightMotor:
+  channel: 30
+  type: "CANTalonSRX"
+  inverted: False
+leftMotor:
+  channel: 20
+  type: "CANTalonSRX"
+  inverted: False

@@ -7,7 +7,7 @@ subsystems:
     drivetrain:
       required: true
       type: yaml
-      file: "talonTankDrive.yml"
+      file: "talonFXTankDrive.yml"
     #TODO flesh out support for non required and missing
     #newSub:
     #  type: newFile
