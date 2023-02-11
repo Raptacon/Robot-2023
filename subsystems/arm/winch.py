@@ -16,7 +16,7 @@ class Winch(commands2.SubsystemBase):
         if len(kargs) > 0:
             self.winchM = kargs[0] if len(kargs) > 0 else None
             #self.winchEncoder = kargs[1] if len(kargs) > 1 else None
-             if not (self.winchM):
+            if not (self.winchM):
                 raise Exception("winch motor must be provided")
 
         else:
