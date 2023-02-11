@@ -2,6 +2,7 @@ import wpilib
 import commands2
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
+from components.Actuators.HighLevel.winch import Winch
 import wpimath.filter
 import wpimath
 
@@ -12,7 +13,7 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
         super().__init__(period)
 
         #load config
-        config, configPath = utils.configMapper.findConfig("greenBot.yml")
+        config, configPath = utils.configMapper.findConfig("testBoard.yml")
 
         assert config, "Please configure default robotConfig. \n\
                         run 'echo (robotCfg.yml) > robotConfig' on roborio\n\
