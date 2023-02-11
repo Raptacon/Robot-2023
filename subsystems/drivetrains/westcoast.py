@@ -78,7 +78,7 @@ class Westcoast(commands2.SubsystemBase):
         '''
         Sets the left and right speed of robot
         '''
-        self.driveTrain.tankDrive(left, right)
+        self.driveTrain.arcadeDrive(left, right)
 
     def getHeading(self) -> float:
         '''

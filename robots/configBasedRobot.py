@@ -39,7 +39,7 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
         #)
 
     def teleopInit(self) -> None:
-        self.driveTrain.setDefaultCommand(self.tankDrive)
+        self.driveTrain.setDefaultCommand(self.arcadeDrive)
 
 
 
