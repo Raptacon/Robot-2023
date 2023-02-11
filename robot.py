@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import navx
 import typing
 import wpilib
 import commands2
@@ -75,9 +75,12 @@ class MyRobot(commands2.TimedCommandRobot):
         # Cancels all running commands at the start of test mode
         commands2.CommandScheduler.getInstance().cancelAll()
         self.container.testInit()
+        self.navx = navx.AHRS.create_spi()
 
     def testPeriodic(self) -> None:
         self.container.testPeriodic()
+        print(f"pitch:{self.navx.getPitch():.3f}, roll: {self.navx.getRoll():.3f}, yaw: {self.navx.getYaw():.3f}")
+
 
 
 if __name__ == "__main__":
