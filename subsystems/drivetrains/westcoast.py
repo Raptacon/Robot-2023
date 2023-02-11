@@ -4,15 +4,13 @@ import wpilib.drive
 import ctre
 import commands2
 import logging
-import utils
-hwFactory = utils.hardwareFactory.getHardwareFactory()
 
 
 log = logging.getLogger("westcoast")
 
 
 class Westcoast(commands2.SubsystemBase):
-    def __init__(self, *kargs,
+    def __init__(self, hwFactory, *kargs,
                  **kwargs):
         ''' TODO update to be more generic, hard coding talons
             iff kargs is used
@@ -39,6 +37,7 @@ class Westcoast(commands2.SubsystemBase):
             self.leftEncoder = kargs[2] if len(kargs) > 2 else None
             self.rightEncoder = kargs[3] if len(kargs) > 3 else None
             self.gyro = kargs[4] if len(kargs) > 4 else None
+            log.info("Obtained components in subsystem class from args")
 
             if not (self.leftM and self.rightM):
                 raise Exception("Left and Right Motors must be provided")
@@ -49,6 +48,7 @@ class Westcoast(commands2.SubsystemBase):
             self.leftEncoder = self.leftM if isinstance(self.leftM, ctre.WPI_TalonFX) else None
             self.rightEncoder = self.rightM if isinstance(self.rightM, ctre.WPI_TalonFX) else None
             self.gyro = None #TODO fix me to use hardware factory
+            log.info("Obtained components in subsystem class from HWFactory")
 
         self.driveTrain = wpilib.drive.DifferentialDrive(self.leftM, self.rightM)
 

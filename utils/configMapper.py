@@ -45,7 +45,6 @@ class ConfigMapper(object):
         #load and create subsystem
         subClass = importClassFromModule(subsystem["subsystem"])
 
-
         if subClass == None:
             if subsystem["required"]:
                 raise RuntimeError(f"Failed to create {subsystemName} from {subsystem['subsystem']} and is required")
@@ -53,7 +52,7 @@ class ConfigMapper(object):
                 log.warn(f"Failed to create {subsystemName} from {subsystem['subsystem']} and is not required")
                 return None
 
-        return subClass(**subsystem)
+        return subClass(self.hwFact, **subsystem)
 
 
     def getSubsystems(self):
