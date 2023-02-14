@@ -27,14 +27,14 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
             subsystem = self.configMapper.getSubsystem(ssName)
             self.subsystems[ssName] = subsystem
 
-    if "drivetrain" in self.subsystems:
-        self.driveTrain = self.subsystems["drivetrain"]
-        self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
+        if "drivetrain" in self.subsystems:
+            self.driveTrain = self.subsystems["drivetrain"]
+            self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
                                    getStick(wpilib.XboxController.Axis.kRightY, True),
-                                   self.driveTrain)
-        self.arcadeDrive = ArcadeDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   getStick(wpilib.XboxController.Axis.kRightX, False),
-                                   self.driveTrain)
+                                        self.driveTrain)
+            self.arcadeDrive = ArcadeDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
+                                        getStick(wpilib.XboxController.Axis.kRightX, False),
+                                        self.driveTrain)
 
         if "Arm" in self.subsystems:
             self.arm = self.subsystems["Arm"]
