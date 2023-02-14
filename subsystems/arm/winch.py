@@ -23,7 +23,8 @@ class Winch(commands2.SubsystemBase):
         
         if not (self.winchM):
             raise Exception("winch motor must be provided")
-
+    def setspeed(self,setspeed):
+        self.winchM.set(setspeed)
 """
     def log(self):
         '''
