@@ -79,7 +79,7 @@ class HardwareFactory(object):
                     return componet
         
         log.debug(f"{subsystem}.{name} not created. Creating")
-        if self.createComponet(subsystem, name):
+        if self.createHardwareComponet(subsystem, name):
             return self.componets[name]
         else:
             log.error(f"Failed to find componet {name}")
@@ -89,7 +89,6 @@ class HardwareFactory(object):
         """
             Creates a componet from a dictory.
         """
-
         if not config:
             config = self.getConfig(subsystem, name)
 

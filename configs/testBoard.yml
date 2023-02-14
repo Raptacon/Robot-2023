@@ -1,14 +1,14 @@
 details: ""
 
 subsystems:
+    drivetrain:
+      required: true
+      type: yaml
+      file: "talonTankDrive.yml"
     Arm:
       required: true
       type: yaml
       file: "armwinch.yml"
-    #TODO flesh out support for non required and missing
-    #newSub:
-    #  type: newFile
-    #  file: "newSubsystem.yml"
 
 commands:
     driveController:
@@ -16,3 +16,7 @@ commands:
       subsystems:
         - "driveTrain"
       default-sub: "driveTrain"
+    armController:
+      name: "moveArm"
+      subsystems:
+        - "Arm"

@@ -1,13 +1,11 @@
 import commands2
 import logging
-import utils
 import rev
-hwFactory = utils.hardwareFactory.getHardwareFactory()
 
 log = logging.getLogger("winch")
 
 class Winch(commands2.SubsystemBase):
-    def __init__(self, *kargs,
+    def __init__(self, hwFactory, *kargs,
                  **kwargs):
         super().__init__()
         print(kargs)
@@ -15,14 +13,18 @@ class Winch(commands2.SubsystemBase):
 
         if len(kargs) > 0:
             self.winchM = kargs[0] if len(kargs) > 0 else None
+            log.info("Obtained components in subsystem class from args")
             #self.winchEncoder = kargs[1] if len(kargs) > 1 else None
-            if not (self.winchM):
-                raise Exception("winch motor must be provided")
-
         else:
-            self.winchM = hwFactory.getHardwareComponet("Arm" , "winch")
+            self.winchM = hwFactory.getHardwareComponet("Arm", "winch")
+            log.info("Obtained components in subsystem class from HWFactory")
 
             #self.winchEncoder = self.winchM.getEncoder() if isinstance(self.winchM, rev.CANSparkMax) else None
+        
+        if not (self.winchM):
+            raise Exception("winch motor must be provided")
+    def setspeed(self,setspeed):
+        self.winchM.set(setspeed)
 """
     def log(self):
         '''
