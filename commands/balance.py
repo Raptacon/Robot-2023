@@ -44,8 +44,3 @@ class Balance(commands2.CommandBase):
     def stop(self) -> None:
         self.driveTrain.drive(0, 0)
 
-
-
-   
-
-    
