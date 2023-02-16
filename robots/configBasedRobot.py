@@ -34,9 +34,13 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
                                    getStick(wpilib.XboxController.Axis.kRightX, False),
                                    self.driveTrain)
 
+        self.navx = navx._navx.AHRS.create_spi()
         #self.driveModeSelect = commands2.SelectCommand(
         #    self.DrivetrainMode.TANK
         #)
+
+    def getAutonomousCommand(self):
+        return(Autonoumous(self.driveTrain, self.navx))
 
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)

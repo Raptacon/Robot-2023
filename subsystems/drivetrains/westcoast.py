@@ -3,6 +3,7 @@ import wpilib.interfaces
 import wpilib.drive
 import ctre
 import commands2
+import navx
 import logging
 import utils
 hwFactory = utils.hardwareFactory.getHardwareFactory()
@@ -88,15 +89,21 @@ class Westcoast(commands2.SubsystemBase):
             return self.gyro.getAngle()
         return float('NaN')
 
+    def getGyro(self):
+        return self.gyro
+
     def getDistance(self) -> float:
         '''
         returns the average distance driven since last reset
         '''
 
         left = self.leftEncoder.getSensorCollection().getIntegratedSensorPosition() if self.leftEncoder else 0
-        right = self.rightEncoder.getSensorCollection().getIntegratedSensorPosition if self.rightEncoder else 0
+        right = self.rightEncoder.getSensorCollection().getIntegratedSensorPosition() if self.rightEncoder else 0
 
         return (left + right) / 2.0
+
+    def getRightEncoder(self) -> float:
+        return self.rightEncoder.getSensorCollection().getIntegratedSensorPosition() if self.rightEncoder else 0
 
     def reset(self) -> None:
         if self.gyro:
