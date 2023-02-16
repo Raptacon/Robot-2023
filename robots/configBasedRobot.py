@@ -4,6 +4,7 @@ from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 import wpimath.filter
 import wpimath
+from commands.balance import Balance
 
 import utils.configMapper
 
@@ -33,6 +34,7 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
         self.arcadeDrive = ArcadeDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
                                    getStick(wpilib.XboxController.Axis.kRightX, False),
                                    self.driveTrain)
+        self.balance = Balance(getButton(wpilib.XboxController.Button.kX), self.driveTrain)
 
         #self.driveModeSelect = commands2.SelectCommand(
         #    self.DrivetrainMode.TANK
@@ -41,7 +43,8 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)
 
-
+    def teleopPeriodic(self) -> None:
+        self.balance.execute()
 
 
 #TODO move to a better way, demo purposes
@@ -50,3 +53,6 @@ def getStick(axis: wpilib.XboxController.Axis, invert: bool = False):
     slew = wpimath.filter.SlewRateLimiter(3)
     return lambda: slew.calculate(wpimath.applyDeadband(sign * wpilib.XboxController(0).getRawAxis(axis), 0.1))
 
+def getButton(button: wpilib.XboxController.Button.kX, invert: bool = False):
+    slew = wpimath.filter.SlewRateLimiter(3)
+    return lambda: slew.calculate(wpimath.applyDeadband(wpilib.XboxController(0).getRawButton(button), 0.1))
