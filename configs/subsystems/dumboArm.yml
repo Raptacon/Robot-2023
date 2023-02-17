@@ -20,6 +20,6 @@ encoder:
   #type: "sensor.wpilib.DutyCycleEncoder"
   channel: 0
   offset: 0.0
-  unitsPerRotation: 360.0
+  unitsPerRotation: 6.28318530718 #2Pi
   minDutyCycle: 0.0
   maxDutyCycle: 1.0

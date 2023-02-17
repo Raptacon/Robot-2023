@@ -1,6 +1,7 @@
 import wpilib
 import wpilib.interfaces
 import wpimath.controller
+import wpimath.trajectory
 import ctre
 import commands2
 import logging
@@ -12,7 +13,7 @@ import utils.motorHelper
 log = logging.getLogger("Arm")
 
 
-class Arm(commands2.SubsystemBase):
+class Arm(commands2.ProfiledPIDSubsystem):
     motor: wpilib.interfaces._interfaces.MotorController
     encoder: wpilib.DutyCycleEncoder
     def __init__(self, subsystem, armFeedFordward, *kargs,
@@ -22,7 +23,9 @@ class Arm(commands2.SubsystemBase):
             armMotor
             endoder
         '''
-        super().__init__()
+        contstraints = wpimath.trajectory.TrapezoidProfile.Constraints(1.0, 1.0)
+        profileController = wpimath.controller.ProfiledPIDController(0.1, 0, 0, contstraints, 0.02)
+        super().__init__(profileController, 0)
         #TODO Fix factor
 #        self.config = kwargs
 #        self.motor = hwFactory.getHardwareComponet("arm", "motor")
@@ -40,15 +43,19 @@ class Arm(commands2.SubsystemBase):
             "type": "wpilib.DutyCycleEncoder",
             "channel": 0,
             "offset": 0.0,
-            "unitsPerRotation": 360.0,
+            "unitsPerRotation": 6.28318530718,
             "minDutyCycle": 0.0,
             "maxDutyCycle": 1.0,       }
         self.encoder = utils.sensorFactory.create("wpilib.DutyCycleEncoder", encoderSettings)
 
         aff = wpimath.controller.ArmFeedforward(**armFeedFordward)
-        
-    def setPostion(self, degrees: float):
-        self.motor.set(0.1)
-    
+
+        self.setGoal(self.encoder.getDistance())
+
+    def useOutput(self, output: float, setpoint: wpimath.trajectory.TrapezoidProfile.State) -> None:
+        feedforward = self.aff.calculate(setpoint.position, setpoint.velocity)
+        log.info(f"output: {output}, feedforward: {feedforward}")
+        self.motor.set(output + feedforward)
+
     def getPostion(self) -> float:
-        return self.encoder
+        return self.encoder.getAbsolutePosition()
