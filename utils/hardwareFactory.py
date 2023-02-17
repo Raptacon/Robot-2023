@@ -80,7 +80,8 @@ class HardwareFactory(object):
                     return componet
         
         log.debug(f"{subsystem}.{name} not created. Creating")
-        if self.createHardwareComponet(subsystem, name):
+        if self.createComponet(subsystem, name):
+            log.error("Not finished")
             return self.componets[name]
         else:
             log.error(f"Failed to find componet {name}")
