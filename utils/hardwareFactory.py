@@ -1,5 +1,6 @@
 import logging
 from . import motorHelper
+from . import sensorFactory
 #TODO Delet me
 logging.basicConfig(level=logging.DEBUG)
 
@@ -79,7 +80,7 @@ class HardwareFactory(object):
                     return componet
         
         log.debug(f"{subsystem}.{name} not created. Creating")
-        if self.createComponet(subsystem, name):
+        if self.createHardwareComponet(subsystem, name):
             return self.componets[name]
         else:
             log.error(f"Failed to find componet {name}")
@@ -94,9 +95,16 @@ class HardwareFactory(object):
             config = self.getConfig(subsystem, name)
 
         config = config.copy()
-        subtype = config["type"].split(".")[0]
-        compType = config["type"].split(".")[1]
-        log.info(f"Creating componet {subsystem}.{name} as {subtype}.{compType}")
+        try:
+            subtype = config["type"].split(".", 1)[0]
+            compType = config["type"].split(".", 1)[1]
+            log.info(f"Creating componet {subsystem}.{name} as {subtype}.{compType}")
+        except Exception as e:
+            log.error(f"**** {config['type']} is not in the format subtype.type. i.e. motor.SparkMax) for {subsystem} {name}")
+            if "required" in config and config["required"]:
+                raise RuntimeError(f"Failed to create required hardware {config['type']} in {subsystem} {name}")
+            
+            return None
 
         #clean up componets
         if not subsystem in self.componets:
@@ -111,7 +119,7 @@ class HardwareFactory(object):
             case "motor":
                 componet = motorHelper.createMotor(config)
             case "sensor":
-                log.warning("TODO create sensor factory")
+                componet = sensorFactory.create(compType, config)
             case _:
                 log.error(f"{subtype} is not a valid subtype. Support for matching any factory not done")
         if componet:

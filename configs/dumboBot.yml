@@ -1,0 +1,21 @@
+details: "Drive Train For Dumbo with elevator on arm and actuator"
+cameraServer: True #
+# Start camera server for USB cameras
+#CameraServer.launch()
+
+subsystems:
+    drivetrain:
+      required: true
+      type: yaml
+      file: "talonTankDrive.yml"
+    arm:
+       required: False
+       type: yaml
+       file: "dumboArm.yml"
+
+commands:
+    driveController:
+      name: "tankDrive"
+      subsystems:
+        - "driveTrain"
+      default-sub: "driveTrain"
