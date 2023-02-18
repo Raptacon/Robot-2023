@@ -4,7 +4,6 @@ import commands2.cmd
 import commands2.button
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
-import wpimath.filter
 import math
 
 from .configBasedRobot import ConfigBaseCommandRobot
