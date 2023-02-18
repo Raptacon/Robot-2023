@@ -6,6 +6,7 @@ import ctre
 import commands2
 import logging
 import utils
+import math
 hwFactory = utils.hardwareFactory.getHardwareFactory()
 import utils.sensorFactory
 import utils.motorHelper
@@ -23,8 +24,9 @@ class Arm(commands2.ProfiledPIDSubsystem):
             armMotor
             endoder
         '''
-        contstraints = wpimath.trajectory.TrapezoidProfile.Constraints(1.0, 1.0)
-        profileController = wpimath.controller.ProfiledPIDController(0.1, 0, 0, contstraints, 0.02)
+        contstraints = wpimath.trajectory.TrapezoidProfile.Constraints(20, 50)
+        profileController = wpimath.controller.ProfiledPIDController(12.763, 0, 0, contstraints, 0.02)
+        profileController.setTolerance(0.2)
         super().__init__(profileController, 0)
         #TODO Fix factor
 #        self.config = kwargs
@@ -48,14 +50,46 @@ class Arm(commands2.ProfiledPIDSubsystem):
             "maxDutyCycle": 1.0,       }
         self.encoder = utils.sensorFactory.create("wpilib.DutyCycleEncoder", encoderSettings)
 
-        aff = wpimath.controller.ArmFeedforward(**armFeedFordward)
 
-        self.setGoal(self.encoder.getDistance())
+        self.aff = wpimath.controller.ArmFeedforward(**armFeedFordward)
 
-    def useOutput(self, output: float, setpoint: wpimath.trajectory.TrapezoidProfile.State) -> None:
+        self.addChild("Encoder", self.encoder)
+        #self.addChild("Motor", self.motor) //spark max is not sendable
+        #self.addChild("AFF", self.aff)
+
+        self.setGoal(self.getPostion())
+
+    def _useOutput(self, output: float, setpoint: wpimath.trajectory.TrapezoidProfile.State) -> None:
         feedforward = self.aff.calculate(setpoint.position, setpoint.velocity)
-        log.info(f"output: {output}, feedforward: {feedforward}")
-        self.motor.set(output + feedforward)
+        #print(f"output: {output}, feedforward: {feedforward} curr {self.getPostion()} set {self.goal}")
+        if not self.disabled:
+            self.motor.setVoltage(output + feedforward)
+        else:
+            print("Disabled")
+            self.motor.setVoltage(0)
+            self.motor.disable()
+
+    def disable(self) -> None:
+        self.disabled = True
+        return super().disable()
+    def enable(self) -> None:
+        self.disabled = False
+        return super().enable()
 
     def getPostion(self) -> float:
-        return self.encoder.getAbsolutePosition()
+        return math.fmod(self.encoder.getDistance(), 2*math.pi)
+
+    def _getMeasurement(self) -> float:
+        return self.getPostion()
+
+    def setGoal(self, goal: float) -> None: 
+        print(f"set goal {goal}, {self.getPostion()}")
+        self.goal = goal
+        super().setGoal(goal)
+
+    def moveArm(self, radians: float) -> None:
+        self.setGoal(radians)
+        self.enable()
+
+    def moveArmDegrees(self, degrees: float) -> None:
+        self.moveArm(math.radians(degrees))

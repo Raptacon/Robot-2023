@@ -3,10 +3,10 @@ name: "arm"
 description: "Arm for Dumbo. Future may be more general arm"
 
 armFeedFordward:
-    kS: 1.0
-    kG: 1.0
-    kV: 1.0
-    kA: 1.0
+    kS: -0.10263
+    kG: 0.0094089
+    kV: 24.416
+    kA: 4.1812
 
 motor:
   channel: 40
