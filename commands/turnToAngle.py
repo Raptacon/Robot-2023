@@ -10,16 +10,13 @@ class TurnToAngle(commands2.CommandBase):
     turnAngle = 0
     tolerance = .8
     change = 0
-    def __init__(self, speed: float, degrees: float, drive: DriveTrain, navx : navx.AHRS) -> None:
-        """Creates a new TurnDegrees. This command will turn your robot for a desired rotation (in
-        degrees) and rotational speed.
-        :param speed:   The speed which the robot will drive. Negative is in reverse.
-        :param degrees: Degrees to turn. Leverages encoders to compare distance.
-        :param drive:   The drive subsystem on which this command will run
+    def __init__(self, degrees: float, drive: DriveTrain, navx : navx.AHRS) -> None:
+        """Creates a new TurnDegrees. This command turns the robot to a desired angle in degrees
+        :param degrees: Degrees to turn. Uses encoders to compare distance.
+        :param drive:   The drive subsystem where this command will run
         """
         super().__init__()
         self.turnAngle = degrees
-        self.speed = speed
         self.drive = drive
         self.navx = navx
         self.pid = wpimath.controller.PIDController(0.001, 0.001, 0.001, 0.01)
@@ -55,10 +52,10 @@ class TurnToAngle(commands2.CommandBase):
         self.drive.arcadeDrive(0, self.speed)
         print("change" + str(self.change))
         self.calcHeading()
-        #self.speed = self.speedSections.getSpeed(self.speed, self.change, "TurnToAngle")
 
     def end(self, interrupted: bool) -> None:
         """Called once the command ends or is interrupted."""
+        #Stops the movement of the robot and resets the encoders and the PID controller
         self.drive.drive(0, 0)
         self.drive.reset()
         self.pid.reset()

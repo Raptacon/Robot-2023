@@ -9,9 +9,9 @@ class Autonoumous(commands2.SequentialCommandGroup):
         super().__init__()
 
         self.addCommands(
-            GoToDist(.0, 10, drive),
+            GoToDist(10, drive),
             commands2.PrintCommand("GoToDist finished"),
-            TurnToAngle(.0, 180, drive, navx),
+            TurnToAngle(180, drive, navx),
             commands2.PrintCommand("TurnToAngle finished"),
-            GoToDist(.0, 10, drive)
+            GoToDist(10, drive)
         )

@@ -7,16 +7,14 @@ from speedSections import SpeedSections
 class GoToDist(commands2.CommandBase):
     targetDist = 0
     tolerance = 5
-    def __init__(self, speed: float, feet: float, drive: DriveTrain) -> None:
+    def __init__(self, feet: float, drive: DriveTrain) -> None:
         """Creates a new DriveDistance. This command will drive your your robot for a desired distance at
         a desired speed.
-        :param speed:  The speed at which the robot will drive
-        :param inches: The number of inches the robot will drive
-        :param drive:  The drivetrain subsystem on which this command will run
+        inches: The number of inches the robot will drive
+        drive:  The drivetrain subsystem on which this command will run
         """
         super().__init__()
         self.targetDist = feet * 10_000
-        self.speed = speed
         self.drive = drive
         self.pid = wpimath.controller.PIDController(0.001, 0.01, 0.001)
         self.pid.setTolerance(5, 10)
