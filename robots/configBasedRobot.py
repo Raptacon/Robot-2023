@@ -28,13 +28,14 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
             self.subsystems[ssName] = subsystem
 
         self.driveTrain = self.subsystems["drivetrain"]
+        self.balance = Balance(getButton(wpilib.XboxController.Button.kX), self.driveTrain)
         self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
                                    getStick(wpilib.XboxController.Axis.kRightY, True),
                                    self.driveTrain)
         self.arcadeDrive = ArcadeDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
                                    getStick(wpilib.XboxController.Axis.kRightX, False),
                                    self.driveTrain)
-        self.balance = Balance(getButton(wpilib.XboxController.Button.kX), self.driveTrain)
+        self.balanceDrive = TankDrive(self.balance.GetLeft,self.balance.GetRight, self.driveTrain)
 
         #self.driveModeSelect = commands2.SelectCommand(
         #    self.DrivetrainMode.TANK
@@ -44,7 +45,14 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
         self.driveTrain.setDefaultCommand(self.tankDrive)
 
     def teleopPeriodic(self) -> None:
-        self.balance.execute()
+        """ Runs every frame """
+        # TODO below is the problem...we just need to get a boolean value of the button
+        if wpilib.XboxController.Button.kX() > 0:
+            self.balance.execute()
+            self.driveTrain.setDefaultCommand(self.balanceDrive)
+        else:
+            self.driveTrain.setDefaultCommand(self.tankDrive)
+            
 
 
 #TODO move to a better way, demo purposes

@@ -2,6 +2,9 @@ import navx
 import commands2
 
 class Balance(commands2.CommandBase):
+    left = 0.0
+    right = 0.0
+    
     # def init is being called
     def __init__(self, xKey, driveTrain):
         super().__init__()
@@ -19,15 +22,20 @@ class Balance(commands2.CommandBase):
         x = self.navx.getRoll() - self.startOrientation["x"]
         print(f"Trying to balance:: {x}")
         if x < 2.5 and x > -2.5:
-            self.stop()
+            self.left = 0
+            self.right = 0
+            # self.stop()
         if x > 2.5:
-            self.driveBackwards()
+            self.left = -0.25
+            self.right = -0.25
+            # self.driveBackwards()
         if x < -2.5:
-            self.driveForward()
-             
+            self.left = 0.25
+            self.right = 0.25
+            # self.driveForward()
+ 
     def execute(self) -> None:
-        if self.xKey() > 0:
-            self.dobalance()
+        self.dobalance()
 
     def driveForward(self) -> None:
         self.driveTrain.drive(.25, -.25)
@@ -44,3 +52,8 @@ class Balance(commands2.CommandBase):
     def stop(self) -> None:
         self.driveTrain.drive(0, 0)
 
+    def GetLeft(self) -> float:
+        return self.left
+    
+    def GetRight(self) -> float:
+        return self.right
