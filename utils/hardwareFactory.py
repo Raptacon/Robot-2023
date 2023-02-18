@@ -102,6 +102,7 @@ class HardwareFactory(object):
             log.info(f"Creating componet {subsystem}.{name} as {subtype}.{compType}")
         except Exception as e:
             log.error(f"**** {config['type']} is not in the format subtype.type. i.e. motor.SparkMax) for {subsystem} {name}")
+            log.debug(e)
             if "required" in config and config["required"]:
                 raise RuntimeError(f"Failed to create required hardware {config['type']} in {subsystem} {name}")
             
