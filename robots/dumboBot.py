@@ -1,5 +1,7 @@
 import wpilib
 import commands2
+import commands2.cmd
+import commands2.button
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 import wpimath.filter
@@ -12,7 +14,11 @@ class Dumbo(ConfigBaseCommandRobot):
     def __init__(self, period: float = 0.02) -> None:
         super().__init__(period)
 
-        wpilib.XboxController(0).A().whenPressed(commands2.Command.runOnce(lambda: print("A pressed")))
+        controller = commands2.button.CommandXboxController(0)
+        controller.A().onTrue(
+            commands2..run(lambda: self.moveArm(2), [self.robot_arm])
+        )
+
 
 
 
