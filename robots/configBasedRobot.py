@@ -47,6 +47,7 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
     def teleopPeriodic(self) -> None:
         """ Runs every frame """
         # TODO below is the problem...we just need to get a boolean value of the button
+        # NOTE FROM RAYL (hi): wpilib.XboxController.getXButton() -> bool: the state of the button
         if wpilib.XboxController.Button.kX() > 0:
             self.balance.execute()
             self.driveTrain.setDefaultCommand(self.balanceDrive)
