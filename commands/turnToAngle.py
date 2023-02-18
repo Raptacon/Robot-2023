@@ -1,17 +1,13 @@
-import wpilib
 import commands2
 import commands2.cmd
 import wpimath.controller
 import navx
-import utils
 from subsystems.drivetrains.westcoast import Westcoast as DriveTrain
 
 class TurnToAngle(commands2.CommandBase):
     initialHeading = 0
     nextHeading = 0
-    heading = 0
     turnAngle = 0
-    dumbSpeed = .25
     tolerance = .8
     change = 0
     def __init__(self, speed: float, degrees: float, drive: DriveTrain, navx : navx.AHRS) -> None:

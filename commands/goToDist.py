@@ -18,7 +18,7 @@ class GoToDist(commands2.CommandBase):
         self.targetDist = feet * 10_000
         self.speed = speed
         self.drive = drive
-        self.pid = wpimath.controller.PIDController(0.001, 0.001, 0.001)
+        self.pid = wpimath.controller.PIDController(0.001, 0.01, 0.001)
         self.pid.setTolerance(5, 10)
         self.addRequirements(drive)
 
