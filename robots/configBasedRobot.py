@@ -27,9 +27,6 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
             self.subsystems[ssName] = subsystem
         """
         """
-        #self.driveModeSelect = commands2.SelectCommand(
-        #    self.DrivetrainMode.TANK
-        #)
 
     def teleopInit(self) -> None:
         super().teleopInit()

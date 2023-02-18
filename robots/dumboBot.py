@@ -29,14 +29,16 @@ class Dumbo(ConfigBaseCommandRobot):
                                    self.getStick(wpilib.XboxController.Axis.kRightX, False),
                                    self.driveTrain)
 
+        wpilib.SmartDashboard.putNumber("set angle", self.robot_arm.getPostion() * math.pi / 180.0)
+
 
 
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)
         
     def teleopPeriodic(self) -> None:
-        wpilib.SmartDashboard.putNumber("ang", self.robot_arm.getPostion() * math.pi / 180.0)
-        wpilib.SmartDashboard.putNumber("rad", self.robot_arm.getPostion())
+        wpilib.SmartDashboard.putNumber("curr ang", self.robot_arm.getPostion() * math.pi / 180.0)
+        wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm.getPostion())
 
         return super().teleopPeriodic()
 
@@ -75,23 +77,23 @@ class Dumbo(ConfigBaseCommandRobot):
         """
 
         # Move the arm to 2 radians above horizontal when the 'A' button is pressed.
-        self.driver_controller.A().onTrue(
-            commands2.cmd.runOnce(lambda: self.moveArmDegrees(270), [self.robot_arm])
+        self.driver_controller.A().whileTrue(
+            commands2.cmd.runOnce(lambda: self.trackAngle(), [self.robot_arm])
         )
 
         self.driver_controller.X().onTrue(
-            commands2.cmd.runOnce(lambda: self.moveArmDegrees(180), [self.robot_arm])
+            commands2.cmd.runOnce(lambda: self.moveArmDegrees(0), [self.robot_arm])
         )
 
         # Move the arm to neutral position when the 'B' button is pressed
         self.driver_controller.B().onTrue(
             commands2.cmd.runOnce(
-                lambda: self.moveArmDegrees(90), [self.robot_arm]
+                lambda: self.moveArmDegrees(180), [self.robot_arm]
             )
         )
         self.driver_controller.Y().onTrue(
             commands2.cmd.runOnce(
-                lambda: self.moveArmDegrees(0), [self.robot_arm]
+                lambda: self.moveArmDegrees(90), [self.robot_arm]
             )
         )
 
@@ -99,6 +101,10 @@ class Dumbo(ConfigBaseCommandRobot):
         self.driver_controller.rightBumper().onTrue(
             commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm])
         )
+
+
+    def trackAngle(self):
+        self.moveArmDegrees(wpilib.SmartDashboard.getNumber("set angle", self.robot_arm.getPostion()))
 
     def disableArm(self):
         print("disabling")
