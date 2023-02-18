@@ -18,26 +18,22 @@ class Dumbo(ConfigBaseCommandRobot):
         super().__init__(period)
         self.robot_arm = self.subsystems["arm"]
         self.driver_controller = commands2.button.CommandXboxController(0)
-        #controller = commands2.button.CommandXboxController(0)
-        #controller.A().onTrue(
-        #    commands2.cmd.run(lambda: self.moveArm(2), [self.robot_arm])
-        #)
 
         self.configureButtonBindings()
-        wpilib.SmartDashboard.putNumber("ang", self.robot_arm.getPostion() * math.pi / 180.0)
-        wpilib.SmartDashboard.putNumber("rad", self.robot_arm.getPostion())
+
+        self.driveTrain = self.subsystems["drivetrain"]
+        self.tankDrive = TankDrive(self.getStick(wpilib.XboxController.Axis.kLeftY, True),
+                                   self.getStick(wpilib.XboxController.Axis.kRightY, True),
+                                   self.driveTrain)
+        self.arcadeDrive = ArcadeDrive(self.getStick(wpilib.XboxController.Axis.kLeftY, True),
+                                   self.getStick(wpilib.XboxController.Axis.kRightX, False),
+                                   self.driveTrain)
+
 
 
     def teleopInit(self) -> None:
+        self.driveTrain.setDefaultCommand(self.tankDrive)
         
-        #ang = wpilib.SmartDashboard.getNumber("ang", 180) * math.pi / 180.0
-        #commands2.cmd.run(self.moveArm(ang), [self.robot_arm])
-        #curr_pos = self.robot_arm.getPostion()
-        #print(f"Arm at {curr_pos} / {curr_pos * 180.0 / math.pi}")
-        #self.moveArmDegrees(ang)
-        #self.driveTrain.setDefaultCommand(self.tankDrive)
-        pass
-
     def teleopPeriodic(self) -> None:
         wpilib.SmartDashboard.putNumber("ang", self.robot_arm.getPostion() * math.pi / 180.0)
         wpilib.SmartDashboard.putNumber("rad", self.robot_arm.getPostion())
@@ -80,29 +76,28 @@ class Dumbo(ConfigBaseCommandRobot):
 
         # Move the arm to 2 radians above horizontal when the 'A' button is pressed.
         self.driver_controller.A().onTrue(
-            commands2.cmd.run(lambda: self.moveArmDegrees(270), [self.robot_arm])
+            commands2.cmd.runOnce(lambda: self.moveArmDegrees(270), [self.robot_arm])
         )
 
         self.driver_controller.X().onTrue(
-            commands2.cmd.run(lambda: self.moveArmDegrees(180), [self.robot_arm])
+            commands2.cmd.runOnce(lambda: self.moveArmDegrees(180), [self.robot_arm])
         )
 
         # Move the arm to neutral position when the 'B' button is pressed
         self.driver_controller.B().onTrue(
-            commands2.cmd.run(
+            commands2.cmd.runOnce(
                 lambda: self.moveArmDegrees(90), [self.robot_arm]
             )
         )
-
         self.driver_controller.Y().onTrue(
-            commands2.cmd.run(
+            commands2.cmd.runOnce(
                 lambda: self.moveArmDegrees(0), [self.robot_arm]
             )
         )
 
         # Disable the arm controller when Y is pressed
         self.driver_controller.rightBumper().onTrue(
-            commands2.cmd.runOnce(lambda: self.disablePIDSubsystems())
+            commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm])
         )
 
     def disableArm(self):

@@ -4,10 +4,10 @@ cameraServer: True #
 #CameraServer.launch()
 
 subsystems:
-    #drivetrain:
-    #  required: true
-    #  type: yaml
-    #  file: "talonTankDrive.yml"
+    drivetrain:
+      required: true
+      type: yaml
+      file: "talonTankDrive.yml"
     arm:
        required: False
        type: yaml

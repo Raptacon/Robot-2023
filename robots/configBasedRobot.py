@@ -26,27 +26,20 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
             subsystem = self.configMapper.getSubsystem(ssName)
             self.subsystems[ssName] = subsystem
         """
-        self.driveTrain = self.subsystems["drivetrain"]
-        self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   getStick(wpilib.XboxController.Axis.kRightY, True),
-                                   self.driveTrain)
-        self.arcadeDrive = ArcadeDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   getStick(wpilib.XboxController.Axis.kRightX, False),
-                                   self.driveTrain)
         """
         #self.driveModeSelect = commands2.SelectCommand(
         #    self.DrivetrainMode.TANK
         #)
 
     def teleopInit(self) -> None:
-        self.driveTrain.setDefaultCommand(self.tankDrive)
+        super().teleopInit()
 
 
 
 
-#TODO move to a better way, demo purposes
-def getStick(axis: wpilib.XboxController.Axis, invert: bool = False):
-    sign = -1.0 if invert else 1.0
-    slew = wpimath.filter.SlewRateLimiter(3)
-    return lambda: slew.calculate(wpimath.applyDeadband(sign * wpilib.XboxController(0).getRawAxis(axis), 0.1))
+    #TODO move to a better way, demo purposes
+    def getStick(self, axis: wpilib.XboxController.Axis, invert: bool = False):
+        sign = -1.0 if invert else 1.0
+        slew = wpimath.filter.SlewRateLimiter(3)
+        return lambda: slew.calculate(wpimath.applyDeadband(sign * wpilib.XboxController(0).getRawAxis(axis), 0.1))
 
