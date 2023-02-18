@@ -4,7 +4,8 @@ from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 import wpimath.filter
 import wpimath
-
+from auto import Autonoumous
+import navx
 import utils.configMapper
 
 class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
