@@ -1,17 +1,18 @@
-import math
+import wpilib
 import commands2
+import commands2.cmd
+import wpimath.controller
 import navx
+import utils
 from subsystems.drivetrains.westcoast import Westcoast as DriveTrain
-from speedSections import SpeedSections
 
 class TurnToAngle(commands2.CommandBase):
     initialHeading = 0
     nextHeading = 0
     heading = 0
-    originalHeading = 0
     turnAngle = 0
     dumbSpeed = .25
-    tolerance = 2
+    tolerance = .8
     change = 0
     def __init__(self, speed: float, degrees: float, drive: DriveTrain, navx : navx.AHRS) -> None:
         """Creates a new TurnDegrees. This command will turn your robot for a desired rotation (in
@@ -25,6 +26,8 @@ class TurnToAngle(commands2.CommandBase):
         self.speed = speed
         self.drive = drive
         self.navx = navx
+        self.pid = wpimath.controller.PIDController(0.001, 0.001, 0.001, 0.01)
+        self.pid.setTolerance(.8)
         self.addRequirements(drive)
 
     def initialize(self) -> None:
@@ -51,16 +54,18 @@ class TurnToAngle(commands2.CommandBase):
 
     def execute(self) -> None:
         """Called every time the scheduler runs while the command is scheduled."""
-        self.drive.drive(self.speed, -1 * self.speed)
-        self.calcHeading()
-        print("Heading" + str(self.navx.getFusedHeading()))
+        self.speed = self.pid.calculate(self.change)
+        print(self.pid.calculate(self.change, self.tolerance))
+        self.drive.arcadeDrive(0, self.speed)
         print("change" + str(self.change))
+        self.calcHeading()
         #self.speed = self.speedSections.getSpeed(self.speed, self.change, "TurnToAngle")
 
     def end(self, interrupted: bool) -> None:
         """Called once the command ends or is interrupted."""
         self.drive.drive(0, 0)
         self.drive.reset()
+        self.pid.reset()
 
     def isFinished(self) -> bool:
         """Returns true when the command should end."""

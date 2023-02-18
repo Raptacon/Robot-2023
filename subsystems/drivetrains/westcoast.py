@@ -81,6 +81,9 @@ class Westcoast(commands2.SubsystemBase):
         '''
         self.driveTrain.tankDrive(left, right)
 
+    def arcadeDrive(self, speed : float, rotation : float) -> None:
+        self.driveTrain.arcadeDrive(speed, rotation)
+
     def getHeading(self) -> float:
         '''
         Returns the heading if known. If not returns NaN
