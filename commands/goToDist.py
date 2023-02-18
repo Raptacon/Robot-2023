@@ -2,7 +2,6 @@ import commands2
 import commands2.cmd
 import wpimath.controller
 from subsystems.drivetrains.westcoast import Westcoast as DriveTrain
-from speedSections import SpeedSections
 
 class GoToDist(commands2.CommandBase):
     targetDist = 0
