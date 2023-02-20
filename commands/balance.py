@@ -11,7 +11,7 @@ class Balance(commands2.CommandBase):
         self.navx = navx._navx.AHRS.create_spi()
         self.startOrientation = {
             "x": self.navx.getRoll(),
-            "y": self.navx.getPitch(), 
+            "y": self.navx.getPitch(),
             "Z" : self.navx.getYaw()
             }
         
