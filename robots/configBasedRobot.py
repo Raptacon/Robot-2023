@@ -2,8 +2,6 @@ import wpilib
 import commands2
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
-import wpimath.filter
-import wpimath
 from Input import input
 
 import utils.configMapper
