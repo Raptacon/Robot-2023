@@ -2,10 +2,10 @@ import wpilib
 import commands2
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
-import wpimath.filter
-import wpimath
+from Input import input
+import navx
+from auto import Autonomous
 from commands.balance import Balance
-
 import utils.configMapper
 
 class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
@@ -31,18 +31,23 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
         self.XboxController = wpilib.XboxController(0)
 
         self.driveTrain = self.subsystems["drivetrain"]
-        self.balance = Balance(getButton(wpilib.XboxController.getXButton(self.XboxController)), self.driveTrain)
-        self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   getStick(wpilib.XboxController.Axis.kRightY, True),
+        self.balance = Balance(input().getButton("XButton", self.XboxController), self.driveTrain)
+
+        self.tankDrive = TankDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True),
+                                   input.getStick(wpilib.XboxController.Axis.kRightY, True),
                                    self.driveTrain)
-        self.arcadeDrive = ArcadeDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   getStick(wpilib.XboxController.Axis.kRightX, False),
+        self.arcadeDrive = ArcadeDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True),
+                                   input.getStick(wpilib.XboxController.Axis.kRightX, False),
                                    self.driveTrain)
         self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, self.driveTrain)
 
+        self.navx = navx._navx.AHRS.create_spi()
         #self.driveModeSelect = commands2.SelectCommand(
         #    self.DrivetrainMode.TANK
         #)
+
+    def getAutonomousCommand(self):
+        return(Autonomous(self.driveTrain, self.navx))
 
     def teleopInit(self) -> None:
         self.XboxController = wpilib.XboxController(0)
@@ -50,7 +55,7 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
 
     def teleopPeriodic(self) -> None:
         """ Runs every frame """
-        if self.XboxController.getXButton():
+        if input().getButton("XButton", self.XboxController):
             if(not self.balanceing):
                 commands2.CommandScheduler.getInstance().cancelAll()
             self.driveTrain.setDefaultCommand(self.balanceDrive)
@@ -61,12 +66,3 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
             self.driveTrain.setDefaultCommand(self.tankDrive)
             self.balanceing = False
 
-
-#TODO move to a better way, demo purposes
-def getStick(axis: wpilib.XboxController.Axis, invert: bool = False):
-    sign = -1.0 if invert else 1.0
-    slew = wpimath.filter.SlewRateLimiter(3)
-    return lambda: slew.calculate(wpimath.applyDeadband(sign * wpilib.XboxController(0).getRawAxis(axis), 0.1))
-
-def getButton(button: wpilib.XboxController.Button.kX):
-    return lambda: wpilib.XboxController(0).getRawButton(button)

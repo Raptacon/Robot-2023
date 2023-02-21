@@ -15,8 +15,8 @@ class Balance(commands2.CommandBase):
             "y": self.navx.getPitch(),
             "Z" : self.navx.getYaw()
             }
-        self.pid = wpimath.controller.PIDController(0.001, 0.001, 0.001, 0.01)
-        self.pid.setTolerance(.8)
+        # self.pid = wpimath.controller.PIDController(0.006, 0.006, 0.0079, 0.00795)
+        # self.pid.setTolerance(.8)
         self.xKey = xKey
         self.driveTrain = driveTrain
 
@@ -27,11 +27,11 @@ class Balance(commands2.CommandBase):
           
             return 0
         if y > 2.5:
-          
-            return -self.pid.calculate(y)
+            return -.5
+            # return self.pid.calculate(y)
         if y < -2.5:
-          
-            return self.pid.calculate(y)
+            return .5
+            # return self.pid.calculate(y)
  
     def execute(self) -> None:
         if self.xKey:
