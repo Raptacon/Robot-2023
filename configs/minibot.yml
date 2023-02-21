@@ -1,44 +1,21 @@
-compatibility: "minibot"
-driveTrain:
-  subsystem: "driveTrain"
-  description: "All motors used in the drive train live here"
-  motors:
-    groups:
-      - "motors"
-    rightMotor:
-      channel: 30
-      type: "CANTalonSRX"
-      inverted: False
-    leftMotor:
-      channel: 20
-      type: "CANTalonSRX"
-      inverted: False
+details: "Drive Train only robot with 2 talon SRX in tank drive"
+cameraServer: True #
+# Start camera server for USB cameras
+#CameraServer.launch()
 
-speedSections:
-  subsystem: "speedSections"
-  description: "Speed Sections (tables used to determine speeds based on distances)"
-  speedSections:
-    groups: "configuredValues"
-    TurretTurn:
-      - [45, .03]
-      - [90, .04]
-      - [180, .06]
-      - ["End", .3]
-    PID:
-      TurretTurn:
-        P: 0
-        I: 0
-        D: 0
-        SpeedFloor: 0.01
+subsystems:
+    drivetrain:
+      required: true
+      type: yaml
+      file: "talonSRXTankDriveSmall.yml"
+    #TODO flesh out support for non required and missing
+    #newSub:
+    #  type: newFile
+    #  file: "newSubsystem.yml"
 
-TurretMotor:
-  subsystem: "turret"
-  description: "motor for turret goes here"
-  motors:
-    groups:
-     - "motors"
-    turretMotor:
-      channel: 12
-      type: "SparkMax"
-      inverted: False
-      motorType: "kBrushless"
+commands:
+    driveController:
+      name: "tankDrive"
+      subsystems:
+        - "driveTrain"
+      default-sub: "driveTrain"
