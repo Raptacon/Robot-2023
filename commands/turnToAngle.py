@@ -48,9 +48,7 @@ class TurnToAngle(commands2.CommandBase):
     def execute(self) -> None:
         """Called every time the scheduler runs while the command is scheduled."""
         self.speed = self.pid.calculate(self.change)
-        print(self.pid.calculate(self.change, self.tolerance))
         self.drive.arcadeDrive(0, self.speed)
-        print("change" + str(self.change))
         self.calcHeading()
 
     def end(self, interrupted: bool) -> None:

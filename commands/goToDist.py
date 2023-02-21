@@ -13,7 +13,7 @@ class GoToDist(commands2.CommandBase):
         drive:  The drivetrain subsystem on which this command will run
         """
         super().__init__()
-        self.targetDist = feet * 10_000
+        self.targetDist = feet * 10_000 #The encoders read in 10,000ths of a foot so we need to multiply it by 10000
         self.drive = drive
         self.pid = wpimath.controller.PIDController(0.001, 0.01, 0.001)
         self.pid.setTolerance(5, 10)
@@ -29,7 +29,6 @@ class GoToDist(commands2.CommandBase):
         """Called every time the scheduler runs while the command is scheduled."""
         self.dist = abs(self.drive.getRightEncoder()) - self.startingDistance
         self.totalOffset = self.targetDist - self.dist
-        print(self.pid.calculate(self.targetDist / 10_000, self.dist / 10_000))
         self.speed = self.pid.calculate(self.targetDist / 10_000, self.dist / 10_000)
         self.drive.drive(-1 * self.speed, -1 * self.speed)
 
