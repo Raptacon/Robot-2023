@@ -80,7 +80,7 @@ class MyRobot(commands2.TimedCommandRobot):
         """This function is called periodically during operator control"""
         self.container.teleopPeriodic()
 
-        test = self.Apriltags.updatePose
+        test = self.AprilTags.updatePose()
         pose = test[0]
         print(pose.X())
 
