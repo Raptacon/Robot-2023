@@ -3,8 +3,8 @@
 import typing
 import wpilib
 import commands2
-from wpilib import CameraServer
 
+from robots.configBasedRobot import ConfigBaseCommandRobot
 from robots.greenBot import GreenBot
 import aprilTags
 
@@ -28,18 +28,12 @@ class MyRobot(commands2.TimedCommandRobot):
 
         #determine the robot based on the config file
         #TODO
-        robot_name = "GreenBot"
+        
+        if False:
+            self.container = GreenBot()
+        if True:
+            self.container = ConfigBaseCommandRobot()
 
-        match robot_name:
-            case GreenBot.config_name:
-                self.container = GreenBot()
-            case _:
-                raise Exception(f"Unknown Robot {robot_name}")
-        self.AprilTagTester = aprilTags.AprilTags()
-        # Start camera server for USB cameras
-        CameraServer.launch()
-        
-        
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""
         self.container.disabledInit()

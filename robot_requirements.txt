@@ -1,0 +1,1 @@
+robotpy[commands2,ctre,navx,rev,sim,pathplannerlib,photonvision,playingwithfusion] ==2023.*
