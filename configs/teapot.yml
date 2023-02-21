@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 details: "Config for Teapot robot. Currently only supports drive train in 2023"
+=======
+details: "Drive Train only robot with 4 talon SRX in tank drive"
+>>>>>>> Stashed changes
 cameraServer: True #
 # Start camera server for USB cameras
 #CameraServer.launch()
@@ -8,6 +12,13 @@ subsystems:
       required: true
       type: yaml
       file: "talonTankDrive.yml"
+<<<<<<< Updated upstream
+=======
+    #TODO flesh out support for non required and missing
+    #newSub:
+    #  type: newFile
+    #  file: "newSubsystem.yml"
+>>>>>>> Stashed changes
 
 commands:
     driveController:

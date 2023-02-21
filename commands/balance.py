@@ -1,5 +1,6 @@
 import navx
 import commands2
+import wpimath.controller
 from subsystems.drivetrains.westcoast import Westcoast as DriveTrain
 
 class Balance(commands2.CommandBase):
@@ -14,7 +15,8 @@ class Balance(commands2.CommandBase):
             "y": self.navx.getPitch(),
             "Z" : self.navx.getYaw()
             }
-        
+        self.pid = wpimath.controller.PIDController(0.001, 0.001, 0.001, 0.01)
+        self.pid.setTolerance(.8)
         self.xKey = xKey
         self.driveTrain = driveTrain
 
@@ -26,10 +28,10 @@ class Balance(commands2.CommandBase):
             return 0
         if y > 2.5:
           
-            return -.35
+            return -self.pid.calculate(y)
         if y < -2.5:
           
-            return .35
+            return self.pid.calculate(y)
  
     def execute(self) -> None:
         if self.xKey:
