@@ -4,7 +4,7 @@ from commands.turnToAngle import TurnToAngle
 from subsystems.drivetrains.westcoast import Westcoast
 import navx
 
-class Autonoumous(commands2.SequentialCommandGroup):
+class Autonomous(commands2.SequentialCommandGroup):
     def __init__(self, drive : Westcoast, navx : navx.AHRS) -> None:
         super().__init__()
 

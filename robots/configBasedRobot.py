@@ -4,7 +4,7 @@ from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 import wpimath.filter
 import wpimath
-from auto import Autonoumous
+from auto import Autonomous
 import navx
 import utils.configMapper
 
@@ -41,7 +41,7 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
         #)
 
     def getAutonomousCommand(self):
-        return(Autonoumous(self.driveTrain, self.navx))
+        return(Autonomous(self.driveTrain, self.navx))
 
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)
