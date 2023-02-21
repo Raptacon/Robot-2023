@@ -3,7 +3,6 @@ import wpilib.interfaces
 import wpilib.drive
 import ctre
 import commands2
-import navx
 import logging
 import utils
 hwFactory = utils.hardwareFactory.getHardwareFactory()
