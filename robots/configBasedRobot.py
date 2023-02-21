@@ -2,8 +2,7 @@ import wpilib
 import commands2
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
-import wpimath.filter
-import wpimath
+from Input import input
 
 import utils.configMapper
 
@@ -27,11 +26,11 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
             self.subsystems[ssName] = subsystem
 
         self.driveTrain = self.subsystems["drivetrain"]
-        self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   getStick(wpilib.XboxController.Axis.kRightY, True),
+        self.tankDrive = TankDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True),
+                                   input.getStick(wpilib.XboxController.Axis.kRightY, True),
                                    self.driveTrain)
-        self.arcadeDrive = ArcadeDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   getStick(wpilib.XboxController.Axis.kRightX, False),
+        self.arcadeDrive = ArcadeDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True),
+                                   input.getStick(wpilib.XboxController.Axis.kRightX, False),
                                    self.driveTrain)
 
         #self.driveModeSelect = commands2.SelectCommand(
@@ -40,13 +39,3 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
 
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)
-
-
-
-
-#TODO move to a better way, demo purposes
-def getStick(axis: wpilib.XboxController.Axis, invert: bool = False):
-    sign = -1.0 if invert else 1.0
-    slew = wpimath.filter.SlewRateLimiter(3)
-    return lambda: slew.calculate(wpimath.applyDeadband(sign * wpilib.XboxController(0).getRawAxis(axis), 0.1))
-
