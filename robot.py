@@ -6,6 +6,7 @@ import commands2
 from wpilib import CameraServer
 
 from robots.greenBot import GreenBot
+import aprilTags
 
 
 class MyRobot(commands2.TimedCommandRobot):
@@ -34,10 +35,11 @@ class MyRobot(commands2.TimedCommandRobot):
                 self.container = GreenBot()
             case _:
                 raise Exception(f"Unknown Robot {robot_name}")
-
+        self.AprilTagTester = aprilTags.AprilTags()
         # Start camera server for USB cameras
         CameraServer.launch()
-
+        
+        
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""
         self.container.disabledInit()
@@ -61,7 +63,13 @@ class MyRobot(commands2.TimedCommandRobot):
 
     def autonomousPeriodic(self) -> None:
         """This function is called periodically during autonomous"""
-        self.container.autonomousPeriodic()
+
+        'self.container.autonomousPeriodic()'
+
+        test = self.AprilTagTester.updatePose
+        pose = test[0]
+        print(pose.X())
+
 
     def teleopInit(self) -> None:
         # This makes sure that the autonomous stops running when
