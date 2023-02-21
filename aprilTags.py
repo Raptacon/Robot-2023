@@ -1,4 +1,5 @@
 from photonvision import PhotonCamera
+from photonvision import PoseStrategy
 from photonvision import RobotPoseEstimator
 from photonvision import SimVisionSystem
 from wpimath import geometry
@@ -36,22 +37,24 @@ class AprilTags():
             self.camera = PhotonCamera(name)
             if nt.isConnected():
                 print('Connected')
-        # else:
-            # self.camera = SimVisionSystem(name, camDaigFov, cameraToRobot, maxLEDRange, cameraResWidth, cameraResHeight, minTargetArea)
+        else:
+             self.camera = SimVisionSystem(name, camDaigFov, cameraToRobot, maxLEDRange, cameraResWidth, cameraResHeight, minTargetArea)
         
         '''grabs this year's feild data'''
         'atfl means AprilTagFieldLayout'
-        # atfl = robotpy_apriltag.AprilTagFieldLayout(robotpy_apriltag.AprilTagField(robotpy_apriltag.AprilTagField.k2023ChargedUp))
+        #.AprilTagFieldrobotpy_apriltag.AprilTagField.k2023ChargedUp
+        #atfl = robotpy_apriltag._apriltag.AprilTagFieldLayout(robotpy_apriltag.AprilTagField.k2023ChargedUp.loadAprilTagLayoutField())
+        atfl = robotpy_apriltag.loadAprilTagLayoutField(robotpy_apriltag.AprilTagField.k2023ChargedUp)
         '''the closest to last pose can be, and probaly should be changed/evaluated, as closest to last pose is just what my example uses'''
-        # self.estimator = RobotPoseEstimator(atfl, 'CLOSEST_TO_LAST_POSE', self.camera)
+        self.estimator = RobotPoseEstimator(atfl, PoseStrategy.CLOSEST_TO_LAST_POSE, self.camera)
 
-    # def updatePose(self) -> geometry.Pose3d:
-    #     '''returns a pose 3d with the pose of the robot'''
-    #     estimatorTuple = self.estimator.update()
-    #     return(estimatorTuple)
+    def updatePose(self) -> geometry.Pose3d:
+        '''returns a pose 3d with the pose of the robot'''
+        estimatorTuple = self.estimator.update()
+        return(estimatorTuple)
     
 'test code'
 test = AprilTags()
-# test2 = test.updatePose()
-# test3 = test2[0]
-# print(test3.X())
+test2 = test.updatePose()
+test3 = test2[0]
+print(test3.X())

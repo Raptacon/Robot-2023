@@ -33,6 +33,7 @@ class MyRobot(commands2.TimedCommandRobot):
             self.container = GreenBot()
         if True:
             self.container = ConfigBaseCommandRobot()
+        self.AprilTags = aprilTags.AprilTags()
 
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""
@@ -58,11 +59,12 @@ class MyRobot(commands2.TimedCommandRobot):
     def autonomousPeriodic(self) -> None:
         """This function is called periodically during autonomous"""
 
-        'self.container.autonomousPeriodic()'
-
+        self.container.autonomousPeriodic()
+        '''
         test = self.AprilTagTester.updatePose
         pose = test[0]
         print(pose.X())
+        '''
 
 
     def teleopInit(self) -> None:
@@ -77,6 +79,10 @@ class MyRobot(commands2.TimedCommandRobot):
     def teleopPeriodic(self) -> None:
         """This function is called periodically during operator control"""
         self.container.teleopPeriodic()
+
+        test = self.Apriltags.updatePose
+        pose = test[0]
+        print(pose.X())
 
     def testInit(self) -> None:
         # Cancels all running commands at the start of test mode
