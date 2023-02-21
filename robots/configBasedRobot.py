@@ -3,6 +3,8 @@ import commands2
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 from Input import input
+import navx
+from auto import Autonomous
 
 import utils.configMapper
 
@@ -33,9 +35,13 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
                                    input.getStick(wpilib.XboxController.Axis.kRightX, False),
                                    self.driveTrain)
 
+        self.navx = navx._navx.AHRS.create_spi()
         #self.driveModeSelect = commands2.SelectCommand(
         #    self.DrivetrainMode.TANK
         #)
+
+    def getAutonomousCommand(self):
+        return(Autonomous(self.driveTrain, self.navx))
 
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)
