@@ -1,5 +1,6 @@
 import wpilib
 import commands2
+import aprilTags
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 from Input import input
@@ -45,3 +46,9 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
 
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)
+        self.AprilTags = aprilTags.AprilTags()
+
+    def teleopPeriodic(self) -> None:
+        test = self.AprilTags.updatePose()
+        pose = test[0]
+        print(pose.X())
