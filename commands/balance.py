@@ -13,25 +13,34 @@ class Balance(commands2.CommandBase):
         self.startOrientation = {
             "x": self.navx.getRoll(),
             "y": self.navx.getPitch(),
-            "Z" : self.navx.getYaw()
+            "z" : self.navx.getYaw()
             }
-        # self.pid = wpimath.controller.PIDController(0.006, 0.006, 0.0079, 0.00795)
-        # self.pid.setTolerance(.8)
+       
+        self.pid = wpimath.controller.PIDController(0.024, 0.00095, 0.0001, 0.0001)
+        self.pid.setTolerance(.8)
         self.xKey = xKey
         self.driveTrain = driveTrain
 
     def dobalance(self) -> None:
+        # z = self.navx.getYaw() - self.startOrientation["z"]
         y = self.navx.getPitch() - self.startOrientation["y"]
+        # print(f"yaw: {z}")
         print(f"Trying to balance:: {y}")
         if y < 2.5 and y > -2.5:
           
             return 0
+        # if z < -170 and z > -150:
+        #     pass
+        
         if y > 2.5:
-            return -.5
-            # return self.pid.calculate(y)
+            
+            return self.pid.calculate(y)
+        # if z < 20:
+        #     return self.pid.calculate(z)
+
         if y < -2.5:
-            return .5
-            # return self.pid.calculate(y)
+            
+            return self.pid.calculate(y)
  
     def execute(self) -> None:
         if self.xKey:
