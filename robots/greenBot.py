@@ -1,12 +1,9 @@
 import wpilib
-import commands2
 import ctre
 import navx
 from subsystems.drivetrains.westcoast import Westcoast as Drivetrain
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
-import wpimath.filter
-import wpimath
 from .configBasedRobot import ConfigBaseCommandRobot
 from Input import input
 
