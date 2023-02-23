@@ -13,7 +13,7 @@ from subsystems.actuators.dumboArm import Arm
 
 class Dumbo(ConfigBaseCommandRobot):
     robot_arm: Arm
-    def __init__(self, period: float = 0.02) -> None:
+    def __init__(self, period: float = 0.2) -> None:
         super().__init__(period)
         self.robot_arm = self.subsystems["arm"]
         self.driver_controller = commands2.button.CommandXboxController(0)
@@ -49,7 +49,7 @@ class Dumbo(ConfigBaseCommandRobot):
         #commands2.cmd.run(self.moveArm(ang), [self.robot_arm])
         #curr_pos = self.robot_arm.getPostion()
         #print(f"Arm at {curr_pos} / {curr_pos * 180.0 / math.pi}")
-        self.moveArmDegrees(ang)
+        self.robot_arm._getMeasurement()
         super().testPeriodic()
 
     def teleopExit(self) -> None:
