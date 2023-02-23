@@ -1,5 +1,5 @@
-subsystem: "arm.winch.Winch"
-description: "All motors used in the robot winch mechanism live here for the winch component"
+subsystem: "grader.Grader"
+description: "All motors used in the robot grader mechanism live here for the grader component"
 winch:
     channel: 40
     type: "motor.SparkMax"
