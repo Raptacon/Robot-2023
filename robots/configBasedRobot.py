@@ -2,9 +2,9 @@ import wpilib
 import commands2
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
-from commands.moveWinch import moveWinch
-import wpimath.filter
-import wpimath
+from Input import input
+import navx
+from auto import Autonomous
 
 import utils.configMapper
 
@@ -27,32 +27,22 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
             subsystem = self.configMapper.getSubsystem(ssName)
             self.subsystems[ssName] = subsystem
 
-        if "drivetrain" in self.subsystems:
-            self.driveTrain = self.subsystems["drivetrain"]
-            self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   getStick(wpilib.XboxController.Axis.kRightY, True),
-                                        self.driveTrain)
-            self.arcadeDrive = ArcadeDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                        getStick(wpilib.XboxController.Axis.kRightX, False),
-                                        self.driveTrain)
+        self.driveTrain = self.subsystems["drivetrain"]
+        self.tankDrive = TankDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True),
+                                   input.getStick(wpilib.XboxController.Axis.kRightY, True),
+                                   self.driveTrain)
+        self.arcadeDrive = ArcadeDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True),
+                                   input.getStick(wpilib.XboxController.Axis.kRightX, False),
+                                   self.driveTrain)
 
-        if "Arm" in self.subsystems:
-            self.arm = self.subsystems["Arm"]
-            self.armCommand = moveWinch(getStick(wpilib.XboxController.Axis.kLeftY, False, port=1), self.arm)
-
+        self.navx = navx._navx.AHRS.create_spi()
         #self.driveModeSelect = commands2.SelectCommand(
         #    self.DrivetrainMode.TANK
         #)
 
+    def getAutonomousCommand(self):
+        return(Autonomous(self.driveTrain, self.navx))
+
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)
         self.arm.setDefaultCommand(self.armCommand)
-
-
-
-
-#TODO move to a better way, demo purposes
-def getStick(axis: wpilib.XboxController.Axis, invert: bool = False, port: int = 0):
-    sign = -1.0 if invert else 1.0
-    slew = wpimath.filter.SlewRateLimiter(3)
-    return lambda: slew.calculate(wpimath.applyDeadband(sign * wpilib.XboxController(port).getRawAxis(axis), 0.1))
