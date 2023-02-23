@@ -1,29 +1,35 @@
-class Grader:
-    motors_winch: dict
+import commands2
+import logging
+import utils
+import rev
+hwFactory = utils.hardwareFactory.getHardwareFactory()
 
-    def on_enable(self):
-        """
-        Sets up the winch
-        """
-        self.upSpeed = 0
-        self.winchMotor = self.motors_winch["winchMotor"]
+log = logging.getLogger("grader")
 
-        self.logger.info("Lifter Component Created")
+class Grader(commands2.SubsystemBase):
+    def __init__(self, *kargs,
+                 **kwargs):
+        super().__init__()
+        print(kargs)
+        print(kwargs)
 
-    def setRaise(self):
-        """
-        Sets the motor speed to .5 in order to reel in the winch
-        """
-        self.upSpeed = .5
+        if len(kargs) > 0:
+            self.winchM = kargs[0] if len(kargs) > 0 else None
+            #self.winchEncoder = kargs[1] if len(kargs) > 1 else None
+            if not (self.winchM):
+                raise Exception("winch motor must be provided")
 
-    def setLower(self):
-        self.upSpeed = -1
+        else:
+            self.winchM = hwFactory.getHardwareComponet("Arm" , "winch")
 
-    def stop(self):
-        """
-        Sets the motor speed to 0 in order to stop the winch
-        """
-        self.upSpeed = 0
-
-    def execute(self):
-        self.winchMotor.set(self.upSpeed)
+            #self.winchEncoder = self.winchM.getEncoder() if isinstance(self.winchM, rev.CANSparkMax) else None
+"""
+    def log(self):
+        '''
+        Log telemetry to smartdashboard
+        '''
+        if self.winchEncoder:
+            sensor = self.winchEncoder.getSensorCollection()
+           wpilib.SmartDashboard.putNumber("Winch Distance", sensor.getIntegratedSensorAbsolutePosition())
+           wpilib.SmartDashboard.putNumber("Winch Speed", sensor.getIntegratedSensorVelocity())
+"""

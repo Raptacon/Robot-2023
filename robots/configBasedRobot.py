@@ -5,6 +5,7 @@ from commands.arcadeDrive import ArcadeDrive
 from Input import input
 import navx
 from auto import Autonomous
+from grader import Grader
 
 import utils.configMapper
 
