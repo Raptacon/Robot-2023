@@ -20,9 +20,15 @@ class Selector:
     selection = Selection.Middle
 
     def __init__(self) -> None:
+        """
+        Sets up the shuffleboard to display the current selection
+        """
         self.dashboard = Shuffleboard.getTab("Selections")
         self.ControllerEntry = self.dashboard.add(title ="Selection",defaultValue=self.selectionsView[self.selection]).getEntry()
 
     def GetSelection(self, XboxController : wpilib.XboxController):
+        """
+        sets the current selection and sends the value to shuffleboard to display
+        """
         self.selection = self.selections[input().getPOV(XboxController)]
         self.ControllerEntry.setString(self.selectionsView[self.selection])
