@@ -8,10 +8,6 @@ class Autonomous(commands2.SequentialCommandGroup):
     def __init__(self, drive : Westcoast, navx : navx.AHRS) -> None:
         super().__init__()
 
-        self.addCommands(
-            GoToDist(10, drive),
-            commands2.PrintCommand("GoToDist finished"),
-            TurnToAngle(180, drive, navx),
-            commands2.PrintCommand("TurnToAngle finished"),
-            GoToDist(10, drive)
-        )
+        self.addCommands(GoToDist(10, drive), commands2.PrintCommand("GoToDist finished"), TurnToAngle(180, drive, navx),
+                         commands2.PrintCommand("TurnToAngle finished"), GoToDist(10, drive)
+                        )

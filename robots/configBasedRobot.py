@@ -5,11 +5,13 @@ from commands.arcadeDrive import ArcadeDrive
 from Input import input
 import navx
 from auto import Autonomous
-
+from subsystems.drivetrains.westcoast import Westcoast
 import utils.configMapper
 
 class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
+
     def __init__(self, period: float = 0.02) -> None:
+
         super().__init__(period)
 
         #load config
@@ -27,21 +29,17 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
             subsystem = self.configMapper.getSubsystem(ssName)
             self.subsystems[ssName] = subsystem
 
-        self.driveTrain = self.subsystems["drivetrain"]
-        self.tankDrive = TankDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   input.getStick(wpilib.XboxController.Axis.kRightY, True),
-                                   self.driveTrain)
-        self.arcadeDrive = ArcadeDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   input.getStick(wpilib.XboxController.Axis.kRightX, False),
-                                   self.driveTrain)
+        self.driveTrain: Westcoast = self.subsystems["drivetrain"]
 
-        self.navx = navx._navx.AHRS.create_spi()
-        #self.driveModeSelect = commands2.SelectCommand(
-        #    self.DrivetrainMode.TANK
-        #)
+        # tD: Tank Drive, aD: Arcade Drive
+        self.drives = {'tD': TankDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True), input.getStick(wpilib.XboxController.Axis.kRightY, True), self.driveTrain),
+                       'aD': ArcadeDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True), input.getStick(wpilib.XboxController.Axis.kRightX, False), self.driveTrain),
+                       'navX': navx._navx.AHRS.create_spi()}
+
+        #self.driveModeSelect = commands2.SelectCommand(self.DrivetrainMode.TANK)
 
     def getAutonomousCommand(self):
-        return(Autonomous(self.driveTrain, self.navx))
+        return(Autonomous(self.driveTrain, self.drives['navX']))
 
     def teleopInit(self) -> None:
-        self.driveTrain.setDefaultCommand(self.tankDrive)
+        self.driveTrain.setDefaultCommand(self.drives['tD'])

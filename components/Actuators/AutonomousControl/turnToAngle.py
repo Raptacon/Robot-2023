@@ -5,7 +5,7 @@ from magicbot import tunable, feedback, StateMachine, state
 
 import navx
 
-class TurnToAngle(StateMachine):
+class TurnToAngle_Deprecated(StateMachine):
     compatString = ["teapot"]
 
     navx = navx._navx.AHRS.create_spi()
