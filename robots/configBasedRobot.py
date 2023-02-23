@@ -3,7 +3,9 @@ import commands2
 
 import wpimath.filter
 import wpimath
-
+from Input import input
+import navx
+from auto import Autonomous
 
 import utils.configMapper
 
@@ -26,8 +28,11 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
             subsystem = self.configMapper.getSubsystem(ssName)
             self.subsystems[ssName] = subsystem
 
+        self.navx = navx._navx.AHRS.create_spi()
+
     def getAutonomousCommand(self):
         return(Autonomous(self.driveTrain, self.navx))
+
 
     def teleopInit(self) -> None:
         super().teleopInit()

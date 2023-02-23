@@ -5,6 +5,8 @@ import commands2.button
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 import math
+from Input import input
+
 
 from .configBasedRobot import ConfigBaseCommandRobot
 from subsystems.actuators.dumboArm import Arm
@@ -19,11 +21,11 @@ class Dumbo(ConfigBaseCommandRobot):
         self.configureButtonBindings()
 
         self.driveTrain = self.subsystems["drivetrain"]
-        self.tankDrive = TankDrive(self.getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   self.getStick(wpilib.XboxController.Axis.kRightY, True),
+        self.tankDrive = TankDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True),
+                                   input.getStick(wpilib.XboxController.Axis.kRightY, True),
                                    self.driveTrain)
-        self.arcadeDrive = ArcadeDrive(self.getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   self.getStick(wpilib.XboxController.Axis.kRightX, False),
+        self.arcadeDrive = ArcadeDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True),
+                                   input.getStick(wpilib.XboxController.Axis.kRightX, False),
                                    self.driveTrain)
 
         wpilib.SmartDashboard.putNumber("set angle", self.robot_arm.getPostion() * math.pi / 180.0)
