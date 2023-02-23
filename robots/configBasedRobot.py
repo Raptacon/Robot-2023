@@ -3,7 +3,6 @@ import commands2
 
 import wpimath.filter
 import wpimath
-from Input import input
 import navx
 from auto import Autonomous
 

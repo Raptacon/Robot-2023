@@ -29,11 +29,11 @@ class MyRobot(commands2.TimedCommandRobot):
         #determine the robot based on the config file
         #TODO
 
-        if False:
+        if True:
             self.container = GreenBot()
         if False:
             self.container = ConfigBaseCommandRobot()
-        if True:
+        if False:
             self.container = Dumbo()
 
     def disabledInit(self) -> None:
