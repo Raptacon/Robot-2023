@@ -13,12 +13,12 @@ class input:
         """
         Takes in a string which acts as the key for a button and returns whether or not the button is pressed.
         """
-        buttons = {"XButton" : XboxController.getXButtonPressed(),
-        "AButton" : XboxController.getAButton(),"BButton" : XboxController.getBButtonPressed(),
-        "YButton" : XboxController.getYButtonPressed(), "RightTrigger" : XboxController.getRightTriggerAxis(),
-        "RightBumper" : XboxController.getRightBumperPressed(), "LeftTrigger" : XboxController.getLeftTriggerAxis(),
-        "LeftBumper" : XboxController.getLeftBumperPressed(), "RightStickButton" : XboxController.getRightStickButtonPressed(),
-        "LeftStickButton" : XboxController.getLeftStickButtonPressed()}
+        buttons = {"XButton" : XboxController.getXButton(),
+        "AButton" : XboxController.getAButton(),"BButton" : XboxController.getBButton(),
+        "YButton" : XboxController.getYButton(), "RightTrigger" : XboxController.getRightTriggerAxis(),
+        "RightBumper" : XboxController.getRightBumper(), "LeftTrigger" : XboxController.getLeftTriggerAxis(),
+        "LeftBumper" : XboxController.getLeftBumper(), "RightStickButton" : XboxController.getRightStickButton(),
+        "LeftStickButton" : XboxController.getLeftStickButton()}
         return buttons[ButtonName]
 
     def getPOV(self, XboxController : wpilib.XboxController) -> int:
