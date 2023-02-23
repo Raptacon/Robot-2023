@@ -30,8 +30,8 @@ class Arm(commands2.PIDSubsystem):
         super().__init__(pidController, 0)
         #TODO Fix factor
 #        self.config = kwargs
-#        self.motor = hwFactory.getHardwareComponet("arm", "motor")
-#        self.encoder = hwFactory.getHardwareComponet("arm", "encoder")
+#        self.motor = hwFactory.getHardwareComponent("arm", "motor")
+#        self.encoder = hwFactory.getHardwareComponent("arm", "encoder")
 #        log.error("Robot Arm not done")
         motorSettings = {
             "type":"SparkMax",

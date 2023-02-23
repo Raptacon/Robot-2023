@@ -9,7 +9,7 @@ log = logging.root.getChild("HardwareFactory")
 
 class HardwareFactory(object):
     '''
-    Hardware factory for instantiating hardware componets in a config
+    Hardware factory for instantiating hardware components in a config
     '''
     def __new__(cls):
         if not hasattr(cls, "instance"):
@@ -22,10 +22,10 @@ class HardwareFactory(object):
     def __init__(self):
         log.debug("New HardwareFactory")
         self.config = {}
-        self.componets = {}
+        self.components = {}
     def addConfig(self, subsystem: str, config: dict):
         """
-        Adds a new config. Replaces or updates exsisting componets.
+        Adds a new config. Replaces or updates exsisting components.
         """
         log.debug(f"Adding config {subsystem}.{config}")
 
@@ -39,10 +39,10 @@ class HardwareFactory(object):
         self.config[subsystem] = config
 
         for name, value in self.config[subsystem].items():
-            #create the hardware componets at config time to catch errors early
+            #create the hardware components at config time to catch errors early
             if isinstance(value, dict) and "type" in value:
                 log.debug(f"Creating {subsystem}.{name} type {value['type']}")
-                self.createHardwareComponet(subsystem, name, value)
+                self.createHardwareComponent(subsystem, name, value)
             else:
                 log.info(f"{subsystem}.{name} is not hardware")
         
@@ -63,33 +63,33 @@ class HardwareFactory(object):
         log.info(f"getConfig({subsystem}, {name}) failed to find config")
         return None
 
-    def getHardwareComponet(self, subsystem: str, name: str):
+    def getHardwareComponent(self, subsystem: str, name: str):
         """
-        Returns an instantiated componet. Return None if does not exsist
+        Returns an instantiated component. Return None if does not exsist
         """
         if subsystem == None:
             subsystem = "any"
-        log.debug(f"Geting componet {subsystem}.{name}")
+        log.debug(f"Geting component {subsystem}.{name}")
 
-        componet = None
-        for ss in self.componets:
+        component = None
+        for ss in self.components:
             if ss == subsystem or subsystem == "any":
-                if name in self.componets[ss]:
-                    componet = self.componets[ss][name]
-                    log.debug(f"Got {componet} from {ss}.{name}")
-                    return componet
+                if name in self.components[ss]:
+                    component = self.components[ss][name]
+                    log.debug(f"Got {component} from {ss}.{name}")
+                    return component
         
         log.debug(f"{subsystem}.{name} not created. Creating")
-        if self.createComponet(subsystem, name):
+        if self.createComponent(subsystem, name):
             log.error("Not finished")
-            return self.componets[name]
+            return self.components[name]
         else:
-            log.error(f"Failed to find componet {name}")
+            log.error(f"Failed to find component {name}")
             return None
 
-    def createHardwareComponet(self, subsystem: str, name: str, config: dict = None):
+    def createHardwareComponent(self, subsystem: str, name: str, config: dict = None):
         """
-            Creates a componet from a dictory.
+            Creates a component from a dictory.
         """
 
         if not config:
@@ -99,7 +99,7 @@ class HardwareFactory(object):
         try:
             subtype = config["type"].split(".", 1)[0]
             compType = config["type"].split(".", 1)[1]
-            log.info(f"Creating componet {subsystem}.{name} as {subtype}.{compType}")
+            log.info(f"Creating component {subsystem}.{name} as {subtype}.{compType}")
         except Exception as e:
             log.error(f"**** {config['type']} is not in the format subtype.type. i.e. motor.SparkMax) for {subsystem} {name}")
             log.debug(e)
@@ -108,29 +108,29 @@ class HardwareFactory(object):
             
             return None
 
-        #clean up componets
-        if not subsystem in self.componets:
-            self.componets[subsystem] = {}
-        if not name in self.componets[subsystem]:
-            self.componets[subsystem][name] = {}
+        #clean up components
+        if not subsystem in self.components:
+            self.components[subsystem] = {}
+        if not name in self.components[subsystem]:
+            self.components[subsystem][name] = {}
 
         #use short name without subtype
         config["type"] = compType
-        componet = None
+        component = None
         match subtype:
             case "motor":
-                componet = motorHelper.createMotor(config)
+                component = motorHelper.createMotor(config)
             case "sensor":
-                componet = sensorFactory.create(compType, config)
+                component = sensorFactory.create(compType, config)
             case _:
                 log.error(f"{subtype} is not a valid subtype. Support for matching any factory not done")
-        if componet:
+        if component:
             #add names for later use
-            self.componets[subsystem][name] = componet
+            self.components[subsystem][name] = component
         elif "required" in config and config["required"]:
             raise RuntimeError(f"Failed to create {subsystem}.{name} {subtype}.{compType} and is required")
 
-        return componet
+        return component
 
 
 
