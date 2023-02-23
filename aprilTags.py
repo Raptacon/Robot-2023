@@ -36,13 +36,9 @@ class AprilTags():
             nt.setServer("10.32.0.2")
             while not nt.isConnected():
                 print("Connecting   ", end='\r')
-                time.sleep(1)
                 print("Connecting.  ", end='\r')
-                time.sleep(1)
                 print("Connecting.. ", end='\r')
-                time.sleep(1)
                 print("Connecting...", end='\r')
-                time.sleep(1)
 
             self.camera = PhotonCamera(nt, name)
             self.test = [(self.camera, self.cameraToRobot)]
