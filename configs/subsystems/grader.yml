@@ -1,6 +1,6 @@
-subsystem: "grader.Grader"
+subsystem: "arm.grader.Grader"
 description: "All motors used in the robot grader mechanism live here for the grader component"
-winch:
+grader:
     channel: 40
     type: "motor.SparkMax"
     inverted: False

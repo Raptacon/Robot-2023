@@ -20,4 +20,4 @@ class Grader(commands2.SubsystemBase):
                 raise Exception("grader motor must be provided")
 
         else:
-            self.graderM = hwFactory.getHardwareComponet("Arm" , "Grader")
+            self.graderM = hwFactory.getHardwareComponet("arm" , "grader")
