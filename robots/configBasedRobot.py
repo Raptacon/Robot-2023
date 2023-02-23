@@ -3,6 +3,7 @@ import commands2
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 from Input import input
+from selector import Selector
 import navx
 from auto import Autonomous
 
@@ -20,6 +21,9 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
                         where (robotCfg.yml) is the name of the file"
 
         self.configMapper = utils.configMapper.ConfigMapper(config, configPath)
+
+        self.xboxController = wpilib.XboxController(0)
+        self.Selector = Selector()
 
         self.subsystems = {}
         for ssName in self.configMapper.getSubsystems():
@@ -45,3 +49,7 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
 
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)
+
+    def teleopPeriodic(self) -> None:
+        if(input().getButton("BButton", self.xboxController)):
+            self.Selector.GetSelection(self.xboxController)
