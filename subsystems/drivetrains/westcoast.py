@@ -80,6 +80,9 @@ class Westcoast(commands2.SubsystemBase):
         '''
         self.driveTrain.tankDrive(left, right)
 
+    def arcadeDrive(self, speed : float, rotation : float) -> None:
+        self.driveTrain.arcadeDrive(speed, rotation)
+
     def getHeading(self) -> float:
         '''
         Returns the heading if known. If not returns NaN
@@ -88,15 +91,21 @@ class Westcoast(commands2.SubsystemBase):
             return self.gyro.getAngle()
         return float('NaN')
 
+    def getGyro(self):
+        return self.gyro
+
     def getDistance(self) -> float:
         '''
         returns the average distance driven since last reset
         '''
 
         left = self.leftEncoder.getSensorCollection().getIntegratedSensorPosition() if self.leftEncoder else 0
-        right = self.rightEncoder.getSensorCollection().getIntegratedSensorPosition if self.rightEncoder else 0
+        right = self.rightEncoder.getSensorCollection().getIntegratedSensorPosition() if self.rightEncoder else 0
 
         return (left + right) / 2.0
+
+    def getRightEncoder(self) -> float:
+        return self.rightEncoder.getSensorCollection().getIntegratedSensorPosition() if self.rightEncoder else 0
 
     def reset(self) -> None:
         if self.gyro:
