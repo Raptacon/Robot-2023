@@ -57,6 +57,8 @@ class Arm(commands2.PIDSubsystem):
 
         self.addChild("Encoder", self.encoder)
         self.offset = offset
+        self.addChild("Encoder", self.encoder)
+        
         self.disabled = True
         self.setSetpoint(self.getPostion())
 

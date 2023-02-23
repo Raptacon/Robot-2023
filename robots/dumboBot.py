@@ -13,7 +13,7 @@ from subsystems.actuators.dumboArm import Arm
 
 class Dumbo(ConfigBaseCommandRobot):
     robot_arm: Arm
-    def __init__(self, period: float = 0.2) -> None:
+    def __init__(self, period: float = 0.02) -> None:
         super().__init__(period)
         self.robot_arm = self.subsystems["arm"]
         self.driver_controller = commands2.button.CommandXboxController(0)
