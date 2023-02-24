@@ -35,7 +35,7 @@ class Arm(commands2.PIDSubsystem):
 #        log.error("Robot Arm not done")
         motorSettings = {
             "type":"SparkMax",
-            "inverted": True,
+            "inverted": False,
             "motorType": "kBrushless",
             "sensorPhase": True,
             "channel": 40
@@ -50,10 +50,12 @@ class Arm(commands2.PIDSubsystem):
             "maxDutyCycle": 1.0}
 
         self.encoder = utils.sensorFactory.create("wpilib.DutyCycleEncoder", encoderSettings)
-        
+        self.encoder.setPositionOffset(0)
+        self.encoder.reset()
 
         self.aff = wpimath.controller.ArmFeedforward(**armFeedFordward)
 
+        self.addChild("Encoder", self.encoder)
         self.offset = offset
         self.addChild("Encoder", self.encoder)
         
@@ -72,7 +74,7 @@ class Arm(commands2.PIDSubsystem):
             return
         #if not self.disabled:
         else:
-            self.motor.setVoltage(output + feedforward)
+            self.motor.setVoltage((output + feedforward))
 
     def disable(self) -> None:
         self.motor.setVoltage(0)
@@ -84,10 +86,11 @@ class Arm(commands2.PIDSubsystem):
         return super().enable()
 
     def getPostion(self) -> float:
-        return math.fmod(self.encoder.getDistance() + self.offset, 2*math.pi)
-
+        return math.fmod(2*math.pi - (self.encoder.getAbsolutePosition() + self.offset) * (2*math.pi), 2*math.pi)
+        
     def _getMeasurement(self) -> float:
-        print(self.getPostion())
+        #print(f"dist {self.encoder.getDistance() : 01.03}, {self.encoder.getAbsolutePosition(): 01.03} , {self.offset: 01.03}, {self.getPostion(): 01.03}, {math.degrees(self.getPostion()): 01.03}, {self.getSetpoint()}")
+        #print(f"ang {math.degrees(self.getPostion())}, {self.encoder.getAbsolutePosition()}")
         return self.getPostion()
 
     def setSetpoint(self, goal: float) -> None:
