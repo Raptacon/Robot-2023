@@ -39,7 +39,7 @@ def testComponentListCompatibility(robot, componentList):
                 inject_type = origin
 
             # If the type is not actually a type, give a meaningful error
-            #nmb - 8/27/2022 FIXME removed due to crashing on certain componets
+            #nmb - 8/27/2022 FIXME removed due to crashing on certain components
             '''
             if not isinstance(inject_type, type):
                 raise TypeError(

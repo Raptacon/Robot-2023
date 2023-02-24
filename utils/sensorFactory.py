@@ -81,6 +81,6 @@ def create(compType: str, config: dict):
         traceback.print_exception(e)
 
         if config.get("required", False):
-            raise RuntimeError(f"Failed to create required componet {compType} for {config}")
+            raise RuntimeError(f"Failed to create required component {compType} for {config}")
     
     return None

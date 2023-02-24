@@ -45,11 +45,8 @@ class Dumbo(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.putNumber("ang", 180)
     
     def testPeriodic(self) -> None:
-        ang = wpilib.SmartDashboard.getNumber("ang", 180) * math.pi / 180.0
-        #commands2.cmd.run(self.moveArm(ang), [self.robot_arm])
-        #curr_pos = self.robot_arm.getPostion()
-        #print(f"Arm at {curr_pos} / {curr_pos * 180.0 / math.pi}")
-        self.moveArmDegrees(ang)
+        #test code to trigger. Remove after arm mounted and tested
+        self.robot_arm._getMeasurement()
         super().testPeriodic()
 
     def teleopExit(self) -> None:
