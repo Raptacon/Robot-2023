@@ -5,7 +5,6 @@ import commands2.button
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 import math
-from selector import Selector
 from Input import input
 from selector import Selector
 
