@@ -5,6 +5,7 @@ import commands2.button
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 import math
+from selector import Selector
 from Input import input
 from selector import Selector
 
@@ -47,6 +48,7 @@ class Dumbo(ConfigBaseCommandRobot):
     def testPeriodic(self) -> None:
         #test code to trigger. Remove after arm mounted and tested
         self.robot_arm._getMeasurement()
+        Selector().GetSelection(self.driver_controller)
         super().testPeriodic()
 
     def teleopExit(self) -> None:
