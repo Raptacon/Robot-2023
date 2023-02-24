@@ -5,7 +5,7 @@ import commands2.button
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 import math
-from Input import input
+from input import Input
 
 
 from .configBasedRobot import ConfigBaseCommandRobot
@@ -21,11 +21,11 @@ class Dumbo(ConfigBaseCommandRobot):
         self.configureButtonBindings()
 
         self.driveTrain = self.subsystems["drivetrain"]
-        self.tankDrive = TankDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   input.getStick(wpilib.XboxController.Axis.kRightY, True),
+        self.tankDrive = TankDrive(Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
+                                   Input.getStick(wpilib.XboxController.Axis.kRightY, 0, True),
                                    self.driveTrain)
-        self.arcadeDrive = ArcadeDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   input.getStick(wpilib.XboxController.Axis.kRightX, False),
+        self.arcadeDrive = ArcadeDrive(Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
+                                   Input.getStick(wpilib.XboxController.Axis.kRightX, 0, False),
                                    self.driveTrain)
 
         wpilib.SmartDashboard.putNumber("set angle", self.robot_arm.getPostion() * math.pi / 180.0)
@@ -45,8 +45,11 @@ class Dumbo(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.putNumber("ang", 180)
     
     def testPeriodic(self) -> None:
-        #test code to trigger. Remove after arm mounted and tested
-        self.robot_arm._getMeasurement()
+        ang = wpilib.SmartDashboard.getNumber("ang", 180) * math.pi / 180.0
+        #commands2.cmd.run(self.moveArm(ang), [self.robot_arm])
+        #curr_pos = self.robot_arm.getPostion()
+        #print(f"Arm at {curr_pos} / {curr_pos * 180.0 / math.pi}")
+        self.moveArmDegrees(ang)
         super().testPeriodic()
 
     def teleopExit(self) -> None:
