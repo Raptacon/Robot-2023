@@ -2,7 +2,7 @@ subsystem: "actuators.dumboArm.Arm"
 name: "arm"
 description: "Arm for Dumbo. Future may be more general arm"
 
-offset: .7 # radians
+offset: -0.432 # radians
 
 armFeedFordward:
     kS: -0.67376
