@@ -1,7 +1,6 @@
 import commands2
 import logging
 import utils
-import rev
 hwFactory = utils.hardwareFactory.getHardwareFactory()
 
 log = logging.getLogger("grabber")
