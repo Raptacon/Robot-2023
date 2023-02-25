@@ -11,41 +11,54 @@ from Input import input
 from .configBasedRobot import ConfigBaseCommandRobot
 from subsystems.actuators.dumboArm import Arm
 
+
 class Dumbo(ConfigBaseCommandRobot):
     robot_arm: Arm
+
     def __init__(self, period: float = 0.02) -> None:
         super().__init__(period)
-        self.robot_arm = self.subsystems["arm"]
-        self.driver_controller = commands2.button.CommandXboxController(0)
 
+        # Attempt assignments from subsystems and if something is empty, throw an exception
+        try:
+            self.robot_arm = self.subsystems["arm"]
+            self.driveTrain = self.subsystems["drivetrain"]
+        except:
+            raise Exception(
+                "ERROR! Wrong Config! Check ~/robotConfig to ensure you're using the correct robot config or correct robot. If it doubt, read the README.md"
+            )
         self.configureButtonBindings()
+        self.driver_controller = commands2.button.CommandXboxController(0)
+        self.tankDrive = TankDrive(
+            input.getStick(wpilib.XboxController.Axis.kLeftY, True),
+            input.getStick(wpilib.XboxController.Axis.kRightY, True),
+            self.driveTrain,
+        )
+        self.arcadeDrive = ArcadeDrive(
+            input.getStick(wpilib.XboxController.Axis.kLeftY, True),
+            input.getStick(wpilib.XboxController.Axis.kRightX, False),
+            self.driveTrain,
+        )
 
-        self.driveTrain = self.subsystems["drivetrain"]
-        self.tankDrive = TankDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   input.getStick(wpilib.XboxController.Axis.kRightY, True),
-                                   self.driveTrain)
-        self.arcadeDrive = ArcadeDrive(input.getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   input.getStick(wpilib.XboxController.Axis.kRightX, False),
-                                   self.driveTrain)
-
-        wpilib.SmartDashboard.putNumber("set angle", self.robot_arm.getPostion() * math.pi / 180.0)
-
-
+        wpilib.SmartDashboard.putNumber(
+            "set angle", self.robot_arm.getPostion() * math.pi / 180.0
+        )
 
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)
-        
+
     def teleopPeriodic(self) -> None:
-        wpilib.SmartDashboard.putNumber("curr ang", self.robot_arm.getPostion() * math.pi / 180.0)
+        wpilib.SmartDashboard.putNumber(
+            "curr ang", self.robot_arm.getPostion() * math.pi / 180.0
+        )
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm.getPostion())
 
         return super().teleopPeriodic()
 
     def testInit(self) -> None:
         wpilib.SmartDashboard.putNumber("ang", 180)
-    
+
     def testPeriodic(self) -> None:
-        #test code to trigger. Remove after arm mounted and tested
+        # test code to trigger. Remove after arm mounted and tested
         self.robot_arm._getMeasurement()
         super().testPeriodic()
 
@@ -56,7 +69,7 @@ class Dumbo(ConfigBaseCommandRobot):
     def moveArm(self, radians: float) -> None:
         self.robot_arm.setSetpoint(radians)
         self.robot_arm.enable()
-        
+
     def moveArmDegrees(self, degrees: float) -> None:
         self.moveArm(math.radians(degrees))
 
@@ -83,14 +96,10 @@ class Dumbo(ConfigBaseCommandRobot):
 
         # Move the arm to neutral position when the 'B' button is pressed
         self.driver_controller.B().onTrue(
-            commands2.cmd.runOnce(
-                lambda: self.moveArmDegrees(180), [self.robot_arm]
-            )
+            commands2.cmd.runOnce(lambda: self.moveArmDegrees(180), [self.robot_arm])
         )
         self.driver_controller.Y().onTrue(
-            commands2.cmd.runOnce(
-                lambda: self.moveArmDegrees(90), [self.robot_arm]
-            )
+            commands2.cmd.runOnce(lambda: self.moveArmDegrees(90), [self.robot_arm])
         )
 
         # Disable the arm controller when Y is pressed
@@ -98,9 +107,10 @@ class Dumbo(ConfigBaseCommandRobot):
             commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm])
         )
 
-
     def trackAngle(self):
-        self.moveArmDegrees(wpilib.SmartDashboard.getNumber("set angle", self.robot_arm.getPostion()))
+        self.moveArmDegrees(
+            wpilib.SmartDashboard.getNumber("set angle", self.robot_arm.getPostion())
+        )
 
     def disableArm(self):
         print("disabling")
