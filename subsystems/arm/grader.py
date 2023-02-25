@@ -39,3 +39,7 @@ class Grabber(commands2.SubsystemBase):
         if output:
             self.speed = 1
         self.graberMotor.setVoltage(self.speed * 6)
+
+    def stop(self):
+        self.graberMotor.setVoltage(0)
+
