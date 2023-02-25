@@ -6,7 +6,7 @@ from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 import math
 from input import Input
-
+from selector import Selector
 
 from .configBasedRobot import ConfigBaseCommandRobot
 from subsystems.actuators.dumboArm import Arm
@@ -28,6 +28,7 @@ class Dumbo(ConfigBaseCommandRobot):
             )
         self.driver_controller = commands2.button.CommandXboxController(0)
         self.configureButtonBindings()
+        self.selector = Selector()
         self.tankDrive = TankDrive(
             Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
             Input.getStick(wpilib.XboxController.Axis.kRightY, 0, True),
@@ -50,6 +51,8 @@ class Dumbo(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.putNumber(
             "curr ang", self.robot_arm.getPostion() * math.pi / 180.0
         )
+        if Input().getButton("BButton", self.driver_controller):
+            self.selector.GetSelection(self.driver_controller)
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm.getPostion())
 
         return super().teleopPeriodic()
