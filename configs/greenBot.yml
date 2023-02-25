@@ -8,14 +8,15 @@ subsystems:
       required: true
       type: yaml
       file: "talonFXTankDrive.yml"
-    #TODO flesh out support for non required and missing
-    #newSub:
-    #  type: newFile
-    #  file: "newSubsystem.yml"
+    Arm:
+      required: true
+      type: yaml
+      file: "grader.yml"
 
 commands:
     driveController:
       name: "tankDrive"
       subsystems:
         - "driveTrain"
+        - "arm"
       default-sub: "driveTrain"
