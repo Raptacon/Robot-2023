@@ -12,6 +12,10 @@ subsystems:
        required: False
        type: yaml
        file: "dumboArm.yml"
+    grabber:
+      required: False
+      type: yaml
+      file: "grader.yml"
 
 commands:
     driveController:

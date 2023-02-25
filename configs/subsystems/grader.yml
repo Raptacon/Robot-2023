@@ -1,0 +1,8 @@
+subsystem: "arm.grader.Grabber"
+description: "All motors used in the robot grader mechanism live here for the grader component"
+grader:
+    channel: 42
+    type: "motor.SparkMax"
+    inverted: False
+    motorType: "kBrushless"
+    pid: Null
