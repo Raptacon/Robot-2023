@@ -237,7 +237,6 @@ def findConfig(defaultConfig = "greenbot.yml", configPath = None) -> tuple[dict,
     if not configPath:
         configPath = os.path.dirname(__file__) + os.path.sep + ".." +os.path.sep + "configs" + os.path.sep
     home = str(Path.home()) + os.path.sep
-    print("Home:" + str(home))
     robotConfigFile = home + "robotConfig"
 
     if not os.path.isfile(robotConfigFile):
