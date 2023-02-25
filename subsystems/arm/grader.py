@@ -15,7 +15,6 @@ class Grader(commands2.SubsystemBase):
 
         if len(kargs) > 0:
             self.graderM = kargs[0] if len(kargs) > 0 else None
-            #self.winchEncoder = kargs[1] if len(kargs) > 1 else None
             if not (self.graderM):
                 raise Exception("grader motor must be provided")
 
