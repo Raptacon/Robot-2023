@@ -6,6 +6,8 @@ class TankDrive(commands2.CommandBase):
     '''
     Command for converting joystick input to drive train output
     '''
+    limit : float
+
     def __init__(self, left: Callable[[], float], right: Callable[[], float], driveTrain):
         '''
         Takes a left, right callerable to get tank drive controls
@@ -26,6 +28,10 @@ class TankDrive(commands2.CommandBase):
         '''
         left = self.left()
         right = self.right()
+        if left > self.limit:
+            left = self.limit
+        if right > self.limit:
+            right = self.limit
         log.debug(f"l {left}, r {right}")
         self.driveTrain.drive(left, right)
 

@@ -66,6 +66,11 @@ class Dumbo(ConfigBaseCommandRobot):
             self.robot_Grabber.stop()
         if Input().getButton("BButton", self.mech_controller):
             self.selector.GetSelection(self.mech_controller)
+
+        if Input().getButton("RightTrigger", self.driver_controller):
+            self.tankDrive.limit = .75
+        else:
+            self.tankDrive.limit = 1
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm.getPostion())
 
         return super().teleopPeriodic()
