@@ -29,6 +29,7 @@ class Dumbo(ConfigBaseCommandRobot):
                 "ERROR! Wrong Config! Check ~/robotConfig to ensure you're using the correct robot config or correct robot. If it doubt, read the README.md"
             )
         self.driver_controller = commands2.button.CommandXboxController(0)
+        self.mech_controller = commands2.button.CommandXboxController(1)
         self.configureButtonBindings()
         self.selector = Selector()
         self.tankDrive = TankDrive(
@@ -53,17 +54,14 @@ class Dumbo(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.putNumber(
             "curr ang", self.robot_arm.getPostion() * math.pi / 180.0
         )
-        print(Input().getButton("RightTrigger", self.driver_controller))
-        if Input().getButton("LeftTrigger", self.driver_controller) <= 0:
-            self.robot_Grabber.useOutputCones(Input().getButton("RightTrigger", self.driver_controller))
-        if Input().getButton("RightTrigger", self.driver_controller) <= 0:
-            self.robot_Grabber.useOutputCubes(Input().getButton("LeftTrigger", self.driver_controller))
-        if Input().getButton("RightBumper", self.driver_controller):
-            self.robot_Grabber.switchCones()
-        if Input().getButton("LeftBumper", self.driver_controller):
-            self.robot_Grabber.switchCubes()
-        if Input().getButton("BButton", self.driver_controller):
-            self.selector.GetSelection(self.driver_controller)
+        if Input().getButton("LeftTrigger", self.mech_controller) <= 0:
+            self.robot_Grabber.useOutputCones(Input().getButton("RightTrigger", self.mech_controller))
+            self.robot_Grabber.switchCones(Input().getButton("RightBumper", self.mech_controller))
+        if Input().getButton("RightTrigger", self.mech_controller) <= 0:
+            self.robot_Grabber.useOutputCubes(Input().getButton("LeftTrigger", self.mech_controller))
+            self.robot_Grabber.switchCubes(Input().getButton("LeftBumper", self.mech_controller))
+        if Input().getButton("BButton", self.mech_controller):
+            self.selector.GetSelection(self.mech_controller)
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm.getPostion())
 
         return super().teleopPeriodic()

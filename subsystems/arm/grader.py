@@ -7,6 +7,8 @@ hwFactory = utils.hardwareFactory.getHardwareFactory()
 log = logging.getLogger("grader")
 
 class Grader(commands2.SubsystemBase):
+    ConesInverted = False
+    CubeInverted = False
     def __init__(self, *kargs,
                  **kwargs):
         super().__init__()
@@ -27,8 +29,8 @@ class Grader(commands2.SubsystemBase):
             self.speed *= -1
         self.graderM.setVoltage(self.speed)
 
-    def switchCones(self):
-        self.ConesInverted = not self.ConesInverted
+    def switchCones(self, state : bool):
+        self.ConesInverted = state
 
     def useOutputCubes(self, output: float):
         self.speed = output * -1
@@ -36,5 +38,5 @@ class Grader(commands2.SubsystemBase):
             self.speed = output
         self.graderM.setVoltage(self.speed)
 
-    def switchCubes(self):
-        self.CubeInverted = not self.CubeInverted
+    def switchCubes(self, state : bool):
+        self.CubeInverted = state
