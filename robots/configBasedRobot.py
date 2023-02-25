@@ -5,7 +5,6 @@ import wpimath.filter
 import wpimath
 import navx
 from auto import Autonomous
-from grader import Grader
 
 import utils.configMapper
 
