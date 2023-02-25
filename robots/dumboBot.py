@@ -15,6 +15,7 @@ from subsystems.arm.grader import Grabber
 
 
 class Dumbo(ConfigBaseCommandRobot):
+    balanceing = False
     robot_arm: Arm
     robot_Grabber: Grabber
     def __init__(self, period: float = 0.02) -> None:
