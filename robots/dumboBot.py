@@ -26,8 +26,8 @@ class Dumbo(ConfigBaseCommandRobot):
             raise Exception(
                 "ERROR! Wrong Config! Check ~/robotConfig to ensure you're using the correct robot config or correct robot. If it doubt, read the README.md"
             )
-        self.configureButtonBindings()
         self.driver_controller = commands2.button.CommandXboxController(0)
+        self.configureButtonBindings()
         self.tankDrive = TankDrive(
             input.getStick(wpilib.XboxController.Axis.kLeftY, True),
             input.getStick(wpilib.XboxController.Axis.kRightY, True),
