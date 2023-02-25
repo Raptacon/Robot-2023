@@ -91,6 +91,7 @@ class Arm(commands2.PIDSubsystem):
     def _getMeasurement(self) -> float:
         #print(f"dist {self.encoder.getDistance() : 01.03}, {self.encoder.getAbsolutePosition(): 01.03} , {self.offset: 01.03}, {self.getPostion(): 01.03}, {math.degrees(self.getPostion()): 01.03}, {self.getSetpoint()}")
         #print(f"ang {math.degrees(self.getPostion())}, {self.encoder.getAbsolutePosition()}")
+        print(self.encoder.getAbsolutePosition)
         return self.getPostion()
 
     def setSetpoint(self, goal: float) -> None:
