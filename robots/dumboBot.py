@@ -5,7 +5,7 @@ import commands2.button
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 import math
-from Input import input
+from input import Input
 
 
 from .configBasedRobot import ConfigBaseCommandRobot
@@ -26,16 +26,16 @@ class Dumbo(ConfigBaseCommandRobot):
             raise Exception(
                 "ERROR! Wrong Config! Check ~/robotConfig to ensure you're using the correct robot config or correct robot. If it doubt, read the README.md"
             )
-        self.configureButtonBindings()
         self.driver_controller = commands2.button.CommandXboxController(0)
+        self.configureButtonBindings()
         self.tankDrive = TankDrive(
-            input.getStick(wpilib.XboxController.Axis.kLeftY, True),
-            input.getStick(wpilib.XboxController.Axis.kRightY, True),
+            Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
+            Input.getStick(wpilib.XboxController.Axis.kRightY, 0, True),
             self.driveTrain,
         )
         self.arcadeDrive = ArcadeDrive(
-            input.getStick(wpilib.XboxController.Axis.kLeftY, True),
-            input.getStick(wpilib.XboxController.Axis.kRightX, False),
+            Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
+            Input.getStick(wpilib.XboxController.Axis.kRightX, 0, False),
             self.driveTrain,
         )
 
