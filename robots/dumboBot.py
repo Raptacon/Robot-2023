@@ -10,12 +10,12 @@ from selector import Selector
 
 from .configBasedRobot import ConfigBaseCommandRobot
 from subsystems.actuators.dumboArm import Arm
-from subsystems.arm.grader import Grader
+from subsystems.arm.grader import Grabber
 
 
 class Dumbo(ConfigBaseCommandRobot):
     robot_arm: Arm
-    robot_Grabber: Grader
+    robot_Grabber: Grabber
     def __init__(self, period: float = 0.02) -> None:
         super().__init__(period)
 
