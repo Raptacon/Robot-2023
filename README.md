@@ -96,8 +96,9 @@ echo dumboBot.yml > ~/robotConfig
 
 For Windows create a file called robotConfig in your home directory with the contents of
 dumboBot.yml or greenBot.yml etc
+On windows your it should look something like this: C:\Users\Logan\robotConfig
 
 ```powershell
-echo dumboBot.yml > ~/robotConfig
+echo dumboBot.yml > C:\Users\Logan\robotConfig
 ```
 
