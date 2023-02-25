@@ -38,7 +38,7 @@ class Grabber(commands2.SubsystemBase):
     def useIntakeCubes(self, output : bool):
         if output:
             self.speed = 1
-        self.graberMotor.setVoltage(self.speed * 6)
+        self.graberMotor.setVoltage(self.speed * 8)
 
     def stop(self):
         self.graberMotor.setVoltage(0)
