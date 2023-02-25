@@ -36,6 +36,8 @@ class Grabber(commands2.SubsystemBase):
         self.speed = output * -1
         if self.CubeInverted:
             self.speed = output
+        else:
+            self.speed = self.speed / 2
         self.graberMotor.setVoltage(self.speed)
 
     def switchCubes(self, state : bool):

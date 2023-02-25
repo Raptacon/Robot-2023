@@ -1,4 +1,4 @@
-subsystem: "arm.grader.Grader"
+subsystem: "arm.grader.Grabber"
 description: "All motors used in the robot grader mechanism live here for the grader component"
 grader:
     channel: 42
