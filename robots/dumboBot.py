@@ -98,24 +98,24 @@ class Dumbo(ConfigBaseCommandRobot):
         """
 
         # Move the arm to 2 radians above horizontal when the 'A' button is pressed.
-        self.driver_controller.A().whileTrue(
+        self.mech_controller.A().whileTrue(
             commands2.cmd.runOnce(lambda: self.trackAngle(), [self.robot_arm])
         )
 
-        self.driver_controller.X().onTrue(
+        self.mech_controller.X().onTrue(
             commands2.cmd.runOnce(lambda: self.moveArmDegrees(0), [self.robot_arm])
         )
 
         # Move the arm to neutral position when the 'B' button is pressed
-        self.driver_controller.B().onTrue(
+        self.mech_controller.start().onTrue(
             commands2.cmd.runOnce(lambda: self.moveArmDegrees(180), [self.robot_arm])
         )
-        self.driver_controller.Y().onTrue(
+        self.mech_controller.Y().onTrue(
             commands2.cmd.runOnce(lambda: self.moveArmDegrees(90), [self.robot_arm])
         )
 
         # Disable the arm controller when Y is pressed
-        self.driver_controller.rightBumper().onTrue(
+        self.mech_controller.back().onTrue(
             commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm])
         )
 
