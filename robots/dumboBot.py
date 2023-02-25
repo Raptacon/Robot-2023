@@ -54,12 +54,16 @@ class Dumbo(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.putNumber(
             "curr ang", self.robot_arm.getPostion() * math.pi / 180.0
         )
-        if Input().getButton("LeftTrigger", self.mech_controller) <= 0:
+        if Input().getButton("RightTrigger", self.mech_controller) != 0:
             self.robot_Grabber.useOutputCones(Input().getButton("RightTrigger", self.mech_controller))
-            self.robot_Grabber.switchCones(Input().getButton("RightBumper", self.mech_controller))
-        if Input().getButton("RightTrigger", self.mech_controller) <= 0:
+        elif Input().getButton("RightBumper", self.mech_controller):
+            self.robot_Grabber.useIntakehCones(Input().getButton("RightBumper", self.mech_controller))
+        elif Input().getButton("LeftTrigger", self.mech_controller) != 0:
             self.robot_Grabber.useOutputCubes(Input().getButton("LeftTrigger", self.mech_controller))
-            self.robot_Grabber.switchCubes(Input().getButton("LeftBumper", self.mech_controller))
+        elif Input().getButton("LeftBumper", self.mech_controller):
+            self.robot_Grabber.useIntakeCubes(Input().getButton("LeftBumper", self.mech_controller))
+        else:
+            self.robot_Grabber.stop()
         if Input().getButton("BButton", self.mech_controller):
             self.selector.GetSelection(self.mech_controller)
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm.getPostion())
