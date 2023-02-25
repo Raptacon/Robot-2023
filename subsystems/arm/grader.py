@@ -26,7 +26,7 @@ class Grabber(commands2.SubsystemBase):
         self.speed = output
         if self.ConesInverted:
             self.speed *= -1
-        self.graberMotor.setVoltage(self.speed)
+        self.graberMotor.setVoltage(self.speed * 12)
 
     def switchCones(self, state : bool):
         self.ConesInverted = state
@@ -37,7 +37,7 @@ class Grabber(commands2.SubsystemBase):
             self.speed = output
         else:
             self.speed = self.speed / 2
-        self.graberMotor.setVoltage(self.speed)
+        self.graberMotor.setVoltage(self.speed * 12)
 
     def switchCubes(self, state : bool):
         self.CubeInverted = state
