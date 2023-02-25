@@ -10,11 +10,12 @@ from selector import Selector
 
 from .configBasedRobot import ConfigBaseCommandRobot
 from subsystems.actuators.dumboArm import Arm
+from subsystems.arm.grader import Grader
 
 
 class Dumbo(ConfigBaseCommandRobot):
     robot_arm: Arm
-
+    robot_Grabber: Grader
     def __init__(self, period: float = 0.02) -> None:
         super().__init__(period)
 
@@ -22,6 +23,7 @@ class Dumbo(ConfigBaseCommandRobot):
         try:
             self.robot_arm = self.subsystems["arm"]
             self.driveTrain = self.subsystems["drivetrain"]
+            self.robot_Grabber = self.subsystems["grabber"]
         except:
             raise Exception(
                 "ERROR! Wrong Config! Check ~/robotConfig to ensure you're using the correct robot config or correct robot. If it doubt, read the README.md"
@@ -51,6 +53,15 @@ class Dumbo(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.putNumber(
             "curr ang", self.robot_arm.getPostion() * math.pi / 180.0
         )
+        print(Input().getButton("RightTrigger", self.driver_controller))
+        if Input().getButton("LeftTrigger", self.driver_controller) <= 0:
+            self.robot_Grabber.useOutputCones(Input().getButton("RightTrigger", self.driver_controller))
+        if Input().getButton("RightTrigger", self.driver_controller) <= 0:
+            self.robot_Grabber.useOutputCubes(Input().getButton("LeftTrigger", self.driver_controller))
+        if Input().getButton("RightBumper", self.driver_controller):
+            self.robot_Grabber.switchCones()
+        if Input().getButton("LeftBumper", self.driver_controller):
+            self.robot_Grabber.switchCubes()
         if Input().getButton("BButton", self.driver_controller):
             self.selector.GetSelection(self.driver_controller)
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm.getPostion())

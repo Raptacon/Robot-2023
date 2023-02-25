@@ -19,4 +19,22 @@ class Grader(commands2.SubsystemBase):
                 raise Exception("grader motor must be provided")
 
         else:
-            self.graderM = hwFactory.getHardwareComponet("arm" , "grader")
+            self.graderM = hwFactory.getHardwareComponent("grabber" , "grader")
+
+    def useOutputCones(self, output: float):
+        self.speed = output
+        if self.ConesInverted:
+            self.speed *= -1
+        self.graderM.setVoltage(self.speed)
+
+    def switchCones(self):
+        self.ConesInverted = not self.ConesInverted
+
+    def useOutputCubes(self, output: float):
+        self.speed = output * -1
+        if self.CubeInverted:
+            self.speed = output
+        self.graderM.setVoltage(self.speed)
+
+    def switchCubes(self):
+        self.CubeInverted = not self.CubeInverted
