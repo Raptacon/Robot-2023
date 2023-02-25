@@ -27,6 +27,7 @@ class Dumbo(ConfigBaseCommandRobot):
                 "ERROR! Wrong Config! Check ~/robotConfig to ensure you're using the correct robot config or correct robot. If it doubt, read the README.md"
             )
         self.driver_controller = commands2.button.CommandXboxController(0)
+        self.mech_controller = commands2.button.CommandXboxController(1)
         self.configureButtonBindings()
         self.selector = Selector()
         self.tankDrive = TankDrive(
@@ -51,8 +52,8 @@ class Dumbo(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.putNumber(
             "curr ang", self.robot_arm.getPostion() * math.pi / 180.0
         )
-        if Input().getButton("BButton", self.driver_controller):
-            self.selector.GetSelection(self.driver_controller)
+        if Input().getButton("BButton", self.mech_controller):
+            self.selector.GetSelection(self.mech_controller)
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm.getPostion())
 
         return super().teleopPeriodic()
@@ -89,24 +90,24 @@ class Dumbo(ConfigBaseCommandRobot):
         """
 
         # Move the arm to 2 radians above horizontal when the 'A' button is pressed.
-        self.driver_controller.A().whileTrue(
+        self.mech_controller.A().whileTrue(
             commands2.cmd.runOnce(lambda: self.trackAngle(), [self.robot_arm])
         )
 
-        self.driver_controller.X().onTrue(
+        self.mech_controller.X().onTrue(
             commands2.cmd.runOnce(lambda: self.moveArmDegrees(0), [self.robot_arm])
         )
 
         # Move the arm to neutral position when the 'B' button is pressed
-        self.driver_controller.B().onTrue(
+        self.mech_controller.start().onTrue(
             commands2.cmd.runOnce(lambda: self.moveArmDegrees(180), [self.robot_arm])
         )
-        self.driver_controller.Y().onTrue(
+        self.mech_controller.Y().onTrue(
             commands2.cmd.runOnce(lambda: self.moveArmDegrees(90), [self.robot_arm])
         )
 
         # Disable the arm controller when Y is pressed
-        self.driver_controller.rightBumper().onTrue(
+        self.mech_controller.back().onTrue(
             commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm])
         )
 
