@@ -72,3 +72,32 @@ Once you install the firmware, PLEASE LABEL the radio with the current date, fir
 Once you install the firmware, PLEASE LABEL the radio with the current date, firmware version AND SSID. This will make it easy to identify when the RIO was last updated and how to connect to the bot.
 
 TODO more documentation here around motors, controllers and how to update them.
+
+# Configuration
+
+Ensure that you have a robotConfig definied in your home directory: 
+
+If you DON'T have this file defined, you may not be using the correct robot config and end up with the sim/bot crashing with something like
+```python
+Traceback (most recent call last):
+  File "/Users/chirsch/src/raptacon/2023/Robot-2023.deleteme/.venv_osx/lib/python3.11/site-packages/wpilib/_impl/start.py", line 163, in _start
+    self.robot.startCompetition()
+  File "/Users/chirsch/src/raptacon/2023/Robot-2023.deleteme/robot.py", line 37, in robotInit
+    self.container = Dumbo()
+                     ^^^^^^^
+  File "/Users/chirsch/src/raptacon/2023/Robot-2023.deleteme/robots/dumboBot.py", line 20, in __init__
+    self.robot_arm = self.subsystems["arm"]
+```
+
+For Linux/OSX 
+``` bash
+echo dumboBot.yml > ~/robotConfig
+```
+
+For Windows create a file called robotConfig in your home directory with the contents of
+dumboBot.yml or greenBot.yml etc
+
+```powershell
+echo dumboBot.yml > ~/robotConfig
+```
+
