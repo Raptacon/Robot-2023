@@ -6,6 +6,7 @@ from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 import math
 from input import Input
+from commands.balance import Balance
 from selector import Selector
 
 from .configBasedRobot import ConfigBaseCommandRobot
@@ -14,6 +15,7 @@ from subsystems.arm.grader import Grabber
 
 
 class Dumbo(ConfigBaseCommandRobot):
+    balanceing = False
     robot_arm: Arm
     robot_Grabber: Grabber
     def __init__(self, period: float = 0.02) -> None:
@@ -47,10 +49,30 @@ class Dumbo(ConfigBaseCommandRobot):
             "set angle", self.robot_arm.getPostion() * math.pi / 180.0
         )
 
+        self.XboxController = wpilib.XboxController(0)
+        self.driveTrain = self.subsystems["drivetrain"]
+        # self.balance = Balance(Input.getButton("XButton", self.XboxController), self.driveTrain)
+        self.balance = Balance(Input().getButton("XButton", self.driver_controller), self.driveTrain)
+        self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, self.driveTrain)
+
+
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)
 
     def teleopPeriodic(self) -> None:
+        # if Input.getButton("XButton", self.XboxController):
+        if Input().getButton("XButton", self.driver_controller):
+            if (not self.balanceing):
+                commands2.CommandScheduler.getInstance().cancelAll()
+            self.driveTrain.setDefaultCommand(self.balanceDrive)
+            self.balanceing = True
+            self.balance.execute()
+        else:
+            if(self.balanceing):
+                commands2.CommandScheduler.getInstance().cancelAll()
+            self.driveTrain.setDefaultCommand(self.tankDrive)
+            self.balanceing = False
+    
         wpilib.SmartDashboard.putNumber(
             "curr ang", self.robot_arm.getPostion() * math.pi / 180.0
         )
@@ -68,7 +90,9 @@ class Dumbo(ConfigBaseCommandRobot):
             self.selector.GetSelection(self.mech_controller)
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm.getPostion())
 
-        return super().teleopPeriodic()
+        # return super().teleopPeriodic()
+        
+        
 
     def testInit(self) -> None:
         wpilib.SmartDashboard.putNumber("ang", 180)
