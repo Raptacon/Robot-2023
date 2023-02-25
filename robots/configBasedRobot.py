@@ -9,6 +9,7 @@ from auto import Autonomous
 import utils.configMapper
 
 class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
+    balanceing = False
     def __init__(self, period: float = 0.02) -> None:
         super().__init__(period)
 

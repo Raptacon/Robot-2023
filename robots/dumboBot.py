@@ -6,6 +6,7 @@ from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
 import math
 from input import Input
+from commands.balance import Balance
 
 
 from .configBasedRobot import ConfigBaseCommandRobot
@@ -43,16 +44,39 @@ class Dumbo(ConfigBaseCommandRobot):
             "set angle", self.robot_arm.getPostion() * math.pi / 180.0
         )
 
+        self.XboxController = wpilib.XboxController(0)
+        self.driveTrain = self.subsystems["drivetrain"]
+        # self.balance = Balance(Input.getButton("XButton", self.XboxController), self.driveTrain)
+        self.balance = Balance(self.XboxController.getXButton(), self.driveTrain)
+        self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, self.driveTrain)
+
+
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)
 
     def teleopPeriodic(self) -> None:
+        # if Input.getButton("XButton", self.XboxController):
+        if self.XboxController.getXButton():
+            if (not self.balanceing):
+                print("1234567890")
+                commands2.CommandScheduler.getInstance().cancelAll()
+            self.driveTrain.setDefaultCommand(self.balanceDrive)
+            self.balanceing = True
+            self.balance.execute()
+        else:
+            if(self.balanceing):
+                commands2.CommandScheduler.getInstance().cancelAll()
+            self.driveTrain.setDefaultCommand(self.tankDrive)
+            self.balanceing = False
+    
         wpilib.SmartDashboard.putNumber(
             "curr ang", self.robot_arm.getPostion() * math.pi / 180.0
         )
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm.getPostion())
 
-        return super().teleopPeriodic()
+        # return super().teleopPeriodic()
+        
+        
 
     def testInit(self) -> None:
         wpilib.SmartDashboard.putNumber("ang", 180)
