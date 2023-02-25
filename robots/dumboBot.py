@@ -7,7 +7,7 @@ from commands.arcadeDrive import ArcadeDrive
 import math
 from input import Input
 from commands.balance import Balance
-
+from selector import Selector
 
 from .configBasedRobot import ConfigBaseCommandRobot
 from subsystems.actuators.dumboArm import Arm
@@ -28,7 +28,9 @@ class Dumbo(ConfigBaseCommandRobot):
                 "ERROR! Wrong Config! Check ~/robotConfig to ensure you're using the correct robot config or correct robot. If it doubt, read the README.md"
             )
         self.driver_controller = commands2.button.CommandXboxController(0)
+        self.mech_controller = commands2.button.CommandXboxController(1)
         self.configureButtonBindings()
+        self.selector = Selector()
         self.tankDrive = TankDrive(
             Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
             Input.getStick(wpilib.XboxController.Axis.kRightY, 0, True),
@@ -47,7 +49,7 @@ class Dumbo(ConfigBaseCommandRobot):
         self.XboxController = wpilib.XboxController(0)
         self.driveTrain = self.subsystems["drivetrain"]
         # self.balance = Balance(Input.getButton("XButton", self.XboxController), self.driveTrain)
-        self.balance = Balance(self.XboxController.getXButton(), self.driveTrain)
+        self.balance = Balance(Input().getButton("XButton", self.driver_controller), self.driveTrain)
         self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, self.driveTrain)
 
 
@@ -56,9 +58,8 @@ class Dumbo(ConfigBaseCommandRobot):
 
     def teleopPeriodic(self) -> None:
         # if Input.getButton("XButton", self.XboxController):
-        if self.XboxController.getXButton():
+        if Input().getButton("XButton", self.driver_controller):
             if (not self.balanceing):
-                print("1234567890")
                 commands2.CommandScheduler.getInstance().cancelAll()
             self.driveTrain.setDefaultCommand(self.balanceDrive)
             self.balanceing = True
@@ -72,6 +73,8 @@ class Dumbo(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.putNumber(
             "curr ang", self.robot_arm.getPostion() * math.pi / 180.0
         )
+        if Input().getButton("BButton", self.mech_controller):
+            self.selector.GetSelection(self.mech_controller)
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm.getPostion())
 
         # return super().teleopPeriodic()
@@ -110,24 +113,24 @@ class Dumbo(ConfigBaseCommandRobot):
         """
 
         # Move the arm to 2 radians above horizontal when the 'A' button is pressed.
-        self.driver_controller.A().whileTrue(
+        self.mech_controller.A().whileTrue(
             commands2.cmd.runOnce(lambda: self.trackAngle(), [self.robot_arm])
         )
 
-        self.driver_controller.X().onTrue(
+        self.mech_controller.X().onTrue(
             commands2.cmd.runOnce(lambda: self.moveArmDegrees(0), [self.robot_arm])
         )
 
         # Move the arm to neutral position when the 'B' button is pressed
-        self.driver_controller.B().onTrue(
+        self.mech_controller.start().onTrue(
             commands2.cmd.runOnce(lambda: self.moveArmDegrees(180), [self.robot_arm])
         )
-        self.driver_controller.Y().onTrue(
+        self.mech_controller.Y().onTrue(
             commands2.cmd.runOnce(lambda: self.moveArmDegrees(90), [self.robot_arm])
         )
 
         # Disable the arm controller when Y is pressed
-        self.driver_controller.rightBumper().onTrue(
+        self.mech_controller.back().onTrue(
             commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm])
         )
 
