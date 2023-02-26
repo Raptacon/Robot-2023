@@ -1,6 +1,6 @@
-subsystem: "actuators.dumboArm.Arm"
-name: "arm"
-description: "Arm for Dumbo. Future may be more general arm"
+subsystem: "actuators.dumboArmRotation.ArmRotation"
+name: "armRotation"
+description: "Arm Rotation for Dumbo. Future may be more general arm"
 
 offset: -0.432 # radians
 

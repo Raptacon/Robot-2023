@@ -10,20 +10,20 @@ from commands.balance import Balance
 from selector import Selector
 
 from .configBasedRobot import ConfigBaseCommandRobot
-from subsystems.actuators.dumboArm import Arm
+from subsystems.actuators.dumboArmRotation import ArmRotation
 from subsystems.arm.grader import Grabber
 
 
 class Dumbo(ConfigBaseCommandRobot):
     balanceing = False
-    robot_arm: Arm
+    robot_arm_rotation: ArmRotation
     robot_Grabber: Grabber
     def __init__(self, period: float = 0.02) -> None:
         super().__init__(period)
 
         # Attempt assignments from subsystems and if something is empty, throw an exception
         try:
-            self.robot_arm = self.subsystems["arm"]
+            self.robot_arm_rotation = self.subsystems["armRotation"]
             self.driveTrain = self.subsystems["drivetrain"]
             self.robot_Grabber = self.subsystems["grabber"]
         except:
@@ -46,7 +46,7 @@ class Dumbo(ConfigBaseCommandRobot):
         )
 
         wpilib.SmartDashboard.putNumber(
-            "set angle", self.robot_arm.getPostion() * math.pi / 180.0
+            "set angle", self.robot_arm_rotation.getPostion() * math.pi / 180.0
         )
 
         self.XboxController = wpilib.XboxController(0)
@@ -72,9 +72,9 @@ class Dumbo(ConfigBaseCommandRobot):
                 commands2.CommandScheduler.getInstance().cancelAll()
             self.driveTrain.setDefaultCommand(self.tankDrive)
             self.balanceing = False
-    
+
         wpilib.SmartDashboard.putNumber(
-            "curr ang", self.robot_arm.getPostion() * math.pi / 180.0
+            "curr ang", self.robot_arm_rotation.getPostion() * math.pi / 180.0
         )
         if Input().getButton("RightTrigger", self.mech_controller) != 0:
             self.robot_Grabber.useOutputCones(Input().getButton("RightTrigger", self.mech_controller))
@@ -88,18 +88,18 @@ class Dumbo(ConfigBaseCommandRobot):
             self.robot_Grabber.stop()
         if Input().getButton("BButton", self.mech_controller):
             self.selector.GetSelection(self.mech_controller)
-        wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm.getPostion())
+        wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm_rotation.getPostion())
 
         # return super().teleopPeriodic()
-        
-        
+
+
 
     def testInit(self) -> None:
         wpilib.SmartDashboard.putNumber("ang", 180)
 
     def testPeriodic(self) -> None:
         # test code to trigger. Remove after arm mounted and tested
-        self.robot_arm._getMeasurement()
+        self.robot_arm_rotation._getMeasurement()
         super().testPeriodic()
 
     def teleopExit(self) -> None:
@@ -107,8 +107,8 @@ class Dumbo(ConfigBaseCommandRobot):
         return super().teleopExit()
 
     def moveArm(self, radians: float) -> None:
-        self.robot_arm.setSetpoint(radians)
-        self.robot_arm.enable()
+        self.robot_arm_rotation.setSetpoint(radians)
+        self.robot_arm_rotation.enable()
 
     def moveArmDegrees(self, degrees: float) -> None:
         self.moveArm(math.radians(degrees))
@@ -116,7 +116,7 @@ class Dumbo(ConfigBaseCommandRobot):
     def disablePIDSubsystems(self) -> None:
         """Disables all ProfiledPIDSubsystem and PIDSubsystem instances.
         This should be called on robot disable to prevent integral windup."""
-        self.robot_arm.disable()
+        self.robot_arm_rotation.disable()
 
     def configureButtonBindings(self) -> None:
         """
@@ -127,31 +127,31 @@ class Dumbo(ConfigBaseCommandRobot):
 
         # Move the arm to 2 radians above horizontal when the 'A' button is pressed.
         self.mech_controller.A().whileTrue(
-            commands2.cmd.runOnce(lambda: self.trackAngle(), [self.robot_arm])
+            commands2.cmd.runOnce(lambda: self.trackAngle(), [self.robot_arm_rotation])
         )
 
         self.mech_controller.X().onTrue(
-            commands2.cmd.runOnce(lambda: self.moveArmDegrees(0), [self.robot_arm])
+            commands2.cmd.runOnce(lambda: self.moveArmDegrees(0), [self.robot_arm_rotation])
         )
 
         # Move the arm to neutral position when the 'B' button is pressed
         self.mech_controller.start().onTrue(
-            commands2.cmd.runOnce(lambda: self.moveArmDegrees(180), [self.robot_arm])
+            commands2.cmd.runOnce(lambda: self.moveArmDegrees(180), [self.robot_arm_rotation])
         )
         self.mech_controller.Y().onTrue(
-            commands2.cmd.runOnce(lambda: self.moveArmDegrees(62), [self.robot_arm])
+            commands2.cmd.runOnce(lambda: self.moveArmDegrees(62), [self.robot_arm_rotation])
         )
 
         # Disable the arm controller when Y is pressed
         self.mech_controller.back().onTrue(
-            commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm])
+            commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm_rotation])
         )
 
     def trackAngle(self):
         self.moveArmDegrees(
-            wpilib.SmartDashboard.getNumber("set angle", self.robot_arm.getPostion())
+            wpilib.SmartDashboard.getNumber("set angle", self.robot_arm_rotation.getPostion())
         )
 
     def disableArm(self):
         print("disabling")
-        self.robot_arm.disable()
+        self.robot_arm_rotation.disable()

@@ -10,10 +10,10 @@ hwFactory = utils.hardwareFactory.getHardwareFactory()
 import utils.sensorFactory
 import utils.motorHelper
 
-log = logging.getLogger("Arm")
+log = logging.getLogger("Arm Rotation")
 
 
-class Arm(commands2.PIDSubsystem):
+class ArmRotation(commands2.PIDSubsystem):
     motor: wpilib.interfaces._interfaces.MotorController
     encoder: wpilib.DutyCycleEncoder
     def __init__(self, subsystem, armFeedFordward, offset = 0, *kargs,
@@ -58,7 +58,7 @@ class Arm(commands2.PIDSubsystem):
         self.addChild("Encoder", self.encoder)
         self.offset = offset
         self.addChild("Encoder", self.encoder)
-        
+
         self.disabled = True
         self.setSetpoint(self.getPostion())
 
@@ -87,7 +87,7 @@ class Arm(commands2.PIDSubsystem):
 
     def getPostion(self) -> float:
         return math.fmod(2*math.pi - (self.encoder.getAbsolutePosition() + self.offset) * (2*math.pi), 2*math.pi)
-        
+
     def _getMeasurement(self) -> float:
         #print(f"dist {self.encoder.getDistance() : 01.03}, {self.encoder.getAbsolutePosition(): 01.03} , {self.offset: 01.03}, {self.getPostion(): 01.03}, {math.degrees(self.getPostion()): 01.03}, {self.getSetpoint()}")
         #print(f"ang {math.degrees(self.getPostion())}, {self.encoder.getAbsolutePosition()}")
