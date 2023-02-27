@@ -16,6 +16,8 @@ log = logging.getLogger("Arm Rotation")
 class ArmRotation(commands2.PIDSubsystem):
     motor: wpilib.interfaces._interfaces.MotorController
     encoder: wpilib.DutyCycleEncoder
+    kMinPostion = 0
+    kMaxPostion = .8 * 2 * math.pi
     def __init__(self, subsystem, armFeedFordward, offset = 0, *kargs,
                  **kwargs):
         ''' TODO update to be more generic, hard coding talons
@@ -57,7 +59,11 @@ class ArmRotation(commands2.PIDSubsystem):
 
         self.addChild("Encoder", self.encoder)
         self.offset = offset
-        self.addChild("Encoder", self.encoder)
+
+        if "kMinPostion" in kwargs:
+            self.kMinPostion = kwargs["kMinPostion"]
+        if "kMaxPostion" in kwargs:
+            self.kMaxPostion = kwargs["kMaxPostion"]
 
         self.disabled = True
         self.setSetpoint(self.getPostion())
@@ -95,5 +101,18 @@ class ArmRotation(commands2.PIDSubsystem):
         return self.getPostion()
 
     def setSetpoint(self, goal: float) -> None:
+        if goal < self.kMinPostion:
+            log.warning(f"Goal {goal} is less than min {self.kMinPostion}")
+            return
+        if goal > self.kMaxPostion:
+            log.warning(f"Goal {goal} is greater than max {self.kMaxPostion}")
+            return
+
         self.goal = goal
         super().setSetpoint(self.goal)
+
+    def setSetpointDegrees(self, setpoint: float) -> None:
+        return super().setSetpoint(math.radians(setpoint))
+
+    def atSetpoint(self) -> bool:
+        return self.getController().atSetpoint()

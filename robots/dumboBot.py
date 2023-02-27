@@ -7,17 +7,19 @@ from commands.arcadeDrive import ArcadeDrive
 import math
 from input import Input
 from commands.balance import Balance
+from commands.dumbo import armCommands
 from selector import Selector
 
 from .configBasedRobot import ConfigBaseCommandRobot
 from subsystems.actuators.dumboArmRotation import ArmRotation
+from subsystems.actuators.dumboArmController import ArmController
 from subsystems.arm.grader import Grabber
-
 
 class Dumbo(ConfigBaseCommandRobot):
     balanceing = False
     robot_arm_rotation: ArmRotation
     robot_Grabber: Grabber
+    robot_arm_controller: ArmController
     def __init__(self, period: float = 0.02) -> None:
         super().__init__(period)
 
@@ -26,14 +28,21 @@ class Dumbo(ConfigBaseCommandRobot):
             self.robot_arm_rotation = self.subsystems["armRotation"]
             self.driveTrain = self.subsystems["drivetrain"]
             self.robot_Grabber = self.subsystems["grabber"]
+            self.robot_arm_controller = self.subsystems["armController"]
+            #TODO fix this way this setter works
+            self.robot_arm_controller.setArmRotationSubsystem(self.robot_arm_rotation)
+            #self.robot_arm_controller.setArmExtensionSubsystem(self.robot_arm_extension)
+
         except:
             raise Exception(
                 "ERROR! Wrong Config! Check ~/robotConfig to ensure you're using the correct robot config or correct robot. If it doubt, read the README.md"
             )
         self.driver_controller = commands2.button.CommandXboxController(0)
         self.mech_controller = commands2.button.CommandXboxController(1)
+        self.mech_controller_hid = commands2.button.CommandGenericHID(1)
         self.configureButtonBindings()
         self.selector = Selector()
+
         self.tankDrive = TankDrive(
             Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
             Input.getStick(wpilib.XboxController.Axis.kRightY, 0, True),
@@ -146,6 +155,8 @@ class Dumbo(ConfigBaseCommandRobot):
         self.mech_controller.back().onTrue(
             commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm_rotation])
         )
+
+        armCommands.createArmPositionCommands(self.mech_controller_hid, self.robot_arm_controller)
 
     def trackAngle(self):
         self.moveArmDegrees(

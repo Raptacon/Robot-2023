@@ -2,7 +2,9 @@ subsystem: "actuators.dumboArmRotation.ArmRotation"
 name: "armRotation"
 description: "Arm Rotation for Dumbo. Future may be more general arm"
 
-offset: -0.432 # radians
+offset: -0.432 # 0-1 around unit circle
+kMinPostion: 0.0 # radians
+kMaxPostion: 5.024 #radians
 
 armFeedFordward:
     kS: -0.67376
