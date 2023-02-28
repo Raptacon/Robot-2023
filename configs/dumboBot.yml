@@ -8,10 +8,13 @@ subsystems:
       required: true
       type: yaml
       file: "talonFXTankDrive.yml"
-    arm:
-       required: False
-       type: yaml
-       file: "dumboArm.yml"
+    armRotation:
+      required: True
+      type: yaml
+      file: "dumboArmRotation.yml"
+    armController:
+      type: yaml
+      file: "dumboArmControler.yml"
     grabber:
       required: False
       type: yaml

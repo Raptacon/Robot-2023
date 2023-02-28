@@ -1,0 +1,23 @@
+subsystem: "actuators.dumboArmController.ArmController"
+name: "Dumbo Arm Controller"
+description:  "Handles the rotation, extension, and manipulator"
+
+setArmAnglesDegrees:
+    frontBottom: 0
+    frontMiddle: 30
+    frontTop: 60
+    top: 100
+    backTop: 130
+    backMiddle: 180
+    backBottom: 200
+
+#TODO once arm elevator if set, control here
+setArmLengthUnits:
+    frontBottom: 0
+    frontMiddle: 0
+    frontTop: 0
+    top: 0
+    backTop: 0
+    backMiddle: 0
+    backBottom: 0
+
