@@ -5,7 +5,6 @@ from photonvision import SimVisionSystem
 from wpimath import geometry
 import robotpy_apriltag
 import ntcore
-import time
 
 
 class AprilTags():
@@ -27,38 +26,49 @@ class AprilTags():
         cameraResHeight = 240
         minTargetArea = 0
 
-
+        '''Check whether the camera is running on the robot, and sets the camera up for beign on the robot or being in the sim'''
         '''TODO: change the if statemnt below to detect whether the sim is running, if it is run sim vision system'''
         if(True):
 
+            '''sets up network tables'''
             nt = ntcore.NetworkTableInstance.getDefault()
             nt.startClient3("test code")
-            nt.setServer("10.32.0.2")
+            nt.setServer("10.32.0.13")
+            '''lets people know whether it was connected'''
             while not nt.isConnected():
-                print("Connecting   ", end='\r')
-                print("Connecting.  ", end='\r')
-                print("Connecting.. ", end='\r')
-                print("Connecting...", end='\r')
-
-            self.camera = PhotonCamera(nt, name)
-            self.test = [(self.camera, self.cameraToRobot)]
-
+                print("Network tables Connecting   ", end='\r')
+                print("Network tables Connecting.  ", end='\r')
+                print("Network tables Connecting.. ", end='\r')
+                print("Network tables Connecting...", end='\r')
             if nt.isConnected():
-                print('Connected')
+                print('Network tables Connected')
 
+            '''connects a camera object to the network tables'''
+            self.camera = PhotonCamera(nt, name)
+            '''Creates a camera that has a position on the robot'''
+            self.robotCamera = [(self.camera, self.cameraToRobot)]
         else:
-             self.camera = SimVisionSystem(name, camDaigFov, cameraToRobot, maxLEDRange, cameraResWidth, cameraResHeight, minTargetArea)
+            '''sets up a camera for the sim'''
+            self.camera = SimVisionSystem(name, camDaigFov, cameraToRobot, maxLEDRange, cameraResWidth, cameraResHeight, minTargetArea)
         
         '''grabs this year's feild data'''
         'atfl means AprilTagFieldLayout'
-        #.AprilTagFieldrobotpy_apriltag.AprilTagField.k2023ChargedUp
-        #atfl = robotpy_apriltag._apriltag.AprilTagFieldLayout(robotpy_apriltag.AprilTagField.k2023ChargedUp.loadAprilTagLayoutField())
         atfl = robotpy_apriltag.loadAprilTagLayoutField(robotpy_apriltag.AprilTagField.k2023ChargedUp)
         '''the closest to last pose can be, and probaly should be changed/evaluated, as closest to last pose is just what my example uses'''
-        self.estimator = RobotPoseEstimator(atfl, PoseStrategy.CLOSEST_TO_LAST_POSE, self.test)
+        self.estimator = RobotPoseEstimator(atfl, PoseStrategy.AVERAGE_BEST_TARGETS, self.robotCamera)
 
 
     def updatePose(self) -> geometry.Pose3d:
-        '''returns a pose 3d with the pose of the robot'''
+        '''
+        Gets the position of the robot based off of Apriltag vision systems
+        Parameters: None
+        Return: a 3d pose of the robot in the field
+        '''
+        '''the estimator update function returns a tuple, or basically an array, with the pose and a variable that doesnt seem to be anything'''
         estimatorTuple = self.estimator.update()
-        return(estimatorTuple)
+        retVal = estimatorTuple[0]
+        '''test code:'''
+        pipeLineResult = self.camera.getLatestResult()
+        print(pipeLineResult.hasTargets())
+        
+        return(retVal)

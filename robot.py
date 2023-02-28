@@ -6,6 +6,7 @@ import commands2
 
 from robots.configBasedRobot import ConfigBaseCommandRobot
 from robots.greenBot import GreenBot
+from robots.dumboBot import Dumbo
 
 
 class MyRobot(commands2.TimedCommandRobot):
@@ -27,11 +28,14 @@ class MyRobot(commands2.TimedCommandRobot):
 
         #determine the robot based on the config file
         #TODO
-        
-        if False:
-            self.container = GreenBot()
+
         if True:
+            self.container = GreenBot()
+        if False:
             self.container = ConfigBaseCommandRobot()
+        if False:
+            self.container = Dumbo()
+
 
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""
@@ -58,11 +62,6 @@ class MyRobot(commands2.TimedCommandRobot):
         """This function is called periodically during autonomous"""
 
         self.container.autonomousPeriodic()
-        '''
-        test = self.AprilTagTester.updatePose
-        pose = test[0]
-        print(pose.X())
-        '''
 
 
     def teleopInit(self) -> None:
