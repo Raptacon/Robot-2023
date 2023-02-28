@@ -29,12 +29,14 @@ class MyRobot(commands2.TimedCommandRobot):
         #determine the robot based on the config file
         #TODO
 
-        if False:
+        if True:
             self.container = GreenBot()
         if False:
             self.container = ConfigBaseCommandRobot()
-        if True:
+        if False:
             self.container = Dumbo()
+
+        wpilib.CameraServer.launch()
 
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""
