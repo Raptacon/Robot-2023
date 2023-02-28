@@ -136,10 +136,10 @@ class Dumbo(ConfigBaseCommandRobot):
 
         # Move the arm to neutral position when the 'B' button is pressed
         self.mech_controller.start().onTrue(
-            commands2.cmd.runOnce(lambda: self.moveArmDegrees(180), [self.robot_arm])
+            commands2.cmd.runOnce(lambda: self.moveArmDegrees(120), [self.robot_arm])
         )
         self.mech_controller.Y().onTrue(
-            commands2.cmd.runOnce(lambda: self.moveArmDegrees(62), [self.robot_arm])
+            commands2.cmd.runOnce(lambda: self.moveArmDegrees(270), [self.robot_arm])
         )
 
         # Disable the arm controller when Y is pressed
