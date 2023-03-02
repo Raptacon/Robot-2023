@@ -7,15 +7,15 @@ from commands.arcadeDrive import ArcadeDrive
 import math
 from input import Input
 from commands.balance import Balance
-from commands.dumbo import armCommands
+from commands.breadbox import armCommands
 from selector import Selector
 
 from .configBasedRobot import ConfigBaseCommandRobot
-from subsystems.actuators.dumboArmRotation import ArmRotation
-from subsystems.actuators.dumboArmController import ArmController
+from subsystems.actuators.breadboxArmRotation import ArmRotation
+from subsystems.actuators.breadboxArmController import ArmController
 from subsystems.arm.grader import Grabber
 
-class Dumbo(ConfigBaseCommandRobot):
+class Breadbox(ConfigBaseCommandRobot):
     balanceing = False
     robot_arm_rotation: ArmRotation
     robot_Grabber: Grabber
@@ -85,6 +85,7 @@ class Dumbo(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.putNumber(
             "curr ang", self.robot_arm_rotation.getPostion() * math.pi / 180.0
         )
+
         if Input().getButton("RightTrigger", self.mech_controller) != 0:
             self.robot_Grabber.useOutputCones(Input().getButton("RightTrigger", self.mech_controller))
         elif Input().getButton("RightBumper", self.mech_controller):
@@ -95,6 +96,7 @@ class Dumbo(ConfigBaseCommandRobot):
             self.robot_Grabber.useIntakeCubes(Input().getButton("LeftBumper", self.mech_controller))
         else:
             self.robot_Grabber.stop()
+
         if Input().getButton("BButton", self.mech_controller):
             self.selector.GetSelection(self.mech_controller)
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm_rotation.getPostion())
@@ -156,7 +158,7 @@ class Dumbo(ConfigBaseCommandRobot):
             commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm_rotation])
         )
 
-        armCommands.createArmPositionCommands(self.mech_controller_hid, self.robot_arm_controller)
+        armCommands.createArmPositionCommands(self.mech_controller_hid, self.robot_arm_controller, self.robot_arm_rotation)
 
     def trackAngle(self):
         self.moveArmDegrees(

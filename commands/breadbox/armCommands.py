@@ -1,14 +1,14 @@
 import commands2
 import commands2.button
 import commands2.cmd
-from subsystems.actuators.dumboArmController import ArmController
+from subsystems.actuators.breadboxArmController import ArmController
+from subsystems.actuators.breadboxArmRotation import ArmRotation
 
 
-def createArmPositionCommands(controller: commands2.button.CommandGenericHID, armController: ArmController):
+def createArmPositionCommands(controller: commands2.button.CommandGenericHID, armController: ArmController, arm_subsystem: ArmRotation):
     """
     Creates commands for each arm position
     """
-
 
     controller.POVDownLeft().onTrue(commands2.cmd.run(lambda: armController.setFrontBottom(), armController.getReqSubsystems()))
     controller.POVLeft().onTrue(commands2.cmd.run(lambda: armController.setFrontCenter(), armController.getReqSubsystems()))
@@ -17,3 +17,4 @@ def createArmPositionCommands(controller: commands2.button.CommandGenericHID, ar
     controller.POVUpRight().onTrue(commands2.cmd.run(lambda: armController.setBackTop(), armController.getReqSubsystems()))
     controller.POVRight().onTrue(commands2.cmd.run(lambda: armController.setBackCenter(), armController.getReqSubsystems()))
     controller.POVDownRight().onTrue(commands2.cmd.run(lambda: armController.setBackBottom(), armController.getReqSubsystems()))
+
