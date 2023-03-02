@@ -55,11 +55,6 @@ class Breadbox(ConfigBaseCommandRobot):
             lambda: self.getCreeperMode(),
             self.driveTrain,
         )
-        self.arcadeDrive = ArcadeDrive(
-            Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
-            Input.getStick(wpilib.XboxController.Axis.kRightX, 0, False),
-            self.driveTrain,
-        )
 
         wpilib.SmartDashboard.putNumber(
             "set angle", self.robot_arm_rotation.getPostion() * math.pi / 180.0
