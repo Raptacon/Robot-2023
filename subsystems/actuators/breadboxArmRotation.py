@@ -123,4 +123,4 @@ class ArmRotation(commands2.PIDSubsystem):
             self.motor.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
         else:
             log.warning("Setting to brake")
-            self.motor.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
+            self.motor.setIdleMode(rev.CANSparkMax.IdleMode.kBrake
