@@ -9,9 +9,9 @@ class Autonomous(commands2.SequentialCommandGroup):
         super().__init__()
 
         self.addCommands(
-            GoToDist(10, drive),
+            GoToDist(8, drive),
             commands2.PrintCommand("GoToDist finished"),
             TurnToAngle(180, drive, navx),
             commands2.PrintCommand("TurnToAngle finished"),
-            GoToDist(10, drive)
+            GoToDist(8, drive)
         )
