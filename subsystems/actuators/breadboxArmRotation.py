@@ -9,6 +9,7 @@ import math
 hwFactory = utils.hardwareFactory.getHardwareFactory()
 import utils.sensorFactory
 import utils.motorHelper
+import rev
 
 log = logging.getLogger("Arm Rotation")
 
@@ -17,7 +18,7 @@ class ArmRotation(commands2.PIDSubsystem):
     motor: wpilib.interfaces._interfaces.MotorController
     encoder: wpilib.DutyCycleEncoder
     kMinPostion = 0
-    kMaxPostion = .8 * 2 * math.pi
+    kMaxPostion = 1.0 * 2 * math.pi
     def __init__(self, subsystem, armFeedFordward, offset = 0, *kargs,
                  **kwargs):
         ''' TODO update to be more generic, hard coding talons
@@ -96,6 +97,7 @@ class ArmRotation(commands2.PIDSubsystem):
 
     def _getMeasurement(self) -> float:
         wpilib.SmartDashboard.putNumber("Arm offset", -self.encoder.getAbsolutePosition())
+        wpilib.SmartDashboard.putNumber("Arm Angle Degrees", math.degrees(self.getPostion()))
         return self.getPostion()
 
     def setSetpoint(self, goal: float) -> None:
@@ -114,3 +116,11 @@ class ArmRotation(commands2.PIDSubsystem):
 
     def atSetpoint(self) -> bool:
         return self.getController().atSetpoint()
+
+    def toggleBrake(self) -> None:
+        if self.motor.getIdleMode() == rev.CANSparkMax.IdleMode.kBrake:
+            log.warning("Setting to coast")
+            self.motor.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
+        else:
+            log.warning("Setting to brake")
+            self.motor.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
