@@ -8,6 +8,7 @@ from input import Input
 from commands.balance import Balance
 from commands.breadbox import armCommands
 from selector import Selector
+from wpilib import cameraserver
 
 from .configBasedRobot import ConfigBaseCommandRobot
 from subsystems.actuators.breadboxArmRotation import ArmRotation
@@ -30,6 +31,7 @@ class Breadbox(ConfigBaseCommandRobot):
             self.robot_arm_controller = self.subsystems["armController"]
             #TODO fix this way this setter works
             self.robot_arm_controller.setArmRotationSubsystem(self.robot_arm_rotation)
+            cameraserver.CameraServer.launch()
             #self.robot_arm_controller.setArmExtensionSubsystem(self.robot_arm_extension)
 
         except:
