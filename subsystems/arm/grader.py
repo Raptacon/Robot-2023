@@ -25,20 +25,24 @@ class Grabber(commands2.SubsystemBase):
     def useOutputCones(self, output: float):
         self.speed = output
         self.graberMotor.setVoltage(self.speed * 12)
+        print(self.graberMotor)
 
     def useIntakehCones(self, output : bool):
         if output:
             self.speed = -1
         self.graberMotor.setVoltage(self.speed * 12)
+        print(self.graberMotor)
 
     def useOutputCubes(self, output: float):
         self.speed = output * -1
         self.graberMotor.setVoltage(self.speed * 12)
+        print(self.graberMotor)
 
     def useIntakeCubes(self, output : bool):
         if output:
             self.speed = 1
         self.graberMotor.setVoltage(self.speed * 8)
+        print(self.graberMotor)
 
     def stop(self):
         self.graberMotor.setVoltage(0)
