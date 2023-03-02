@@ -46,6 +46,7 @@ class Breadbox(ConfigBaseCommandRobot):
         self.tankDrive = TankDrive(
             Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
             Input.getStick(wpilib.XboxController.Axis.kRightY, 0, True),
+            lambda: self.getCreeperMode(),
             self.driveTrain,
         )
         self.arcadeDrive = ArcadeDrive(
@@ -57,12 +58,15 @@ class Breadbox(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.putNumber(
             "set angle", self.robot_arm_rotation.getPostion() * math.pi / 180.0
         )
+        wpilib.SmartDashboard.putNumber(
+            "CreeperMode Multiplier", 0.5
+        )
 
         self.XboxController = wpilib.XboxController(0)
         self.driveTrain = self.subsystems["drivetrain"]
         # self.balance = Balance(Input.getButton("XButton", self.XboxController), self.driveTrain)
         self.balance = Balance(Input().getButton("XButton", self.driver_controller), self.driveTrain)
-        self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, self.driveTrain)
+        self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, lambda: self.getCreeperMode(), self.driveTrain)
 
 
     def teleopInit(self) -> None:
@@ -87,9 +91,9 @@ class Breadbox(ConfigBaseCommandRobot):
         )
 
         if Input().getButton("RightTrigger", self.driver_controller):
-            self.tankDrive.limit = .75
+            self.creeperMode = True
         else:
-            self.tankDrive.limit = 1
+            self.creeperMode = False
 
         if Input().getButton("RightTrigger", self.mech_controller) != 0:
             self.robot_Grabber.useOutputCones(Input().getButton("RightTrigger", self.mech_controller))
@@ -173,3 +177,6 @@ class Breadbox(ConfigBaseCommandRobot):
     def disableArm(self):
         print("disabling")
         self.robot_arm_rotation.disable()
+
+    def getCreeperMode(self):
+        return self.creeperMode
