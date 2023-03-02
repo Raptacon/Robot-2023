@@ -86,6 +86,11 @@ class Breadbox(ConfigBaseCommandRobot):
             "curr ang", self.robot_arm_rotation.getPostion() * math.pi / 180.0
         )
 
+        if Input().getButton("RightTrigger", self.driver_controller):
+            self.tankDrive.limit = .75
+        else:
+            self.tankDrive.limit = 1
+
         if Input().getButton("RightTrigger", self.mech_controller) != 0:
             self.robot_Grabber.useOutputCones(Input().getButton("RightTrigger", self.mech_controller))
         elif Input().getButton("RightBumper", self.mech_controller):
