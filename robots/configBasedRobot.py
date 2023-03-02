@@ -4,7 +4,6 @@ import commands2
 import wpimath.filter
 import wpimath
 import navx
-from auto import Autonomous
 
 import utils.configMapper
 
@@ -30,8 +29,7 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
         self.navx = navx._navx.AHRS.create_spi()
 
     def getAutonomousCommand(self):
-        return(Autonomous(self.driveTrain, self.navx))
-
+        return None
 
     def teleopInit(self) -> None:
         super().teleopInit()

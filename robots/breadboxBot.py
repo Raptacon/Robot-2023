@@ -9,6 +9,7 @@ from input import Input
 from commands.balance import Balance
 from commands.breadbox import armCommands
 from selector import Selector
+from auto import Autonomous
 
 from .configBasedRobot import ConfigBaseCommandRobot
 from subsystems.actuators.breadboxArmRotation import ArmRotation
@@ -64,6 +65,9 @@ class Breadbox(ConfigBaseCommandRobot):
         self.balance = Balance(Input().getButton("XButton", self.driver_controller), self.driveTrain)
         self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, self.driveTrain)
 
+    def getAutonomousCommand(self):
+        print("Gave Command")
+        return(Autonomous(self.driveTrain, self.navx, self.robot_arm_rotation, self.robot_Grabber))
 
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)

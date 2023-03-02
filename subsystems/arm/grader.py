@@ -23,23 +23,33 @@ class Grabber(commands2.SubsystemBase):
             self.graberMotor = hwFactory.getHardwareComponent("grabber" , "grader")
 
     def useOutputCones(self, output: float):
+        self.checkForMotor()
         self.speed = output
         self.graberMotor.setVoltage(self.speed * 12)
 
     def useIntakehCones(self, output : bool):
+        self.checkForMotor()
         if output:
             self.speed = -1
         self.graberMotor.setVoltage(self.speed * 12)
 
     def useOutputCubes(self, output: float):
+        self.checkForMotor()
         self.speed = output * -1
         self.graberMotor.setVoltage(self.speed * 12)
 
     def useIntakeCubes(self, output : bool):
+        self.checkForMotor()
         if output:
             self.speed = 1
         self.graberMotor.setVoltage(self.speed * 8)
 
     def stop(self):
+        self.checkForMotor()
         self.graberMotor.setVoltage(0)
 
+    def checkForMotor(self):
+        if self.graberMotor:
+            return
+        else:
+            self.graberMotor = hwFactory.getHardwareComponent("grabber" , "grader")
