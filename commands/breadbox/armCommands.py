@@ -5,7 +5,7 @@ from subsystems.actuators.breadboxArmController import ArmController
 from subsystems.actuators.breadboxArmRotation import ArmRotation
 
 
-def createArmPositionCommands(controller: commands2.button.CommandGenericHID, armController: ArmController, arm_subsystem: ArmRotation):
+def createArmPositionCommands(controller: commands2.button.CommandGenericHID, xbox: commands2.button.CommandXboxController, armController: ArmController, arm_subsystem: ArmRotation):
     """
     Creates commands for each arm position
     """
@@ -17,4 +17,5 @@ def createArmPositionCommands(controller: commands2.button.CommandGenericHID, ar
     controller.POVUpRight().onTrue(commands2.cmd.run(lambda: armController.setBackTop(), armController.getReqSubsystems()))
     controller.POVRight().onTrue(commands2.cmd.run(lambda: armController.setBackCenter(), armController.getReqSubsystems()))
     controller.POVDownRight().onTrue(commands2.cmd.run(lambda: armController.setBackBottom(), armController.getReqSubsystems()))
+    xbox.start().onTrue(commands2.cmd.runOnce(lambda: arm_subsystem.toggleBrake(), [arm_subsystem]))
 

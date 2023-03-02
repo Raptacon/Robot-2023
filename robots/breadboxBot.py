@@ -3,7 +3,6 @@ import commands2
 import commands2.cmd
 import commands2.button
 from commands.tankDrive import TankDrive
-from commands.arcadeDrive import ArcadeDrive
 import math
 from input import Input
 from commands.balance import Balance
@@ -37,6 +36,13 @@ class Breadbox(ConfigBaseCommandRobot):
             raise Exception(
                 "ERROR! Wrong Config! Check ~/robotConfig to ensure you're using the correct robot config or correct robot. If it doubt, read the README.md"
             )
+
+        wpilib.SmartDashboard.putNumber(
+            "set angle", self.robot_arm_rotation.getPostion() * math.pi / 180.0
+        )
+
+
+    def teleopInit(self) -> None:
         self.driver_controller = commands2.button.CommandXboxController(0)
         self.mech_controller = commands2.button.CommandXboxController(1)
         self.mech_controller_hid = commands2.button.CommandGenericHID(1)
@@ -48,29 +54,18 @@ class Breadbox(ConfigBaseCommandRobot):
             Input.getStick(wpilib.XboxController.Axis.kRightY, 0, True),
             self.driveTrain,
         )
-        self.arcadeDrive = ArcadeDrive(
-            Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
-            Input.getStick(wpilib.XboxController.Axis.kRightX, 0, False),
-            self.driveTrain,
-        )
+        
+        self.driveTrain.setDefaultCommand(self.tankDrive)
 
-        wpilib.SmartDashboard.putNumber(
-            "set angle", self.robot_arm_rotation.getPostion() * math.pi / 180.0
-        )
-
-        self.XboxController = wpilib.XboxController(0)
         self.driveTrain = self.subsystems["drivetrain"]
         # self.balance = Balance(Input.getButton("XButton", self.XboxController), self.driveTrain)
-        self.balance = Balance(Input().getButton("XButton", self.driver_controller), self.driveTrain)
+        self.balance = Balance(self.driver_controller.getAButton(), self.driveTrain)
         self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, self.driveTrain)
 
 
-    def teleopInit(self) -> None:
-        self.driveTrain.setDefaultCommand(self.tankDrive)
-
     def teleopPeriodic(self) -> None:
         # if Input.getButton("XButton", self.XboxController):
-        if Input().getButton("XButton", self.driver_controller):
+        if self.driver_controller.getAButton():
             if (not self.balanceing):
                 commands2.CommandScheduler.getInstance().cancelAll()
             self.driveTrain.setDefaultCommand(self.balanceDrive)
@@ -86,14 +81,14 @@ class Breadbox(ConfigBaseCommandRobot):
             "curr ang", self.robot_arm_rotation.getPostion() * math.pi / 180.0
         )
 
-        if Input().getButton("RightTrigger", self.mech_controller) != 0:
-            self.robot_Grabber.useOutputCones(Input().getButton("RightTrigger", self.mech_controller))
-        elif Input().getButton("RightBumper", self.mech_controller):
-            self.robot_Grabber.useIntakehCones(Input().getButton("RightBumper", self.mech_controller))
-        elif Input().getButton("LeftTrigger", self.mech_controller) != 0:
-            self.robot_Grabber.useOutputCubes(Input().getButton("LeftTrigger", self.mech_controller))
-        elif Input().getButton("LeftBumper", self.mech_controller):
-            self.robot_Grabber.useIntakeCubes(Input().getButton("LeftBumper", self.mech_controller))
+        if self.mech_controller.getRightTriggerAxis() > 0.2:
+            self.robot_Grabber.useOutputCones(self.mech_controller.getRightTriggerAxis())
+        elif self.mech_controller.getRightBumper():
+            self.robot_Grabber.useIntakehCones(self.mech_controller.getRightBumper())
+        elif self.mech_controller.getLeftTriggerAxis() > 0.2:
+            self.robot_Grabber.useOutputCubes(self.mech_controller.getLeftTriggerAxis())
+        elif self.mech_controller.getLeftBumper():
+            self.robot_Grabber.useIntakeCubes(self.mech_controller.getLeftBumper())
         else:
             self.robot_Grabber.stop()
 
@@ -101,7 +96,7 @@ class Breadbox(ConfigBaseCommandRobot):
             self.selector.GetSelection(self.mech_controller)
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm_rotation.getPostion())
 
-        # return super().teleopPeriodic()
+        return super().teleopPeriodic()
 
 
 
@@ -137,20 +132,8 @@ class Breadbox(ConfigBaseCommandRobot):
         """
 
         # Move the arm to 2 radians above horizontal when the 'A' button is pressed.
-        self.mech_controller.A().whileTrue(
+        self.mech_controller.A().onTrue(
             commands2.cmd.runOnce(lambda: self.trackAngle(), [self.robot_arm_rotation])
-        )
-
-        self.mech_controller.X().onTrue(
-            commands2.cmd.runOnce(lambda: self.moveArmDegrees(0), [self.robot_arm_rotation])
-        )
-
-        # Move the arm to neutral position when the 'B' button is pressed
-        self.mech_controller.start().onTrue(
-            commands2.cmd.runOnce(lambda: self.moveArmDegrees(180), [self.robot_arm_rotation])
-        )
-        self.mech_controller.Y().onTrue(
-            commands2.cmd.runOnce(lambda: self.moveArmDegrees(62), [self.robot_arm_rotation])
         )
 
         # Disable the arm controller when Y is pressed
@@ -158,7 +141,7 @@ class Breadbox(ConfigBaseCommandRobot):
             commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm_rotation])
         )
 
-        armCommands.createArmPositionCommands(self.mech_controller_hid, self.robot_arm_controller, self.robot_arm_rotation)
+        armCommands.createArmPositionCommands(self.mech_controller_hid, self.mech_controller, self.robot_arm_controller, self.robot_arm_rotation)
 
     def trackAngle(self):
         self.moveArmDegrees(
