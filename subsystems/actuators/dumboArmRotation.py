@@ -95,9 +95,6 @@ class ArmRotation(commands2.PIDSubsystem):
         return math.fmod(2*math.pi - (self.encoder.getAbsolutePosition() + self.offset) * (2*math.pi), 2*math.pi)
 
     def _getMeasurement(self) -> float:
-        #print(f"dist {self.encoder.getDistance() : 01.03}, {self.encoder.getAbsolutePosition(): 01.03} , {self.offset: 01.03}, {self.getPostion(): 01.03}, {math.degrees(self.getPostion()): 01.03}, {self.getSetpoint()}")
-        #print(f"ang {math.degrees(self.getPostion())}, {self.encoder.getAbsolutePosition()}")
-        #print(self.encoder.getAbsolutePosition()) #TODO enable for cal, conver to dashboard
         wpilib.SmartDashboard.putNumber("Arm offset", -self.encoder.getAbsolutePosition())
         return self.getPostion()
 
@@ -113,7 +110,7 @@ class ArmRotation(commands2.PIDSubsystem):
         super().setSetpoint(self.goal)
 
     def setSetpointDegrees(self, setpoint: float) -> None:
-        return super().setSetpoint(math.radians(setpoint))
+        return self.setSetpoint(math.radians(setpoint))
 
     def atSetpoint(self) -> bool:
         return self.getController().atSetpoint()

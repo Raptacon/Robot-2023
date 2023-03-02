@@ -85,6 +85,7 @@ class Dumbo(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.putNumber(
             "curr ang", self.robot_arm_rotation.getPostion() * math.pi / 180.0
         )
+
         if Input().getButton("RightTrigger", self.mech_controller) != 0:
             self.robot_Grabber.useOutputCones(Input().getButton("RightTrigger", self.mech_controller))
         elif Input().getButton("RightBumper", self.mech_controller):
@@ -95,6 +96,7 @@ class Dumbo(ConfigBaseCommandRobot):
             self.robot_Grabber.useIntakeCubes(Input().getButton("LeftBumper", self.mech_controller))
         else:
             self.robot_Grabber.stop()
+
         if Input().getButton("BButton", self.mech_controller):
             self.selector.GetSelection(self.mech_controller)
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm_rotation.getPostion())
@@ -156,7 +158,7 @@ class Dumbo(ConfigBaseCommandRobot):
             commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm_rotation])
         )
 
-        armCommands.createArmPositionCommands(self.mech_controller_hid, self.robot_arm_controller)
+        armCommands.createArmPositionCommands(self.mech_controller_hid, self.robot_arm_controller, self.robot_arm_rotation)
 
     def trackAngle(self):
         self.moveArmDegrees(

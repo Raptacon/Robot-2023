@@ -62,6 +62,7 @@ class ArmController(commands2.SubsystemBase):
             armLength (_type_): length of arm in units
         """
         self.getArmRotation().setSetpointDegrees(angleDegrees)
+        self.getArmRotation().enable()
 
     def setFrontBottom(self):
         """
