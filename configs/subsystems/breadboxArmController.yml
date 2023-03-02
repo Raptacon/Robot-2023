@@ -7,8 +7,8 @@ setArmAnglesDegrees:
     frontMiddle: 30
     frontTop: 60
     top: 100
-    backTop: 130
-    backMiddle: 180
+    backTop: 161.0
+    backMiddle: 196.0
     backBottom: 200
 
 #TODO once arm elevator if set, control here

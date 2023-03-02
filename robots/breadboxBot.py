@@ -98,6 +98,8 @@ class Breadbox(ConfigBaseCommandRobot):
             self.selector.GetSelection(self.mech_controller)
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm_rotation.getPostion())
 
+        self.robot_arm_rotation._getMeasurement()
+
         return super().teleopPeriodic()
 
 
