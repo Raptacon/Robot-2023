@@ -1,4 +1,4 @@
-subsystem: "actuators.dumboArmController.ArmController"
+subsystem: "actuators.breadboxArmController.ArmController"
 name: "Dumbo Arm Controller"
 description:  "Handles the rotation, extension, and manipulator"
 

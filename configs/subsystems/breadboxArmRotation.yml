@@ -1,4 +1,4 @@
-subsystem: "actuators.dumboArmRotation.ArmRotation"
+subsystem: "actuators.breadboxArmRotation.ArmRotation"
 name: "armRotation"
 description: "Arm Rotation for Dumbo. Future may be more general arm"
 

@@ -7,15 +7,15 @@ from commands.arcadeDrive import ArcadeDrive
 import math
 from input import Input
 from commands.balance import Balance
-from commands.dumbo import armCommands
+from commands.breadbox import armCommands
 from selector import Selector
 
 from .configBasedRobot import ConfigBaseCommandRobot
-from subsystems.actuators.dumboArmRotation import ArmRotation
-from subsystems.actuators.dumboArmController import ArmController
+from subsystems.actuators.breadboxArmRotation import ArmRotation
+from subsystems.actuators.breadboxArmController import ArmController
 from subsystems.arm.grader import Grabber
 
-class Dumbo(ConfigBaseCommandRobot):
+class Breadbox(ConfigBaseCommandRobot):
     balanceing = False
     robot_arm_rotation: ArmRotation
     robot_Grabber: Grabber

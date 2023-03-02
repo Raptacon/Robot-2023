@@ -1,4 +1,3 @@
-#Warning this file is depricated and will be removed
 details: "Drive Train For Dumbo with elevator on arm and actuator"
 cameraServer: True #
 # Start camera server for USB cameras
