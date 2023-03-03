@@ -131,11 +131,7 @@ class Breadbox(ConfigBaseCommandRobot):
         if Input().getButton("BButton", self.mech_controller):
             self.selector.GetSelection(self.mech_controller)
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm_rotation.getPostion())
-
-        self.robot_arm_rotation._getMeasurement()
-
         return super().teleopPeriodic()
-
 
 
     def testInit(self) -> None:
@@ -193,6 +189,3 @@ class Breadbox(ConfigBaseCommandRobot):
 
     def getCreeperMode(self):
         return self.creeperMode
-
-
-

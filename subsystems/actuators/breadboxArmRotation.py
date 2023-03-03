@@ -130,6 +130,10 @@ class ArmRotation(commands2.PIDSubsystem):
         self.goal = goal
         super().setSetpoint(self.goal)
 
+    def periodic(self) -> None:
+        super().periodic()
+        self.getPostion()
+
     def setSetpointDegrees(self, setpoint: float) -> None:
         return self.setSetpoint(math.radians(setpoint))
 
