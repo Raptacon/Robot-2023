@@ -10,17 +10,17 @@ class Autonomous(commands2.SequentialCommandGroup):
     def __init__(self, drive : Westcoast, navx : navx.AHRS) -> None:
         super().__init__()
         
-        distance = wpilib.SmartDashboard.getNumber("Auto Distance 1", 8)
+        distance1 = wpilib.SmartDashboard.getNumber("Auto Distance 1", 8)
         distance2 = wpilib.SmartDashboard.getNumber("Auto Distance 2", 8)
         turnAngle = 180
 
-        log.info(f"Auto Distance 1: {distance}")
+        log.info(f"Auto Distance 1: {distance1}")
         log.info(f"Auto Distance 2: {distance2}")
         log.info(f"Auto Turn Angle: {turnAngle}")
 
         self.addCommands(
-            GoToDist(distance, drive),
-            commands2.PrintCommand(f"GoToDist finished {distance}"),
+            GoToDist(distance1, drive),
+            commands2.PrintCommand(f"GoToDist finished {distance1}"),
             TurnToAngle(turnAngle, drive, navx),
             commands2.PrintCommand(f"TurnToAngle finished {turnAngle}"),
             GoToDist(distance2, drive),
