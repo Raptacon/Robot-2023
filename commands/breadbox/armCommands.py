@@ -10,12 +10,12 @@ def createArmPositionCommands(controller: commands2.button.CommandGenericHID, xb
     Creates commands for each arm position
     """
 
-    controller.POVDownLeft().onTrue(commands2.cmd.run(lambda: armController.setFrontBottom(), armController.getReqSubsystems()))
-    controller.POVLeft().onTrue(commands2.cmd.run(lambda: armController.setFrontCenter(), armController.getReqSubsystems()))
-    controller.POVUpLeft().onTrue(commands2.cmd.run(lambda: armController.setFrontTop(), armController.getReqSubsystems()))
+    xbox.back().onTrue(commands2.cmd.run(lambda: armController.setFrontBottom(), armController.getReqSubsystems()))
+    xbox.start().onTrue(commands2.cmd.run(lambda: armController.setFrontCenter(), armController.getReqSubsystems()))
+    xbox.X().onTrue(commands2.cmd.run(lambda: armController.setFrontTop(), armController.getReqSubsystems()))
     controller.POVUp().onTrue(commands2.cmd.run(lambda: armController.setTop(), armController.getReqSubsystems()))
-    controller.POVUpRight().onTrue(commands2.cmd.run(lambda: armController.setBackTop(), armController.getReqSubsystems()))
-    controller.POVRight().onTrue(commands2.cmd.run(lambda: armController.setBackCenter(), armController.getReqSubsystems()))
-    controller.POVDownRight().onTrue(commands2.cmd.run(lambda: armController.setBackBottom(), armController.getReqSubsystems()))
-    xbox.start().onTrue(commands2.cmd.runOnce(lambda: arm_subsystem.toggleBrake(), [arm_subsystem]))
+    xbox.Y().onTrue(commands2.cmd.run(lambda: armController.setBackTop(), armController.getReqSubsystems()))
+    xbox.B().onTrue(commands2.cmd.run(lambda: armController.setBackCenter(), armController.getReqSubsystems()))
+    xbox.A().onTrue(commands2.cmd.run(lambda: armController.setBackBottom(), armController.getReqSubsystems()))
+    xbox.rightStick().onTrue(commands2.cmd.runOnce(lambda: arm_subsystem.toggleBrake(), [arm_subsystem]))
 

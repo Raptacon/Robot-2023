@@ -13,9 +13,6 @@ class Autonomous(commands2.SequentialCommandGroup):
         super().__init__()
 
         self.addCommands(
-            AutoArm(arm, 270),
+            AutoArm(arm, 135),
             AutoIntake(grabber, False, 2),
-            AutoArm(arm, 0),
-            GoToDist(3, drive, .75),
-            Balance(True, drive)
         )
