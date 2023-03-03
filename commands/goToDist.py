@@ -4,6 +4,7 @@ import wpimath.controller
 import time
 from subsystems.drivetrains.westcoast import Westcoast as DriveTrain
 
+#TODO change name to something that represents time as this no longer works with distance
 class GoToDist(commands2.CommandBase):
     def __init__(self, maxTime: float, drive: DriveTrain, speed : float) -> None:
         """Creates a new DriveDistance. This command will drive your your robot for a desired distance at
