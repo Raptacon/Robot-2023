@@ -23,7 +23,7 @@ class Autonomous(commands2.SequentialCommandGroup):
         log.info(f"Auto Turn Angle: {turnAngle}")
 
         self.addCommands(
-            commands2.cmd.run(lambda: armController.setBackCenter(), armController.getReqSubsystems()),
+            commands2.cmd.runOnce(lambda: armController.setBackTop(), armController.getReqSubsystems()),
             commands2.PrintCommand("Arm movement finished"),
             AutoGrabber(grabber, 2, False),
             commands2.PrintCommand("output cone"),
