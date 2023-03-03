@@ -44,6 +44,11 @@ class Breadbox(ConfigBaseCommandRobot):
             "set angle", self.robot_arm_rotation.getPostion() * math.pi / 180.0
         )
 
+        #create auto distance numbers if do not exist
+        # if wpilib.SmartDashboard.getNumber("Auto Distance 1", -1) == -1:
+        wpilib.SmartDashboard.putNumber("Auto Distance 1", 8)
+        wpilib.SmartDashboard.putNumber("Auto Distance 2", 8)
+
 
     def teleopInit(self) -> None:
         self.driver_controller = commands2.button.CommandXboxController(0)
