@@ -112,7 +112,7 @@ class ArmRotation(commands2.PIDSubsystem):
 
         #below 0 sensor set point, we treat 0-kRolloverDeadZoneDeg for control purposes
         if currDeg > self.kRolloverDeadZoneDeg:
-            return 0
+            absPos = 2*math.pi - currPos
 
         return absPos
 
