@@ -40,7 +40,6 @@ class Breadbox(ConfigBaseCommandRobot):
                 "ERROR! Wrong Config! Check ~/robotConfig to ensure you're using the correct robot config or correct robot. If it doubt, read the README.md"
             )
 
-
         wpilib.SmartDashboard.putNumber(
             "set angle", self.robot_arm_rotation.getPostion() * math.pi / 180.0
         )
