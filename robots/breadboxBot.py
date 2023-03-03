@@ -45,9 +45,11 @@ class Breadbox(ConfigBaseCommandRobot):
         )
 
         #create auto distance numbers if do not exist
-        # if wpilib.SmartDashboard.getNumber("Auto Distance 1", -1) == -1:
-        wpilib.SmartDashboard.putNumber("Auto Distance 1", 8)
-        wpilib.SmartDashboard.putNumber("Auto Distance 2", 8)
+        #wpilib.SmartDashboard.putNumber("Auto Distance 1", 7.25)
+        #wpilib.SmartDashboard.putNumber("Auto Distance 2", 7.25)
+        wpilib.SmartDashboard.setPersistent("Auto Distance 1")
+        wpilib.SmartDashboard.setPersistent("Auto Distance 2")
+
 
 
     def teleopInit(self) -> None:

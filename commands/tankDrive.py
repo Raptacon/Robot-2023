@@ -33,7 +33,7 @@ class TankDrive(commands2.CommandBase):
 
     def getCreeperMultiplier(self) -> float:
         creeperMode = self.creeperMode()
-        print(creeperMode)
+        #print(creeperMode)
         if creeperMode:
             return float(wpilib.SmartDashboard.getNumber("CreeperMode Multiplier", .5))
         else:
