@@ -15,7 +15,7 @@ class AutoGrabber(commands2.CommandBase):
     def execute(self) -> None:
         self.currentTime = time.time() - self.startingTime
         if self.intaking:
-            self.grabber.useIntakehCones(True)
+            self.grabber.useIntakeCones(True)
         else:
             self.grabber.useOutputCones(1)
     

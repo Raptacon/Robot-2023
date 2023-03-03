@@ -107,7 +107,7 @@ class Breadbox(ConfigBaseCommandRobot):
         if self.mech_controller.getRightTriggerAxis() > 0.2:
             self.robot_Grabber.useOutputCones(self.mech_controller.getRightTriggerAxis())
         elif self.mech_controller.getRightBumper():
-            self.robot_Grabber.useIntakehCones(self.mech_controller.getRightBumper())
+            self.robot_Grabber.useIntakeCones(self.mech_controller.getRightBumper())
         elif self.mech_controller.getLeftTriggerAxis() > 0.2:
             self.robot_Grabber.useOutputCubes(self.mech_controller.getLeftTriggerAxis())
         elif self.mech_controller.getLeftBumper():
