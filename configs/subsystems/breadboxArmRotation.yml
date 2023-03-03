@@ -2,7 +2,7 @@ subsystem: "actuators.breadboxArmRotation.ArmRotation"
 name: "armRotation"
 description: "Arm Rotation for Dumbo. Future may be more general arm"
 
-offset: -0.571 # 0-1 around unit circle
+offset: -0.626 # 0-1 around unit circle
 kMinPostion: 0.0 # radians
 kMaxPostion: 5.024 #radians
 
