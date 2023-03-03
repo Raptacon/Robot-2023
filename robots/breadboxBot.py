@@ -41,7 +41,6 @@ class Breadbox(ConfigBaseCommandRobot):
             )
 
 
-        wpilib.SmartDashboard.init()
         wpilib.SmartDashboard.putNumber(
             "set angle", self.robot_arm_rotation.getPostion() * math.pi / 180.0
         )
@@ -193,3 +192,6 @@ class Breadbox(ConfigBaseCommandRobot):
 
     def getCreeperMode(self):
         return self.creeperMode
+
+
+
