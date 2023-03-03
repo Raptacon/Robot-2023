@@ -3,10 +3,12 @@ import commands2
 import commands2.cmd
 import commands2.button
 from commands.tankDrive import TankDrive
+from auto import Autonomous
 import math
 from input import Input
 from commands.balance import Balance
 from commands.breadbox import armCommands
+
 from selector import Selector
 from wpilib import cameraserver
 
@@ -50,8 +52,8 @@ class Breadbox(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.setPersistent("Auto Distance 1")
         wpilib.SmartDashboard.setPersistent("Auto Distance 2")
 
-
-
+    def getAutonomousCommand(self):
+        return(Autonomous(self.driveTrain, self.navx, self.robot_arm_controller))
 
     def teleopInit(self) -> None:
         self.driver_controller = commands2.button.CommandXboxController(0)
