@@ -31,7 +31,7 @@ class ArmRotation(commands2.PIDSubsystem):
 
         pidController = wpimath.controller.PIDController(9.7, 0, 74,6)
 
-        pidController.setTolerance(0.1)
+        pidController.setTolerance(0.02)
         super().__init__(pidController, 0)
         #TODO Fix factor
 #        self.config = kwargs
