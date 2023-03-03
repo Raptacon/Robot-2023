@@ -137,12 +137,12 @@ class Breadbox(ConfigBaseCommandRobot):
         """
 
         # Move the arm to 2 radians above horizontal when the 'A' button is pressed.
-        self.mech_controller.A().onTrue(
+        self.mech_controller_hid.POVLeft().onTrue(
             commands2.cmd.runOnce(lambda: self.trackAngle(), [self.robot_arm_rotation])
         )
 
         # Disable the arm controller when Y is pressed
-        self.mech_controller.back().onTrue(
+        self.mech_controller.leftStick().onTrue(
             commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm_rotation])
         )
 

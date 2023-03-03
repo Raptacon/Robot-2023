@@ -1,10 +1,12 @@
 import wpilib
 import commands2
-
+import json
+from pathlib import Path
 import wpimath.filter
 import wpimath
 import navx
 from auto import Autonomous
+import os
 
 import utils.configMapper
 
@@ -28,6 +30,30 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
             self.subsystems[ssName] = subsystem
 
         self.navx = navx._navx.AHRS.create_spi()
+
+        self.robotVersion = self.getRobotVersion()
+
+    def getRobotVersion(self) -> str:
+        jason_object = None
+        home = str(Path.home()) + os.path.sep
+        releaseFile = home + "release.json"
+        print("release file:" + str(releaseFile))
+        try:
+            with open('releaseFile', 'r') as openfile:
+                # Reading from json file
+                json_object = json.load(openfile)
+                print(json_object)
+                print(type(json_object))
+        except OSError as E:
+                dictionary = '{"deploy-host": "DESKTOP-80HA89O", "deploy-user": "ehsra", "deploy-date": "2023-03-02T17:54:14", "code-path": "blah", "git-hash": "3f4e89f138d9d78093bd4869e0cac9b61becd2b9", "git-desc": "3f4e89f-dirty", "git-branch": "fix-recal-nbeasley"}'
+                json_object = json.dumps(dictionary, indent=4)
+                for i in json_object:
+                    print(f"i={i['deploy-host']}")
+        print(f">>>>>>>>>>>>>>>>{json_object}")
+        return json_object
+
+    def teleopPeriodic(self) -> None:
+         wpilib.SmartDashboard.putString("robotVersion",self.robotVersion)
 
     def getAutonomousCommand(self):
         return(Autonomous(self.driveTrain, self.navx))
