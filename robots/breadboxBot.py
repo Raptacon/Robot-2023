@@ -55,15 +55,21 @@ class Breadbox(ConfigBaseCommandRobot):
         self.tankDrive = TankDrive(
             Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
             Input.getStick(wpilib.XboxController.Axis.kRightY, 0, True),
+            lambda: self.getCreeperMode(),
             self.driveTrain,
         )
-        
-        self.driveTrain.setDefaultCommand(self.tankDrive)
+
+        wpilib.SmartDashboard.putNumber(
+            "set angle", self.robot_arm_rotation.getPostion() * math.pi / 180.0
+        )
+        wpilib.SmartDashboard.putNumber(
+            "CreeperMode Multiplier", 0.5
+        )
 
         self.driveTrain = self.subsystems["drivetrain"]
         # self.balance = Balance(Input.getButton("XButton", self.XboxController), self.driveTrain)
-        self.balance = Balance(self.driver_controller.getAButton(), self.driveTrain)
-        self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, self.driveTrain)
+        self.balance = Balance(Input().getButton("XButton", self.driver_controller), self.driveTrain)
+        self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, lambda: self.getCreeperMode(), self.driveTrain)
 
 
     def teleopPeriodic(self) -> None:
@@ -83,6 +89,10 @@ class Breadbox(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.putNumber(
             "curr ang", self.robot_arm_rotation.getPostion() * math.pi / 180.0
         )
+        if Input().getButton("RightTrigger", self.driver_controller) > 0.2:
+            self.creeperMode = True
+        else:
+            self.creeperMode = False
 
         if self.mech_controller.getRightTriggerAxis() > 0.2:
             self.robot_Grabber.useOutputCones(self.mech_controller.getRightTriggerAxis())
@@ -92,6 +102,19 @@ class Breadbox(ConfigBaseCommandRobot):
             self.robot_Grabber.useOutputCubes(self.mech_controller.getLeftTriggerAxis())
         elif self.mech_controller.getLeftBumper():
             self.robot_Grabber.useIntakeCubes(self.mech_controller.getLeftBumper())
+        if Input().getButton("RightTrigger", self.driver_controller):
+            self.creeperMode = True
+        else:
+            self.creeperMode = False
+
+        if Input().getButton("RightTrigger", self.mech_controller) != 0:
+            self.robot_Grabber.useOutputCones(Input().getButton("RightTrigger", self.mech_controller))
+        elif Input().getButton("RightBumper", self.mech_controller):
+            self.robot_Grabber.useIntakehCones(Input().getButton("RightBumper", self.mech_controller))
+        elif Input().getButton("LeftTrigger", self.mech_controller) != 0:
+            self.robot_Grabber.useOutputCubes(Input().getButton("LeftTrigger", self.mech_controller))
+        elif Input().getButton("LeftBumper", self.mech_controller):
+            self.robot_Grabber.useIntakeCubes(Input().getButton("LeftBumper", self.mech_controller))
         else:
             self.robot_Grabber.stop()
 
@@ -136,13 +159,14 @@ class Breadbox(ConfigBaseCommandRobot):
         and then passing it to a JoystickButton.
         """
 
-        # Move the arm to 2 radians above horizontal when the 'A' button is pressed.
-        self.mech_controller.A().onTrue(
+
+        #track smart dashboad on left click
+        self.mech_controller_hid.POVLeft().onTrue(
             commands2.cmd.runOnce(lambda: self.trackAngle(), [self.robot_arm_rotation])
         )
 
-        # Disable the arm controller when Y is pressed
-        self.mech_controller.back().onTrue(
+        # Disable the arm controller when Left Stick
+        self.mech_controller.leftStick().onTrue(
             commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm_rotation])
         )
 
@@ -156,3 +180,6 @@ class Breadbox(ConfigBaseCommandRobot):
     def disableArm(self):
         print("disabling")
         self.robot_arm_rotation.disable()
+
+    def getCreeperMode(self):
+        return self.creeperMode
