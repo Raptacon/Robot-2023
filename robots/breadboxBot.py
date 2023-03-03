@@ -40,15 +40,18 @@ class Breadbox(ConfigBaseCommandRobot):
                 "ERROR! Wrong Config! Check ~/robotConfig to ensure you're using the correct robot config or correct robot. If it doubt, read the README.md"
             )
 
+
+        wpilib.SmartDashboard.init()
         wpilib.SmartDashboard.putNumber(
             "set angle", self.robot_arm_rotation.getPostion() * math.pi / 180.0
         )
 
         #create auto distance numbers if do not exist
-        #wpilib.SmartDashboard.putNumber("Auto Distance 1", 7.25)
-        #wpilib.SmartDashboard.putNumber("Auto Distance 2", 7.25)
+        wpilib.SmartDashboard.setDefaultNumber("Auto Distance 1", 7.25)
+        wpilib.SmartDashboard.setDefaultNumber("Auto Distance 2", 7.25)
         wpilib.SmartDashboard.setPersistent("Auto Distance 1")
         wpilib.SmartDashboard.setPersistent("Auto Distance 2")
+
 
 
 
