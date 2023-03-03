@@ -8,7 +8,7 @@ class TankDrive(commands2.CommandBase):
     Command for converting joystick input to drive train output
     '''
     def __init__(self, left: Callable[[], float], right: Callable[[], float], creeperMode: Callable[[], bool], driveTrain):
-    #TODO replace crepper with command instead of bypassing commands
+#TODO replace crepper with command instead of bypassing commands
         '''
         Takes a left, right callerable to get tank drive controls
         Takes driveTrain on which to operate. Requires drive train with left, right drive call.
