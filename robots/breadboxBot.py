@@ -53,7 +53,7 @@ class Breadbox(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.setPersistent("Auto Distance 2")
 
     def getAutonomousCommand(self):
-        return(Autonomous(self.driveTrain, self.navx, self.robot_arm_controller))
+        return(Autonomous(self.driveTrain, self.navx, self.robot_arm_controller, self.robot_Grabber))
 
     def teleopInit(self) -> None:
         self.driver_controller = commands2.button.CommandXboxController(0)
