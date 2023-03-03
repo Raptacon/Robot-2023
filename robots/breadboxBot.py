@@ -15,11 +15,13 @@ from subsystems.actuators.breadboxArmRotation import ArmRotation
 from subsystems.actuators.breadboxArmController import ArmController
 from subsystems.arm.grader import Grabber
 
+
 class Breadbox(ConfigBaseCommandRobot):
     balanceing = False
     robot_arm_rotation: ArmRotation
     robot_Grabber: Grabber
     robot_arm_controller: ArmController
+
     def __init__(self, period: float = 0.02) -> None:
         super().__init__(period)
 
@@ -29,9 +31,9 @@ class Breadbox(ConfigBaseCommandRobot):
             self.driveTrain = self.subsystems["drivetrain"]
             self.robot_Grabber = self.subsystems["grabber"]
             self.robot_arm_controller = self.subsystems["armController"]
-            #TODO fix this way this setter works
+            # TODO fix this way this setter works
             self.robot_arm_controller.setArmRotationSubsystem(self.robot_arm_rotation)
-            #self.robot_arm_controller.setArmExtensionSubsystem(self.robot_arm_extension)
+            # self.robot_arm_controller.setArmExtensionSubsystem(self.robot_arm_extension)
 
             cameraserver.CameraServer.launch()
 
@@ -44,6 +46,11 @@ class Breadbox(ConfigBaseCommandRobot):
             "set angle", self.robot_arm_rotation.getPostion() * math.pi / 180.0
         )
 
+        # create auto distance numbers if do not exist
+        wpilib.SmartDashboard.setDefaultNumber("Auto Distance 1", 7.25)
+        wpilib.SmartDashboard.setDefaultNumber("Auto Distance 2", 7.25)
+        wpilib.SmartDashboard.setPersistent("Auto Distance 1")
+        wpilib.SmartDashboard.setPersistent("Auto Distance 2")
 
     def teleopInit(self) -> None:
         self.driver_controller = commands2.button.CommandXboxController(0)
@@ -55,27 +62,37 @@ class Breadbox(ConfigBaseCommandRobot):
         self.tankDrive = TankDrive(
             Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
             Input.getStick(wpilib.XboxController.Axis.kRightY, 0, True),
+            lambda: self.getCreeperMode(),
             self.driveTrain,
         )
-        
-        self.driveTrain.setDefaultCommand(self.tankDrive)
+
+        wpilib.SmartDashboard.putNumber(
+            "set angle", self.robot_arm_rotation.getPostion() * math.pi / 180.0
+        )
+        wpilib.SmartDashboard.putNumber("CreeperMode Multiplier", 0.5)
 
         self.driveTrain = self.subsystems["drivetrain"]
         # self.balance = Balance(Input.getButton("XButton", self.XboxController), self.driveTrain)
-        self.balance = Balance(self.driver_controller.getAButton(), self.driveTrain)
-        self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, self.driveTrain)
-
+        self.balance = Balance(
+            Input().getButton("XButton", self.driver_controller), self.driveTrain
+        )
+        self.balanceDrive = TankDrive(
+            self.balance.dobalance,
+            self.balance.dobalance,
+            lambda: self.getCreeperMode(),
+            self.driveTrain,
+        )
 
     def teleopPeriodic(self) -> None:
         # if Input.getButton("XButton", self.XboxController):
         if self.driver_controller.getAButton():
-            if (not self.balanceing):
+            if not self.balanceing:
                 commands2.CommandScheduler.getInstance().cancelAll()
             self.driveTrain.setDefaultCommand(self.balanceDrive)
             self.balanceing = True
             self.balance.execute()
         else:
-            if(self.balanceing):
+            if self.balanceing:
                 commands2.CommandScheduler.getInstance().cancelAll()
             self.driveTrain.setDefaultCommand(self.tankDrive)
             self.balanceing = False
@@ -83,27 +100,54 @@ class Breadbox(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.putNumber(
             "curr ang", self.robot_arm_rotation.getPostion() * math.pi / 180.0
         )
+        if Input().getButton("RightTrigger", self.driver_controller) > 0.2:
+            self.creeperMode = True
+        else:
+            self.creeperMode = False
 
         if self.mech_controller.getRightTriggerAxis() > 0.2:
-            self.robot_Grabber.useOutputCones(self.mech_controller.getRightTriggerAxis())
+            self.robot_Grabber.useOutputCones(
+                self.mech_controller.getRightTriggerAxis()
+            )
         elif self.mech_controller.getRightBumper():
             self.robot_Grabber.useIntakehCones(self.mech_controller.getRightBumper())
         elif self.mech_controller.getLeftTriggerAxis() > 0.2:
             self.robot_Grabber.useOutputCubes(self.mech_controller.getLeftTriggerAxis())
         elif self.mech_controller.getLeftBumper():
             self.robot_Grabber.useIntakeCubes(self.mech_controller.getLeftBumper())
+        if Input().getButton("RightTrigger", self.driver_controller):
+            self.creeperMode = True
+        else:
+            self.creeperMode = False
+
+        if Input().getButton("RightTrigger", self.mech_controller) != 0:
+            self.robot_Grabber.useOutputCones(
+                Input().getButton("RightTrigger", self.mech_controller)
+            )
+        elif Input().getButton("RightBumper", self.mech_controller):
+            self.robot_Grabber.useIntakehCones(
+                Input().getButton("RightBumper", self.mech_controller)
+            )
+        elif Input().getButton("LeftTrigger", self.mech_controller) != 0:
+            self.robot_Grabber.useOutputCubes(
+                Input().getButton("LeftTrigger", self.mech_controller)
+            )
+        elif Input().getButton("LeftBumper", self.mech_controller):
+            self.robot_Grabber.useIntakeCubes(
+                Input().getButton("LeftBumper", self.mech_controller)
+            )
         else:
             self.robot_Grabber.stop()
 
         if Input().getButton("BButton", self.mech_controller):
             self.selector.GetSelection(self.mech_controller)
-        wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm_rotation.getPostion())
+        wpilib.SmartDashboard.putNumber(
+            "curr rad", self.robot_arm_rotation.getPostion()
+        )
 
         self.robot_arm_rotation._getMeasurement()
 
         return super().teleopPeriodic()
-
-
 
     def testInit(self) -> None:
         wpilib.SmartDashboard.putNumber("ang", 180)
@@ -136,23 +180,35 @@ class Breadbox(ConfigBaseCommandRobot):
         and then passing it to a JoystickButton.
         """
 
-        # Move the arm to 2 radians above horizontal when the 'A' button is pressed.
+        # track smart dashboad on left click
         self.mech_controller_hid.POVLeft().onTrue(
             commands2.cmd.runOnce(lambda: self.trackAngle(), [self.robot_arm_rotation])
         )
 
-        # Disable the arm controller when Y is pressed
+        # Disable the arm controller when Left Stick
         self.mech_controller.leftStick().onTrue(
-            commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm_rotation])
+            commands2.cmd.runOnce(
+                lambda: self.disablePIDSubsystems(), [self.robot_arm_rotation]
+            )
         )
 
-        armCommands.createArmPositionCommands(self.mech_controller_hid, self.mech_controller, self.robot_arm_controller, self.robot_arm_rotation)
+        armCommands.createArmPositionCommands(
+            self.mech_controller_hid,
+            self.mech_controller,
+            self.robot_arm_controller,
+            self.robot_arm_rotation,
+        )
 
     def trackAngle(self):
         self.moveArmDegrees(
-            wpilib.SmartDashboard.getNumber("set angle", self.robot_arm_rotation.getPostion())
+            wpilib.SmartDashboard.getNumber(
+                "set angle", self.robot_arm_rotation.getPostion()
+            )
         )
 
     def disableArm(self):
         print("disabling")
         self.robot_arm_rotation.disable()
+
+    def getCreeperMode(self):
+        return self.creeperMode

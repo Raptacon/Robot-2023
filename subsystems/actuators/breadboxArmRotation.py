@@ -19,6 +19,8 @@ class ArmRotation(commands2.PIDSubsystem):
     encoder: wpilib.DutyCycleEncoder
     kMinPostion = 0
     kMaxPostion = 1.0 * 2 * math.pi
+    kRolloverDeadZoneDeg = 340 #degrees
+    lastPosValDeg = 50 #non intersting value
     def __init__(self, subsystem, armFeedFordward, offset = 0, *kargs,
                  **kwargs):
         ''' TODO update to be more generic, hard coding talons
@@ -29,7 +31,7 @@ class ArmRotation(commands2.PIDSubsystem):
 
         pidController = wpimath.controller.PIDController(9.7, 0, 74,6)
 
-        pidController.setTolerance(0.1)
+        pidController.setTolerance(0.02)
         super().__init__(pidController, 0)
         #TODO Fix factor
 #        self.config = kwargs
@@ -93,11 +95,28 @@ class ArmRotation(commands2.PIDSubsystem):
         return super().enable()
 
     def getPostion(self) -> float:
-        return math.fmod(2*math.pi - (self.encoder.getAbsolutePosition() + self.offset) * (2*math.pi), 2*math.pi)
+        absPos = math.fmod(2*math.pi - (self.encoder.getAbsolutePosition() + self.offset) * (2*math.pi), 2*math.pi)
+        currPos = absPos
+        currDeg = math.degrees(currPos)
+        wpilib.SmartDashboard.putNumber("Arm offset", -self.encoder.getAbsolutePosition())
+        wpilib.SmartDashboard.putNumber("Arm Angle Degrees", math.degrees(currPos))
+
+        if self.motor.getFault(self.motor.FaultID.kHardLimitFwd):
+            log.info("Forward Limit hit")
+            self.forwardHit = True
+
+        if self.motor.getFault(self.motor.FaultID.kHardLimitRev):
+            log.info("Forward Limit hit")
+            self.reverseHit = True
+
+
+        #below 0 sensor set point, we treat 0-kRolloverDeadZoneDeg for control purposes
+        if currDeg > self.kRolloverDeadZoneDeg:
+            absPos = currPos - 2*math.pi
+
+        return absPos
 
     def _getMeasurement(self) -> float:
-        wpilib.SmartDashboard.putNumber("Arm offset", -self.encoder.getAbsolutePosition())
-        wpilib.SmartDashboard.putNumber("Arm Angle Degrees", math.degrees(self.getPostion()))
         return self.getPostion()
 
     def setSetpoint(self, goal: float) -> None:
