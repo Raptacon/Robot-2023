@@ -1,6 +1,7 @@
 import commands2
 
 import logging
+from typing import Callable
 
 log = logging.getLogger("Arm Controller")
 
@@ -106,3 +107,21 @@ class ArmController(commands2.SubsystemBase):
         """
         self.setManipulator(self.setAnglesDegrees["backBottom"], self.setArmLength["backBottom"])
 
+
+
+def getArmFunctionalCommand(armController: ArmController, func: Callable):
+    """
+    Creates a functional command for the arm
+    Args:
+        armController (ArmController): arm controller to use
+        func (Callable): function from arm controller to run
+    Returns: functional command
+    """
+
+    #example usage without command group
+    #cmd = getArmFunctionalCommand(self.robot_arm_controller, self.robot_arm_controller.setTop)
+    #commands2.CommandScheduler.schedule(commands2.CommandScheduler.getInstance(), cmd)
+
+    cmd = commands2.FunctionalCommand(func, lambda *args, **kwargs: None, lambda x: print("Done"), armController.isArmPositioned)
+    cmd.addRequirements(armController.getReqSubsystems())
+    return cmd
