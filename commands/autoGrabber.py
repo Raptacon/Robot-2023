@@ -8,6 +8,8 @@ class AutoGrabber(commands2.CommandBase):
         self.grabber = Grabber
         self.maxTime = maxTime
         self.intaking = Intaking
+
+    def initialize(self) -> None:
         self.startingTime = time.time()
 
     def execute(self) -> None:
