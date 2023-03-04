@@ -21,6 +21,9 @@ class Balance(commands2.CommandBase):
         self.xKey = xKey
         self.driveTrain = driveTrain
 
+    def getPitch(self):
+        return self.navx.getPitch() - self.startOrientation["y"]
+
     def dobalance(self) -> None:
         # z = self.navx.getYaw() - self.startOrientation["z"]
         y = self.navx.getPitch() - self.startOrientation["y"]

@@ -1,7 +1,9 @@
 import commands2
 from commands.goToDist import GoToDist
-from commands.turnToAngle import TurnToAngle
+#from commands.turnToAngle import TurnToAngle
 from subsystems.drivetrains.westcoast import Westcoast
+from commands.balance import Balance
+from commands.autoBalance import AutoBalance
 import wpilib
 import navx
 import logging
@@ -21,8 +23,6 @@ class Autonomous(commands2.SequentialCommandGroup):
         self.addCommands(
             GoToDist(distance1, drive),
             commands2.PrintCommand(f"GoToDist finished {distance1}"),
-            TurnToAngle(turnAngle, drive, navx),
-            commands2.PrintCommand(f"TurnToAngle finished {turnAngle}"),
-            GoToDist(distance2, drive),
-            commands2.PrintCommand(f"GoToDist2 finished {distance2}")
+            AutoBalance(drive, Balance(True, drive)),
+            commands2.PrintCommand("Balance finished"),
         )
