@@ -120,7 +120,7 @@ class Breadbox(ConfigBaseCommandRobot):
         if Input().getButton("RightTrigger", self.mech_controller) != 0:
             self.robot_Grabber.useOutputCones(Input().getButton("RightTrigger", self.mech_controller))
         elif Input().getButton("RightBumper", self.mech_controller):
-            self.robot_Grabber.useIntakehCones(Input().getButton("RightBumper", self.mech_controller))
+            self.robot_Grabber.useIntakeCones(Input().getButton("RightBumper", self.mech_controller))
         elif Input().getButton("LeftTrigger", self.mech_controller) != 0:
             self.robot_Grabber.useOutputCubes(Input().getButton("LeftTrigger", self.mech_controller))
         elif Input().getButton("LeftBumper", self.mech_controller):

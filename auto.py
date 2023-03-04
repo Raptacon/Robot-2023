@@ -3,7 +3,7 @@ import commands2.cmd
 from commands.goToDist import GoToDist
 from commands.turnToAngle import TurnToAngle
 from commands.autoGrabber import AutoGrabber
-from subsystems.actuators.breadboxArmController import ArmController, getArmFunctionalCommand
+from subsystems.actuators.breadboxArmController import ArmController, getArmInstantCommand
 from subsystems.arm.grader import Grabber
 from subsystems.drivetrains.westcoast import Westcoast
 import wpilib
@@ -23,14 +23,11 @@ class Autonomous(commands2.SequentialCommandGroup):
         log.info(f"Auto Turn Angle: {turnAngle}")
 
         self.addCommands(
-            getArmFunctionalCommand(armController, armController.setBackTop),
+            getArmInstantCommand(armController, armController.setBackTop),
+            commands2.WaitCommand(2),
             commands2.PrintCommand("Arm movement finished"),
-            AutoGrabber(grabber, 3, False),
+            AutoGrabber(grabber, 1, False),
             commands2.PrintCommand("output cone"),
             GoToDist(distance1, drive),
-            commands2.PrintCommand(f"GoToDist finished {distance1}"),
-            TurnToAngle(turnAngle, drive, navx),
-            commands2.PrintCommand(f"TurnToAngle finished {turnAngle}"),
-            GoToDist(distance2, drive),
-            commands2.PrintCommand(f"GoToDist2 finished {distance2}")
+            commands2.PrintCommand(f"GoToDist finished {distance1}")
         )
