@@ -26,7 +26,7 @@ class Grabber(commands2.SubsystemBase):
         self.speed = output
         self.graberMotor.setVoltage(self.speed * 12)
 
-    def useIntakehCones(self, output : bool):
+    def useIntakeCones(self, output : bool):
         if output:
             self.speed = -1
         self.graberMotor.setVoltage(self.speed * 12)
