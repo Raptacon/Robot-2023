@@ -43,6 +43,7 @@ class ConfigBaseCommandRobot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putString(
             "Deploy User", self.getDeployInfo("deploy-user")
         )
+        wpilib.SmartDashboard.putString("Bot Config", config)
 
     def getDeployInfo(self, key: str) -> str:
         """Gets the Git SHA of the deployed robot by parsing ~/deploy.json and returning the git-hash from the JSON key OR if deploy.json is unavilable will return "unknown"
