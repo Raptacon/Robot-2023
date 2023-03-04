@@ -9,6 +9,7 @@ from . import hardwareFactory
 
 log = logging.getLogger("configMapper")
 
+
 class ConfigMapper(object):
     def __init__(self, filename, configDir):
         """
@@ -26,7 +27,6 @@ class ConfigMapper(object):
         for key, subsystem in self.subsystems.items():
             self.hwFact.addConfig(key, subsystem)
 
-
     def getSubsystem(self, subsystemName):
         """
         returns the complete config for specified subsystem or none if not
@@ -40,28 +40,32 @@ class ConfigMapper(object):
         subsystem = self.subsystems[subsystemName]
 
         if "subsystem" not in subsystem:
-            raise RuntimeError(f"Failed to find `subsystem` in {subsystemName}. Found {subsystem}")
+            raise RuntimeError(
+                f"Failed to find `subsystem` in {subsystemName}. Found {subsystem}"
+            )
 
-        #load and create subsystem
+        # load and create subsystem
         subClass = importClassFromModule(subsystem["subsystem"])
-
 
         if subClass == None:
             if subsystem["required"]:
-                raise RuntimeError(f"Failed to create {subsystemName} from {subsystem['subsystem']} and is required")
+                raise RuntimeError(
+                    f"Failed to create {subsystemName} from {subsystem['subsystem']} and is required"
+                )
             else:
-                log.warn(f"Failed to create {subsystemName} from {subsystem['subsystem']} and is not required")
+                log.warn(
+                    f"Failed to create {subsystemName} from {subsystem['subsystem']} and is not required"
+                )
                 return None
         subsystem["configMapper"] = self
 
         return subClass(**subsystem)
 
-
     def getSubsystems(self):
         subsystems = list(self.subsystems.keys())
         return subsystems
 
-    def getGroupDict(self, subsystem, groupName, name = None):
+    def getGroupDict(self, subsystem, groupName, name=None):
         """
         returns a dictonary with data from a subsystem matching the groups and
         if given then name.
@@ -80,13 +84,13 @@ class ConfigMapper(object):
         returns all sensors
         """
         data = self.getSubsystem(subsystem)
-        data =  self.__getGroups(data, groupName, name)
+        data = self.__getGroups(data, groupName, name)
         if "groups" in data:
             data.pop("groups")
 
         return data
 
-    def getTypesDict(self, subsystem, typeNames, name = None):
+    def getTypesDict(self, subsystem, typeNames, name=None):
         """
         returns a dictonary with data from a subsystem matching the type(s) and
         Once a type is found in an entry it is not searched any deeper
@@ -159,39 +163,40 @@ class ConfigMapper(object):
 
         for name, subsystem in subsystems.items():
             processedData[name] = {}
-            #add required data defaults
+            # add required data defaults
             processedData[name]["required"] = True
 
             for key, value in subsystem.items():
                 # if file, load file and walk
                 if key == "file":
                     file = "subsystems" + os.sep + value
-                    #TODO special handling for other types. Yaml only supproted type
+                    # TODO special handling for other types. Yaml only supproted type
                     if "type" in subsystem and not subsystem["type"] == "yaml":
                         log.error("Unknown file type fileType. Trying Yaml")
                     log.info("Loading %s into entry %s", file, key)
                     try:
                         data = self.__loadFile(file)
                     except FileNotFoundError as e:
-                        log.error(f"Failed to find file {file} for subsystem {subsystem}")
+                        log.error(
+                            f"Failed to find file {file} for subsystem {subsystem}"
+                        )
                         data = {}
                         data["error"] = e
                     # Flatten the root node of newly loaded yaml file.
                     processedData[name].update(data)
 
-
                 # if subsystem, walk subsystem
-                #TODO add nested subsystems
-                '''
+                # TODO add nested subsystems
+                """
                 if "subsystem" in subsystem[key] and isinstance(subsystem[key], dict):
                     log.info("Walking subsystem")
                     # make a new subsystem
                     print(subsystem[key])
                     print(subsystem[key]["subsystem"])
                     processedData[subsystem[key]["subsystem"]] = self.__convertToSubsystems(inputData[key], inputData[key]["subsystem"])
-                '''
+                """
 
-                #skip special meanings
+                # skip special meanings
                 if key == "type" and "file" in subsystem:
                     continue
 
@@ -204,7 +209,7 @@ class ConfigMapper(object):
         return processedData
 
 
-def importClassFromModule(name: str, base : str = "subsystems"):
+def importClassFromModule(name: str, base: str = "subsystems"):
     """
     Imports a class from a given module
 
@@ -228,7 +233,7 @@ def importClassFromModule(name: str, base : str = "subsystems"):
         return None
 
 
-def findConfig(defaultConfig = "greenbot.yml", configPath = None) -> tuple[dict, str]:
+def findConfig(defaultConfig="greenbot.yml", configPath=None) -> tuple[dict, str]:
     """
     Will determine the correct yml file for the robot.
     Please run 'echo (robotCfg.yml) > robotConfig' on the robot.
@@ -236,9 +241,15 @@ def findConfig(defaultConfig = "greenbot.yml", configPath = None) -> tuple[dict,
     Files should be configs dir
     """
     if not configPath:
-        configPath = os.path.dirname(__file__) + os.path.sep + ".." +os.path.sep + "configs" + os.path.sep
+        configPath = (
+            os.path.dirname(__file__)
+            + os.path.sep
+            + ".."
+            + os.path.sep
+            + "configs"
+            + os.path.sep
+        )
     home = str(Path.home()) + os.path.sep
-    print("Home:" + str(home))
     robotConfigFile = home + "robotConfig"
 
     if not os.path.isfile(robotConfigFile):
@@ -264,8 +275,7 @@ def findConfig(defaultConfig = "greenbot.yml", configPath = None) -> tuple[dict,
 
 
 if __name__ == "__main__":
-
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
     mapper = ConfigMapper("greenBot.yml", "configs")
     print("Subsystem driveTrain:", mapper.getSubsystem("drivetrain"))
