@@ -36,6 +36,7 @@ class ConfigBaseCommandRobot(commands2.TimedCommandRobot):
 
         # We should only need to do this once
         wpilib.SmartDashboard.putString("Robot Version", self.getDeployInfo("git-hash"))
+        wpilib.SmartDashboard.putString("Git Branch", self.getDeployInfo("git-branch"))
         wpilib.SmartDashboard.putString(
             "Deploy Host", self.getDeployInfo("deploy-host")
         )

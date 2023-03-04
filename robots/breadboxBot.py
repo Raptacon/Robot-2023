@@ -149,6 +149,11 @@ class Breadbox(ConfigBaseCommandRobot):
 
         return super().teleopPeriodic()
 
+        wpilib.SmartDashboard.putNumber(
+            "curr rad", self.robot_arm_rotation.getPostion()
+        )
+        return super().teleopPeriodic()
+
     def testInit(self) -> None:
         wpilib.SmartDashboard.putNumber("ang", 180)
 
