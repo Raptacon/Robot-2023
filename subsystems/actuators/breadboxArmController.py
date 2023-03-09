@@ -58,59 +58,69 @@ class ArmController(commands2.SubsystemBase):
     def getReqSubsystems(self) -> list[commands2.Subsystem]:
         return [self, self.getArmRotation()]
 
-    def setManipulator(self, angleDegrees, armLength):
+    def setManipulator(self, angleDegrees):
         """Sets the angle and length of the manipulator
         Args:
             angleDegrees (_type_): angle of arm in degrees
         """
         self.getArmRotation().setSetpointDegrees(angleDegrees)
         self.getArmRotation().enable()
+
+    def setExtension(self, armLength):
         self.getArmExtension().setDistance(armLength)
         self.getArmExtension().execute()
+
 
     def setFrontBottom(self):
         """
         sets the manipulator to the front bottom position
         """
-        self.setManipulator(self.setAnglesDegrees["frontBottom"], self.setArmLength["frontBottom"])
+        self.setManipulator(self.setAnglesDegrees["frontBottom"])
 
     def setFrontCenter(self):
         """
         sets the manipulator to the front center position
         """
-        self.setManipulator(self.setAnglesDegrees["frontMiddle"], self.setArmLength["frontMiddle"])
+        self.setManipulator(self.setAnglesDegrees["frontMiddle"])
 
     def setFrontTop(self):
         """
         sets the manipulator to the front top position
         """
-        self.setManipulator(self.setAnglesDegrees["frontTop"], self.setArmLength["frontTop"])
+        self.setManipulator(self.setAnglesDegrees["frontTop"])
 
     def setTop(self):
         """
         sets the manipulator to the top position
         """
-        self.setManipulator(self.setAnglesDegrees["top"], self.setArmLength["top"])
+        self.setManipulator(self.setAnglesDegrees["top"])
 
     def setBackTop(self):
         """
         sets the manipulator to the back top position
         """
-        self.setManipulator(self.setAnglesDegrees["backTop"], self.setArmLength["backTop"])
+        self.setManipulator(self.setAnglesDegrees["backTop"])
 
     def setBackCenter(self):
         """
         sets the manipulator to the back center position
         """
-        self.setManipulator(self.setAnglesDegrees["backMiddle"], self.setArmLength["backMiddle"])
+        self.setManipulator(self.setAnglesDegrees["backMiddle"])
 
     def setBackBottom(self):
         """
         sets the manipulator to the back bottom position
         """
-        self.setManipulator(self.setAnglesDegrees["backBottom"], self.setArmLength["backBottom"])
+        self.setManipulator(self.setAnglesDegrees["backBottom"])
 
+    def setLow(self):
+        self.setExtension(self.setArmLength["low"])
 
+    def setMid(self):
+        self.setExtension(self.setArmLength["mid"])
+
+    def setHigh(self):
+        self.setExtension(self.setArmLength["high"])
 
 def getArmFunctionalCommand(armController: ArmController, func: Callable, tolerance = 0.1):
     """

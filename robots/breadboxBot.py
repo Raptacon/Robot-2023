@@ -179,6 +179,7 @@ class Breadbox(ConfigBaseCommandRobot):
         )
 
         armCommands.createArmPositionCommands(self.mech_controller_hid, self.mech_controller, self.robot_arm_controller, self.robot_arm_rotation)
+        armCommands.createArmExtensionCommands(self.mech_controller_hid, self.mech_controller, self.robot_arm_controller, self.robot_arm_extension)
 
     def trackAngle(self):
         self.moveArmDegrees(
