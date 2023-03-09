@@ -1,54 +1,63 @@
 from utils import configMapper
-from wpilib import XboxController, Joystick
+from wpilib import XboxController, Joystick, DriverStation
 from wpilib.interfaces import GenericHID
-
+import logging as log
 
 class RobotMap():
     """
     Robot map gathers all the hard coded values needed to interface with
     hardware into a single location
     """
+
     def __init__(self):
-        """intilize the robot map"""
-        configFile, configPath = configMapper.findConfig()
-        self.configMapper = configMapper.ConfigMapper(configFile, configPath)
+
+        try:
+            """intilize the robot map"""
+            configFile, configPath = configMapper.findConfig()
+            self.configMapper = configMapper.ConfigMapper(configFile, configPath)
+            DriverStation.silenceJoystickConnectionWarning(True)
+        except Exception:
+            log.warning("Controller not conected!")
 
 class XboxMap():
     """
     Holds the mappings to TWO Xbox controllers, one for driving, one for mechanisms
     """
-    def __init__(self, Xbox1: XboxController, Xbox2: XboxController):
-        self.drive = Xbox1
-        self.mech = Xbox2
-        self.controllerInput()
-        #Button mappings
+    try:
+        def __init__(self, Xbox1: XboxController, Xbox2: XboxController):
+            self.drive = Xbox1
+            self.mech = Xbox2
+            self.controllerInput()
+            #Button mappings
 
-    def controllerInput(self):
-        """
-        Collects all controller values and puts them in an easily readable format
-        (Should only be used for axes while buttonManager has no equal for axes)
-        """
-        #Drive Controller inputs
-        self.driveLeft = self.drive.getRawAxis(XboxController.Axis.kLeftY)
-        self.driveRight = self.drive.getRawAxis(XboxController.Axis.kRightY)
-        self.driveLeftHoriz = self.drive.getRawAxis(XboxController.Axis.kLeftX)
-        self.driveRightHoriz = self.drive.getRawAxis(XboxController.Axis.kRightX)
-        self.driveRightTrig = self.drive.getRawAxis(XboxController.Axis.kRightTrigger)
-        self.driveLeftTrig = self.drive.getRawAxis(XboxController.Axis.kLeftTrigger)
-        self.driveDPad = self.drive.getPOV()
-        self.driveA = self.drive.getAButton()
-        self.driveX = self.drive.getXButton()
-        #Mechanism controller inputs
-        self.mechLeft = self.mech.getRawAxis(XboxController.Axis.kLeftY)
-        self.mechRight = self.mech.getRawAxis(XboxController.Axis.kRightY)
-        self.mechLeftHoriz = self.mech.getRawAxis(XboxController.Axis.kLeftX)
-        self.mechRightHoriz = self.mech.getRawAxis(XboxController.Axis.kRightX)
-        self.mechRightTrig = self.mech.getRawAxis(XboxController.Axis.kRightTrigger)
-        self.mechLeftTrig = self.mech.getRawAxis(XboxController.Axis.kLeftTrigger)
-        self.mechX = self.mech.getXButton()
-        self.mechA = self.mech.getAButton()
-        self.mechDPad = self.mech.getPOV()
-        self.mechLeftBumper = self.mech.getLeftBumper()
+        def controllerInput(self):
+            """
+            Collects all controller values and puts them in an easily readable format
+            (Should only be used for axes while buttonManager has no equal for axes)
+            """
+            #Drive Controller inputs
+            self.driveLeft = self.drive.getRawAxis(XboxController.Axis.kLeftY)
+            self.driveRight = self.drive.getRawAxis(XboxController.Axis.kRightY)
+            self.driveLeftHoriz = self.drive.getRawAxis(XboxController.Axis.kLeftX)
+            self.driveRightHoriz = self.drive.getRawAxis(XboxController.Axis.kRightX)
+            self.driveRightTrig = self.drive.getRawAxis(XboxController.Axis.kRightTrigger)
+            self.driveLeftTrig = self.drive.getRawAxis(XboxController.Axis.kLeftTrigger)
+            self.driveDPad = self.drive.getPOV()
+            self.driveA = self.drive.getAButton()
+            self.driveX = self.drive.getXButton()
+            #Mechanism controller inputs
+            self.mechLeft = self.mech.getRawAxis(XboxController.Axis.kLeftY)
+            self.mechRight = self.mech.getRawAxis(XboxController.Axis.kRightY)
+            self.mechLeftHoriz = self.mech.getRawAxis(XboxController.Axis.kLeftX)
+            self.mechRightHoriz = self.mech.getRawAxis(XboxController.Axis.kRightX)
+            self.mechRightTrig = self.mech.getRawAxis(XboxController.Axis.kRightTrigger)
+            self.mechLeftTrig = self.mech.getRawAxis(XboxController.Axis.kLeftTrigger)
+            self.mechX = self.mech.getXButton()
+            self.mechA = self.mech.getAButton()
+            self.mechDPad = self.mech.getPOV()
+            self.mechLeftBumper = self.mech.getLeftBumper()
+    except Exception:
+        log.warning('Controller is not conected!')
 
     def getDriveController(self):
         return self.drive

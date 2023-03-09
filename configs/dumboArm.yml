@@ -1,0 +1,27 @@
+subsystem: "actuators.dumboArm.Arm"
+name: "arm"
+description: "Arm for Dumbo. Future may be more general arm"
+
+offset: .7 # radians
+
+armFeedFordward:
+    kS: -0.67376
+    kG: 0.3944
+    kV: 25.02
+    kA: 36.617
+
+motor:
+  channel: 40
+  #type: "motor.SparkMax"
+  inverted: True
+  motorType: "kBrushless"
+  sensorPhase: True
+  pid: Null
+
+encoder:
+  #type: "sensor.wpilib.DutyCycleEncoder"
+  channel: 0
+  offset: 0.0
+  unitsPerRotation: 6.28318530718 #2Pi
+  minDutyCycle: 0.0
+  maxDutyCycle: 1.0

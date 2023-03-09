@@ -23,12 +23,14 @@ class MyRobot(commands2.TimedCommandRobot):
         This function is run when the robot is first started up and should be used for any
         initialization code.
         """
+
+        #This line silence the ControllerWarning
+        wpilib.DriverStation.silenceJoystickConnectionWarning(True)
         # Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         # autonomous chooser on the dashboard.
 
         #determine the robot based on the config file
         #TODO
-
         if False:
             self.container = GreenBot()
         if False:

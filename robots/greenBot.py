@@ -18,6 +18,9 @@ class GreenBot(ConfigBaseCommandRobot):
 
 
     def __init__(self, period: float = 0.02) -> None:
+
+        wpilib.DriverStation.silenceJoystickConnectionWarning(True)
+
         super().__init__(period)
 
         #create the greenbot motors

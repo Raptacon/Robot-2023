@@ -31,7 +31,7 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
 
         self.navx = navx._navx.AHRS.create_spi()
 
-        self.robotVersion = self.getRobotVersion()
+        # self.robotVersion = self.getRobotVersion()
 
     def getRobotVersion(self) -> str:
         jason_object = None
@@ -53,7 +53,8 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
         return json_object
 
     def teleopPeriodic(self) -> None:
-         wpilib.SmartDashboard.putString("robotVersion",self.robotVersion)
+        #  wpilib.SmartDashboard.putString("robotVersion", self.robotVersion)
+         wpilib.SmartDashboard.putString("robotVersion", "1.26.12")
 
     def getAutonomousCommand(self):
         return(Autonomous(self.driveTrain, self.navx))
