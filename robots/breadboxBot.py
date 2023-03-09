@@ -31,8 +31,10 @@ class Breadbox(ConfigBaseCommandRobot):
             self.driveTrain = self.subsystems["drivetrain"]
             self.robot_Grabber = self.subsystems["grabber"]
             self.robot_arm_controller = self.subsystems["armController"]
+            self.robot_arm_extension = self.subsystems["winch"]
             #TODO fix this way this setter works
             self.robot_arm_controller.setArmRotationSubsystem(self.robot_arm_rotation)
+            self.robot_arm_controller.setArmExtensionSubsystem(self.robot_arm_extension)
             #self.robot_arm_controller.setArmExtensionSubsystem(self.robot_arm_extension)
 
             cameraserver.CameraServer.launch()

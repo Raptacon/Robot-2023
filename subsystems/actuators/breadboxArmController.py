@@ -39,12 +39,10 @@ class ArmController(commands2.SubsystemBase):
             #return self.armRotationSS
 
     def getArmExtension(self):
-        return None
         if hasattr(self, "armExtensionSS"):
             return self.armExtensionSS
         else:
-            self.getArmExtension = self.configMapper.getSubsystem("armExtension")
-            return self.armExtensionSS
+            return None
 
     def isArmPositioned(self, tolerance = None):
         """
@@ -64,10 +62,11 @@ class ArmController(commands2.SubsystemBase):
         """Sets the angle and length of the manipulator
         Args:
             angleDegrees (_type_): angle of arm in degrees
-            armLength (_type_): length of arm in units
         """
         self.getArmRotation().setSetpointDegrees(angleDegrees)
         self.getArmRotation().enable()
+        self.getArmExtension().setDistance(armLength)
+        self.getArmExtension().execute()
 
     def setFrontBottom(self):
         """
