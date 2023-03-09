@@ -3,7 +3,6 @@ import commands2.button
 import commands2.cmd
 from subsystems.actuators.breadboxArmController import ArmController
 from subsystems.actuators.breadboxArmRotation import ArmRotation
-from subsystems.actuators.breadboxWinch import Winch
 
 
 def createArmPositionCommands(controller: commands2.button.CommandGenericHID, xbox: commands2.button.CommandXboxController, armController: ArmController, arm_subsystem: ArmRotation):
