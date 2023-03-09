@@ -24,8 +24,6 @@ class MyRobot(commands2.TimedCommandRobot):
         initialization code.
         """
 
-        #This line silence the ControllerWarning
-        wpilib.DriverStation.silenceJoystickConnectionWarning(True)
         # Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         # autonomous chooser on the dashboard.
 

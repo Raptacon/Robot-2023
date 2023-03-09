@@ -23,6 +23,9 @@ class Breadbox(ConfigBaseCommandRobot):
     def __init__(self, period: float = 0.02) -> None:
         super().__init__(period)
 
+        #This line silence the ControllerWarning
+        wpilib.DriverStation.silenceJoystickConnectionWarning(True)
+
         # Attempt assignments from subsystems and if something is empty, throw an exception
         try:
             self.robot_arm_rotation = self.subsystems["armRotation"]
