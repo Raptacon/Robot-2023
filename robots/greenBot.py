@@ -33,6 +33,7 @@ class GreenBot(ConfigBaseCommandRobot):
         self.driveTrain = Drivetrain(rightM, leftM, motors['left'], motors['right'], navx.AHRS.create_i2c())
         self.tankDrive = TankDrive(Input.getStick(wpilib.XboxController.Axis.kRightY, 0, True),
                                    Input.getStick(wpilib.XboxController.Axis.kLeftY, False),
+                                   lambda:False,
                                    self.driveTrain)
         self.arcadeDrive = ArcadeDrive(Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
                                    Input.getStick(wpilib.XboxController.Axis.kRightX, 0, False),
@@ -40,10 +41,12 @@ class GreenBot(ConfigBaseCommandRobot):
         self.driveTrain = self.subsystems["drivetrain"]
         self.tankDrive = TankDrive(Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
                                    Input.getStick(wpilib.XboxController.Axis.kRightY, 0, True),
+                                   lambda:False,
                                    self.driveTrain)
         self.arcadeDrive = ArcadeDrive(Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
                                    Input.getStick(wpilib.XboxController.Axis.kRightX, 0, False),
                                    self.driveTrain)
+        
 
         # self.driveModeSelect = commands2.SelectCommand(
         #    self.DrivetrainMode.TANK

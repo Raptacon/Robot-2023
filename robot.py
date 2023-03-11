@@ -4,7 +4,9 @@ import typing
 import wpilib
 import commands2
 import aprilTags
+import pathFinder
 
+from wpimath.geometry import *
 from robots.configBasedRobot import ConfigBaseCommandRobot
 from robots.greenBot import GreenBot
 from robots.breadboxBot import Breadbox
@@ -103,9 +105,14 @@ class MyRobot(commands2.TimedCommandRobot):
         # Cancels all running commands at the start of test mode
         commands2.CommandScheduler.getInstance().cancelAll()
         self.container.testInit()
+        initPos = aprilTags.AprilTags().updatePose()
+        finalPos = Pose2d(translation = Translation2d(x = initPos.translation().X() + 0.75, y = initPos.translation().Y()), rotation = initPos.rotation())
+        self.pathFinder = pathFinder.PathFinder(self.container.driveTrain, aprilTags.AprilTags.updatePose, finalPos)
+
 
     def testPeriodic(self) -> None:
         self.container.testPeriodic()
+        self.pathFinder.execute()
 
 
 if __name__ == "__main__":
