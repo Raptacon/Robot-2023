@@ -10,7 +10,6 @@ from robots.greenBot import GreenBot
 from robots.breadboxBot import Breadbox
 from wpilib import Field2d
 from wpilib import SmartDashboard
-from wpimath import geometry
 
 class MyRobot(commands2.TimedCommandRobot):
     """

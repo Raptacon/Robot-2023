@@ -3,7 +3,6 @@ import commands2
 import wpimath.filter
 import wpimath
 
-import aprilTags
 import navx
 from auto import Autonomous
 

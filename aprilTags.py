@@ -48,7 +48,7 @@ class AprilTags():
             self.robotCamera = [(self.camera, self.cameraToRobot)]
         else:
             '''sets up a camera for the sim'''
-            self.camera = SimVisionSystem(name, camDaigFov, cameraToRobot, maxLEDRange, cameraResWidth, cameraResHeight, minTargetArea)
+            self.camera = SimVisionSystem(name, camDaigFov, self.cameraToRobot, maxLEDRange, cameraResWidth, cameraResHeight, minTargetArea)
         
         '''grabs this year's feild data'''
         'atfl means AprilTagFieldLayout'
