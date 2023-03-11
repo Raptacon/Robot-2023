@@ -85,19 +85,19 @@ Traceback (most recent call last):
   File "/Users/chirsch/src/raptacon/2023/Robot-2023.deleteme/robot.py", line 37, in robotInit
     self.container = Dumbo()
                      ^^^^^^^
-  File "/Users/chirsch/src/raptacon/2023/Robot-2023.deleteme/robots/dumboBot.py", line 20, in __init__
+  File "/Users/chirsch/src/raptacon/2023/Robot-2023.deleteme/robots/breadboxBot.py", line 20, in __init__
     self.robot_arm = self.subsystems["arm"]
 ```
 
 For Linux/OSX 
 ``` bash
-echo dumboBot.yml > ~/robotConfig
+echo breadboxBot.yml > ~/robotConfig
 ```
 
 For Windows create a file called robotConfig in your home directory with the contents of
-dumboBot.yml or greenBot.yml etc
+breadboxBot.yml or greenBot.yml etc
 
 ```powershell
-echo dumboBot.yml > ~/robotConfig
+echo breadboxBot.yml > ~/robotConfig
 ```
 

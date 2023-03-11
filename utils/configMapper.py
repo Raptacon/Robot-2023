@@ -52,6 +52,7 @@ class ConfigMapper(object):
             else:
                 log.warn(f"Failed to create {subsystemName} from {subsystem['subsystem']} and is not required")
                 return None
+        subsystem["configMapper"] = self
 
         return subClass(**subsystem)
 

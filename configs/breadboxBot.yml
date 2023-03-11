@@ -1,4 +1,4 @@
-details: "Drive Train only robot with 4 talon SRX in tank drive"
+details: "Drive Train For Dumbo with elevator on arm and actuator"
 cameraServer: True #
 # Start camera server for USB cameras
 #CameraServer.launch()
@@ -8,8 +8,15 @@ subsystems:
       required: true
       type: yaml
       file: "talonFXTankDrive.yml"
-    Arm:
-      required: true
+    armRotation:
+      required: True
+      type: yaml
+      file: "breadboxArmRotation.yml"
+    armController:
+      type: yaml
+      file: "breadboxArmController.yml"
+    grabber:
+      required: False
       type: yaml
       file: "grader.yml"
 
@@ -18,5 +25,4 @@ commands:
       name: "tankDrive"
       subsystems:
         - "driveTrain"
-        - "arm"
       default-sub: "driveTrain"

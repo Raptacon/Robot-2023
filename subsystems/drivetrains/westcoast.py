@@ -119,3 +119,4 @@ class Westcoast(commands2.SubsystemBase):
 
     def periodic(self) -> None:
         self.log()
+        self.driveTrain.feedWatchdog()

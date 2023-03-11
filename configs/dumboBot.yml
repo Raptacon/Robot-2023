@@ -1,3 +1,4 @@
+#Warning this file is depricated and will be removed
 details: "Drive Train For Dumbo with elevator on arm and actuator"
 cameraServer: True #
 # Start camera server for USB cameras
@@ -8,10 +9,17 @@ subsystems:
       required: true
       type: yaml
       file: "talonFXTankDrive.yml"
-    arm:
-       required: False
-       type: yaml
-       file: "dumboArm.yml"
+    armRotation:
+      required: True
+      type: yaml
+      file: "breadboxArmRotation.yml"
+    armController:
+      type: yaml
+      file: "breadboxArmController.yml"
+    grabber:
+      required: False
+      type: yaml
+      file: "grader.yml"
 
 commands:
     driveController:
