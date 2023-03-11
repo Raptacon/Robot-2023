@@ -29,7 +29,6 @@ class AprilTags():
         '''Check whether the camera is running on the robot, and sets the camera up for beign on the robot or being in the sim'''
         '''TODO: change the if statemnt below to detect whether the sim is running, if it is run sim vision system'''
         if(True):
-
             '''sets up network tables'''
             nt = ntcore.NetworkTableInstance.getDefault()
             nt.startClient3("test code")
@@ -65,10 +64,10 @@ class AprilTags():
         Return: a 3d pose of the robot in the field
         '''
         '''the estimator update function returns a tuple, or basically an array, with the pose and a variable that doesnt seem to be anything'''
-        estimatorTuple = self.estimator.update()
-        retVal = estimatorTuple[0]
-        '''test code:'''
-        pipeLineResult = self.camera.getLatestResult()
-        print(pipeLineResult.hasTargets())
-        
-        return(retVal)
+        if(self.camera.getLatestResult().hasTargets()):
+            estimatorTuple = self.estimator.update()
+            retVal = estimatorTuple[0]
+            self.lastPose = retVal
+            return(retVal)
+        else:
+            return(self.lastPose)

@@ -36,7 +36,6 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
 
     def teleopInit(self) -> None:
         super().teleopInit()
-        # self.AprilTags = aprilTags.AprilTags()
 
     #TODO move to a better way, demo purposes
     def getStick(self, axis: wpilib.XboxController.Axis, invert: bool = False):
@@ -44,6 +43,4 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
         slew = wpimath.filter.SlewRateLimiter(3)
         return lambda: slew.calculate(wpimath.applyDeadband(sign * wpilib.XboxController(0).getRawAxis(axis), 0.1))
     
-    # def teleopPeriodic(self) -> None:
-    #     test = self.AprilTags.updatePose()
-    #     print(test.X())
+

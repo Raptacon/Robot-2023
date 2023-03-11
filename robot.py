@@ -3,11 +3,14 @@
 import typing
 import wpilib
 import commands2
+import aprilTags
 
 from robots.configBasedRobot import ConfigBaseCommandRobot
 from robots.greenBot import GreenBot
 from robots.dumboBot import Dumbo
-
+from wpilib import Field2d
+from wpilib import SmartDashboard
+from wpimath import geometry
 
 class MyRobot(commands2.TimedCommandRobot):
     """
@@ -35,6 +38,16 @@ class MyRobot(commands2.TimedCommandRobot):
             self.container = ConfigBaseCommandRobot()
         if False:
             self.container = Dumbo()
+
+
+        '''starts the camera server for apriltags'''
+        wpilib.CameraServer.launch()
+        '''starts feild representation in smartdashboard'''
+        '''starts april tags'''
+        self.AprilTags = aprilTags.AprilTags()
+        '''starts the feild available on glass'''
+        self.field = Field2d()
+        SmartDashboard.putData("Field", self.field)
 
 
     def disabledInit(self) -> None:
@@ -73,10 +86,20 @@ class MyRobot(commands2.TimedCommandRobot):
             self.autonomousCommand.cancel()
         self.container.teleopInit()
 
+        
+
     def teleopPeriodic(self) -> None:
         """This function is called periodically during operator control"""
         self.container.teleopPeriodic()
 
+        '''updates the visual feild representation'''
+        '''changes the 3d pose gotten from the april tags to a 2D pose'''
+        '''this should also probably be in other periodics'''
+        robotPose3D = self.AprilTags.updatePose()
+        robotPose2D = robotPose3D.toPose2d()
+        self.field.setRobotPose(robotPose2D)
+        print(robotPose2D)
+        
     def testInit(self) -> None:
         # Cancels all running commands at the start of test mode
         commands2.CommandScheduler.getInstance().cancelAll()
