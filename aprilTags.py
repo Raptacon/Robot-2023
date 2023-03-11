@@ -8,6 +8,7 @@ import ntcore
 
 
 class AprilTags():
+    lastPose : geometry.Pose3d
     def __init__(self) -> None:
         
         '''variables for camera simulation'''
