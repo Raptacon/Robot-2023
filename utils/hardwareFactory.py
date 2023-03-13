@@ -80,7 +80,7 @@ class HardwareFactory(object):
                     return component
         
         log.debug(f"{subsystem}.{name} not created. Creating")
-        if self.createComponent(subsystem, name):
+        if self.createHardwareComponent(subsystem, name):
             log.error("Not finished")
             return self.components[name]
         else:

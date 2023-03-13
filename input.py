@@ -4,10 +4,14 @@ import wpimath
 
 class Input:
 
-    def getStick(axis: wpilib.XboxController.Axis, port : int, invert: bool = False):
+    def getStickSlew(axis: wpilib.XboxController.Axis, port : int, invert: bool = False):
         sign = -1.0 if invert else 1.0
         slew = wpimath.filter.SlewRateLimiter(3)
         return lambda: slew.calculate(wpimath.applyDeadband(sign * wpilib.XboxController(port).getRawAxis(axis), 0.1))
+
+    def getStick(axis: wpilib.XboxController.Axis, port : int, invert: bool = False):
+        sign = -1.0 if invert else 1.0
+        return lambda: wpimath.applyDeadband(sign * wpilib.XboxController(port).getRawAxis(axis), 0.1)
 
     def getButton(self, ButtonName : str, XboxController : wpilib.XboxController):
         """

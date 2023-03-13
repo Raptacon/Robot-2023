@@ -7,7 +7,7 @@ subsystems:
     drivetrain:
       required: true
       type: yaml
-      file: "talonTankDrive.yml"
+      file: "talonFXTankDrive.yml"
 
 commands:
     driveController:
