@@ -4,6 +4,7 @@
 #macholib
 #modulegraph
 flake8
+icecream
 pyyaml
 coverage
 #wheel

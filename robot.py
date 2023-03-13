@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
+import os
+
 import typing
 import wpilib
 import commands2
 
-from robots.configBasedRobot import ConfigBaseCommandRobot
-from robots.greenBot import GreenBot
-from robots.dumboBot import Dumbo
+# from robots.configBasedRobot import ConfigBaseCommandRobot
+# from robots.greenBot import GreenBot
+# from robots.dumboBot import Dumbo
+from utils import botFactory
 
 
 class MyRobot(commands2.TimedCommandRobot):
@@ -26,15 +29,24 @@ class MyRobot(commands2.TimedCommandRobot):
         # Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         # autonomous chooser on the dashboard.
 
-        #determine the robot based on the config file
-        #TODO
+        # get a robot (with defined motors, subsystems, etc based on the robot name or config file
+        # TODO rename container to robot or something more obvious?
+        self.container = botFactory.get_bot(self.setRobotNameFromEnv())
 
-        if False:
-            self.container = GreenBot()
-        if False:
-            self.container = ConfigBaseCommandRobot()
-        if True:
-            self.container = Dumbo()
+        # if False:
+        #     self.container = GreenBot()
+        # if True:
+        #     self.container = ConfigBaseCommandRobot()
+        #  if True:
+        # self.container = Dumbo()
+
+    def setRobotNameFromEnv(self) -> str:
+        """Attempts to get the robot name from the environment variable ROBOT_NAME
+
+        Returns:
+            str: name of the robot like green, dumbo, teapot, lab, etc
+        """
+        return os.getenv("ROBOT_NAME")
 
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""
@@ -85,4 +97,3 @@ class MyRobot(commands2.TimedCommandRobot):
 
 if __name__ == "__main__":
     wpilib.run(MyRobot)
-

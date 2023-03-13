@@ -20,7 +20,7 @@ endif
 
 
 sim: setup_${VENV}
-	${VENVBIN}/${PYTHON} robot.py coverage sim
+	@printf ">>>>>>>--------------------------<<<<<<<<\n"
 	${VENVBIN}/${PYTHON} robot.py sim
 
 run:
