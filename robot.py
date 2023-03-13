@@ -6,7 +6,8 @@ import commands2
 import aprilTags
 import pathFinder
 
-from wpimath.geometry import *
+from wpimath.geometry import Translation2d
+from wpimath.geometry import Pose2d
 from robots.configBasedRobot import ConfigBaseCommandRobot
 from robots.greenBot import GreenBot
 from robots.breadboxBot import Breadbox

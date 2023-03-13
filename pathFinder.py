@@ -1,4 +1,4 @@
-import commands2
+#import commands2
 import wpimath.geometry
 from typing import Callable
 from subsystems.drivetrains.westcoast import Westcoast as DriveTrain
@@ -19,3 +19,4 @@ class PathFinder():
         if(self.dist > 0.1 or True):
             print("i should be driving")
             self.driveTrain.drive(0.5, 0.5)
+            
