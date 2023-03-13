@@ -17,7 +17,7 @@ from robots.configBasedRobot import ConfigBasedCommandRobot
 
 
 logging.basicConfig(level=logging.DEBUG)
-log = logging.root.getChild("ConfigFactory")
+log = logging.root.getChild("BotFactory")
 log.setLevel(logging.DEBUG)
 
 
@@ -141,9 +141,17 @@ class BotFactory(object):
 
         return True
 
-    def _validate_bot_python_exists(self, filename: str) -> bool:
-        ic(f"validateBotPythonExist before {filename}")
-        filename = filename + "Bot.py"
+    def _validate_bot_python_exists(self, botname: str) -> bool:
+        """Checks to see if the python file exists for the supplied bot name
+
+        Args:
+            filename (str): The name of the bot to check for the python file
+
+        Returns:
+            bool: True if the python file for the bot was found or False otherwies
+        """
+        ic(f"validateBotPythonExist before {botname}")
+        filename = botname + "Bot.py"
         ic(f"validateBotPythonFile after {filename}")
         ic(filename)
         configPath = (
@@ -171,7 +179,7 @@ class BotFactory(object):
             LookupError: If the robotConfig can't be read
 
         Returns:
-            str: _description_
+            str: The stripped contents of the config file 
         """
         ic()
         # Need to supply a sane value to findConfig in the form of <botname>Bot.yml
