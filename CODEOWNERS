@@ -2,4 +2,5 @@
 # the repo. Unless a later match takes precedence,
 # @global-owner1 and @global-owner2 will be requested for
 # review when someone opens a pull request.
-*       @Leaf-life @tuffinmuffin @chrishirsch @raylmorris @jeffrey-jenkins @TheSlopper @DarthCooper @jtdurham
+# Allow the mentors to do the final merge into main (slow down to speed up)
+*  @tuffinmuffin @chrishirsch @raylmorris @jeffrey-jenkins  @jtdurham

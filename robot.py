@@ -6,6 +6,7 @@ import commands2
 
 from robots.configBasedRobot import ConfigBaseCommandRobot
 from robots.greenBot import GreenBot
+from robots.breadboxBot import Breadbox
 
 
 class MyRobot(commands2.TimedCommandRobot):
@@ -27,11 +28,13 @@ class MyRobot(commands2.TimedCommandRobot):
 
         #determine the robot based on the config file
         #TODO
-        
+
         if False:
             self.container = GreenBot()
-        if True:
+        if False:
             self.container = ConfigBaseCommandRobot()
+        if True:
+            self.container = Breadbox()
 
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""

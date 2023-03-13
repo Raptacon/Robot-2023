@@ -43,8 +43,8 @@ class Westcoast(commands2.SubsystemBase):
             if not (self.leftM and self.rightM):
                 raise Exception("Left and Right Motors must be provided")
         else:
-            self.leftM = hwFactory.getHardwareComponet("drivetrain", "leftMotor")
-            self.rightM = hwFactory.getHardwareComponet("drivetrain", "rightMotor")
+            self.leftM = hwFactory.getHardwareComponent("drivetrain", "leftMotor")
+            self.rightM = hwFactory.getHardwareComponent("drivetrain", "rightMotor")
 
             self.leftEncoder = self.leftM if isinstance(self.leftM, ctre.WPI_TalonFX) else None
             self.rightEncoder = self.rightM if isinstance(self.rightM, ctre.WPI_TalonFX) else None
@@ -119,3 +119,4 @@ class Westcoast(commands2.SubsystemBase):
 
     def periodic(self) -> None:
         self.log()
+        self.driveTrain.feedWatchdog()

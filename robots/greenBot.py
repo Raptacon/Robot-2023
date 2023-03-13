@@ -1,16 +1,15 @@
 import wpilib
-import commands2
 import ctre
 import navx
 from subsystems.drivetrains.westcoast import Westcoast as Drivetrain
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
-import wpimath.filter
-import wpimath
+from .configBasedRobot import ConfigBaseCommandRobot
+from input import Input
 
 import enum
 
-class GreenBot(commands2.TimedCommandRobot):
+class GreenBot(ConfigBaseCommandRobot):
     config_name = "GreenBot"
 
     class DrivetrainMode(enum.Enum):
@@ -32,11 +31,18 @@ class GreenBot(commands2.TimedCommandRobot):
         leftM = wpilib.MotorControllerGroup(motors['left'], motors['leftF'])
 
         self.driveTrain = Drivetrain(rightM, leftM, motors['left'], motors['right'], navx.AHRS.create_i2c())
-        self.tankDrive = TankDrive(getStick(wpilib.XboxController.Axis.kRightY, True),
-                                   getStick(wpilib.XboxController.Axis.kLeftY, False),
+        self.tankDrive = TankDrive(Input.getStick(wpilib.XboxController.Axis.kRightY, 0, True),
+                                   Input.getStick(wpilib.XboxController.Axis.kLeftY, False),
                                    self.driveTrain)
-        self.arcadeDrive = ArcadeDrive(getStick(wpilib.XboxController.Axis.kLeftY, True),
-                                   getStick(wpilib.XboxController.Axis.kRightX, False),
+        self.arcadeDrive = ArcadeDrive(Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
+                                   Input.getStick(wpilib.XboxController.Axis.kRightX, 0, False),
+                                   self.driveTrain)
+        self.driveTrain = self.subsystems["drivetrain"]
+        self.tankDrive = TankDrive(Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
+                                   Input.getStick(wpilib.XboxController.Axis.kRightY, 0, True),
+                                   self.driveTrain)
+        self.arcadeDrive = ArcadeDrive(Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
+                                   Input.getStick(wpilib.XboxController.Axis.kRightX, 0, False),
                                    self.driveTrain)
 
         #self.driveModeSelect = commands2.SelectCommand(
@@ -45,14 +51,4 @@ class GreenBot(commands2.TimedCommandRobot):
 
     def teleopInit(self) -> None:
         self.driveTrain.setDefaultCommand(self.tankDrive)
-
-
-
-
-
-#TODO move to a better way, demo purposes
-def getStick(axis: wpilib.XboxController.Axis, invert: bool = False):
-    sign = -1.0 if invert else 1.0
-    slew = wpimath.filter.SlewRateLimiter(3)
-    return lambda: slew.calculate(wpimath.applyDeadband(sign * wpilib.XboxController(0).getRawAxis(axis), 0.1))
 
