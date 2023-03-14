@@ -1,17 +1,17 @@
 from enum import Enum
 import wpilib
 
-class position(Enum):
+class EPosition(Enum):
     LEFT = 1
     CENTER = 2
     RIGHT = 3 
-class Position():
+class PositionChooser():
 
-    def __init__(self) -> None:
+    def position(self) -> None:
         self.chooser = wpilib.SendableChooser()
-        self.chooser.setDefaultOption("Left", Position.LEFT)
-        self.chooser.addOption("Center", Position.CENTER)
-        self.chooser.addOption("Right", Position.RIGHT)
+        self.chooser.setDefaultOption("Left", EPosition.LEFT)
+        self.chooser.addOption("Center", EPosition.CENTER)
+        self.chooser.addOption("Right", EPosition.RIGHT)
         self.chooser.addOption("None", None)
 
         wpilib.SmartDashboard.putData("Autonomous Mode", self.chooser) 
