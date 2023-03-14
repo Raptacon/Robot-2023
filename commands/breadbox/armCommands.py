@@ -21,6 +21,5 @@ def createArmPositionCommands(controller: commands2.button.CommandGenericHID, xb
     xbox.rightStick().onTrue(commands2.cmd.runOnce(lambda: arm_subsystem.toggleBrake(), [arm_subsystem]))
 
 def createArmExtensionCommands(controller: commands2.button.CommandGenericHID, xbox: commands2.button.CommandXboxController, armController: ArmController, arm_subsystem: Winch):
-    controller.POVRight().onTrue(commands2.cmd.run(lambda: armController.setLow(), armController.getReqSubsystems()))
-    controller.POVDown().onTrue(commands2.cmd.run(lambda: armController.setMid(), armController.getReqSubsystems()))
-    controller.POVLeft().onTrue(commands2.cmd.run(lambda: armController.setHigh(), armController.getReqSubsystems()))
+    controller.POVDown().onTrue(commands2.cmd.run(lambda: armController.setHigh(), armController.getReqSubsystems()))
+    controller.POVLeft().onTrue(commands2.cmd.run(lambda: armController.setLow(), armController.getReqSubsystems()))

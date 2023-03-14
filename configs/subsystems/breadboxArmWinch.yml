@@ -3,7 +3,7 @@ name: "armExtension"
 description: "Arm extension for breadBox. Future may be more general arm"
 
 motor:
-  channel: 43
+  channel: 60
   #type: "motor.SparkMax"
   inverted: True
   motorType: "kBrushless"
@@ -12,7 +12,7 @@ motor:
 
 encoder:
   #type: "sensor.wpilib.DutyCycleEncoder"
-  channel: 0
+  channel: 1
   offset: 0.0
   unitsPerRotation: 6.28318530718 #2Pi
   minDutyCycle: 0.0

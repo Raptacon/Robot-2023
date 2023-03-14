@@ -20,7 +20,7 @@ class Winch(commands2.CommandBase):
             "inverted": False,
             "motorType": "kBrushless",
             "sensorPhase": True,
-            "channel": 43
+            "channel": 60
         }
         self.motor = utils.motorHelper.createMotor(motorSettings)
         encoderSettings = {
@@ -41,6 +41,12 @@ class Winch(commands2.CommandBase):
             self.forward = False
         else:
             self.forward = True
+
+    def setSpeed(self, speed : float):
+        self.motor.setVoltage(speed * 12)
+
+    def getPosition(self):
+        return self.encoder.getPositionOffset()
 
     def execute(self) -> None:
         self.distance = self.encoder.getPositionOffset()

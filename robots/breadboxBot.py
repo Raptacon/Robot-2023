@@ -15,6 +15,7 @@ from wpilib import cameraserver
 from .configBasedRobot import ConfigBaseCommandRobot
 from subsystems.actuators.breadboxArmRotation import ArmRotation
 from subsystems.actuators.breadboxArmController import ArmController
+from subsystems.actuators.breadboxWinch import Winch
 from subsystems.arm.grader import Grabber
 
 class Breadbox(ConfigBaseCommandRobot):
@@ -22,6 +23,7 @@ class Breadbox(ConfigBaseCommandRobot):
     robot_arm_rotation: ArmRotation
     robot_Grabber: Grabber
     robot_arm_controller: ArmController
+    robot_arm_extension : Winch
     def __init__(self, period: float = 0.02) -> None:
         super().__init__(period)
 
@@ -86,6 +88,7 @@ class Breadbox(ConfigBaseCommandRobot):
 
     def teleopPeriodic(self) -> None:
         # if Input.getButton("XButton", self.XboxController):
+        self.robot_arm_extension.setSpeed(Input.getCurrentStick(self.mech_controller.Axis.kRightY, 1, False))
         if self.driver_controller.getAButton():
             if (not self.balanceing):
                 commands2.CommandScheduler.getInstance().cancelAll()
@@ -100,6 +103,9 @@ class Breadbox(ConfigBaseCommandRobot):
 
         wpilib.SmartDashboard.putNumber(
             "curr ang", self.robot_arm_rotation.getPostion() * math.pi / 180.0
+        )
+        wpilib.SmartDashboard.putNumber(
+            "Cur Pos", self.robot_arm_extension.getPosition()
         )
         if Input().getButton("RightTrigger", self.driver_controller) > 0.2:
             self.creeperMode = True
