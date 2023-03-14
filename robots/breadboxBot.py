@@ -11,6 +11,7 @@ from commands.breadbox import armCommands
 
 from selector import Selector
 from wpilib import cameraserver
+from examples.sendableChooser import PositionChooser
 
 from .configBasedRobot import ConfigBaseCommandRobot
 from subsystems.actuators.breadboxArmRotation import ArmRotation
@@ -26,6 +27,7 @@ class Breadbox(ConfigBaseCommandRobot):
         super().__init__(period)
 
         # Attempt assignments from subsystems and if something is empty, throw an exception
+        self.position = PositionChooser()
         try:
             self.robot_arm_rotation = self.subsystems["armRotation"]
             self.driveTrain = self.subsystems["drivetrain"]
@@ -53,6 +55,7 @@ class Breadbox(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.setPersistent("Auto Distance 2")
 
     def getAutonomousCommand(self):
+        self.position.getPosition()
         return(Autonomous(self.driveTrain, self.navx, self.robot_arm_controller, self.robot_Grabber))
 
     def teleopInit(self) -> None:
