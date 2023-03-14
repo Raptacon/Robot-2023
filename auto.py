@@ -12,8 +12,16 @@ from enum import Enum
 
 log = logging.getLogger("Auto")
 class Autonomous(commands2.SequentialCommandGroup):
-    def __init__(self, drive : Westcoast, navx : navx.AHRS, armController : ArmController, grabber : Grabber) -> None:
+    def __init__(self, drive : Westcoast, navx : navx.AHRS, armController : ArmController, grabber : Grabber, position : int) -> None:
         super().__init__()
+        
+        # self.chooser = wpilib.SendableChooser()
+        # self.chooser.setDefaultOption("Left", 1)
+        # self.chooser.addOption("Center", 2)
+        # self.chooser.addOption("Right", 3)
+        # self.chooser.addOption("None", None)
+
+        # wpilib.SmartDashboard.putData("Autonomous Mode", self.chooser) 
 
         distance1 = wpilib.SmartDashboard.getNumber("Auto Distance 1", 7.25)
         distance2 = wpilib.SmartDashboard.getNumber("Auto Distance 2", 7.25)
@@ -23,8 +31,9 @@ class Autonomous(commands2.SequentialCommandGroup):
         log.info(f"Auto Distance 2: {distance2}")
         log.info(f"Auto Turn Angle: {turnAngle}")
        
-        position = wpilib.SmartDashboard.getData("Autonomous Mode", self.chooser)
-        if position is "Center":
+        # position = wpilib.SmartDashboard.getData("Autonomous Mode", self.chooser)
+        # position = self.chooser.getSelected()
+        if (position == 2):
             self.addCommands(
                 getArmInstantCommand(armController, armController.setBackTop),
                 commands2.WaitCommand(2),
@@ -34,8 +43,11 @@ class Autonomous(commands2.SequentialCommandGroup):
                 GoToDist(distance1, drive),
                 commands2.PrintCommand(f"GoToDist finished {distance1}")
                 )
-        if position == "Left":
-            return
-        if position == "Right":
-            return
+        if position == 1:
+            self.addCommands(
+                GoToDist(distance1, drive),
+                    commands2.PrintCommand(f"GoToDist finished {distance1}")
+            )
+        if position == 3:
+            pass
 
