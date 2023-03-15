@@ -19,4 +19,3 @@ class PathFinder():
         if(self.dist > 0.1 or True):
             print("i should be driving")
             self.driveTrain.drive(0.5, 0.5)
-            

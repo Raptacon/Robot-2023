@@ -5,7 +5,9 @@ import wpilib
 import commands2
 import aprilTags
 import pathFinder
+import ntcore
 
+from photonvision import PhotonCamera
 from wpimath.geometry import Translation2d
 from wpimath.geometry import Pose2d
 from robots.configBasedRobot import ConfigBaseCommandRobot
@@ -45,12 +47,24 @@ class MyRobot(commands2.TimedCommandRobot):
         '''starts the camera server for apriltags'''
         wpilib.CameraServer.launch()
         '''starts feild representation in smartdashboard'''
-        '''starts april tags'''
-        self.AprilTags = aprilTags.AprilTags()
+
         '''starts the feild available on glass'''
         self.field = Field2d()
         SmartDashboard.putData("Field", self.field)
 
+        '''sets up network tables'''
+        nt = ntcore.NetworkTableInstance.getDefault()
+        nt.startClient3("test code")
+        nt.setServer("10.32.0.13")
+        '''lets people know whether it was connected'''
+        if nt.isConnected():
+            print('Network tables Connected')
+
+        '''connects a camera object to the network tables'''
+        self.camera = PhotonCamera(nt, aprilTags.AprilTags.name)
+
+        '''starts april tags'''
+        self.AprilTags = aprilTags.AprilTags(self.camera)
 
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""
@@ -106,12 +120,12 @@ class MyRobot(commands2.TimedCommandRobot):
         # Cancels all running commands at the start of test mode
         commands2.CommandScheduler.getInstance().cancelAll()
         self.container.testInit()
-        self.aprilTags = aprilTags.AprilTags()
-        getInitPos = self.aprilTags.updatePose
-        initPos = getInitPos()
-        oneMeter = Translation2d(x = 1, y = 0).X()
-        finalPos = Pose2d(x = initPos.translation().X() + oneMeter, y = initPos.translation().Y(), rotation = initPos.rotation().toRotation2d())
-        self.pathFinder = pathFinder.PathFinder(self.container.driveTrain, getInitPos, finalPos)
+        if(self.camera.hasTargets()):
+            getInitPos = aprilTags.AprilTags.updatePose
+            initPos = self.AprilTags.updatePose()
+            oneMeter = Translation2d(x = 1, y = 0).X()
+            finalPos = Pose2d(x = initPos.translation().X() + oneMeter, y = initPos.translation().Y(), rotation = initPos.rotation().toRotation2d())
+            self.pathFinder = pathFinder.PathFinder(self.container.driveTrain, getInitPos, finalPos)
 
 
     def testPeriodic(self) -> None:

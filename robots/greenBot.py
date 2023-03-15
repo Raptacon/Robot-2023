@@ -27,6 +27,9 @@ class GreenBot(ConfigBaseCommandRobot):
         motors['left'] = ctre.WPI_TalonFX(20)
         motors['leftF'] = ctre.WPI_TalonFX(21)
 
+        motors['left'].setInverted(True)
+        motors['leftF'].setInverted(True)
+
         rightM = wpilib.MotorControllerGroup(motors['right'], motors['rightF'])
         leftM = wpilib.MotorControllerGroup(motors['left'], motors['leftF'])
 
