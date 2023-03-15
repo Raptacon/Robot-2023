@@ -4,7 +4,6 @@ from photonvision import RobotPoseEstimator
 from photonvision import SimVisionSystem
 from wpimath import geometry
 import robotpy_apriltag
-import ntcore
 
 
 class AprilTags():
@@ -25,15 +24,15 @@ class AprilTags():
     cameraResHeight = 240
     minTargetArea = 0
     def __init__(self, camera : PhotonCamera) -> None:
+        self.camera = camera
         '''Check whether the camera is running on the robot, and sets the camera up for beign on the robot or being in the sim'''
         '''TODO: change the if statemnt below to detect whether the sim is running, if it is run sim vision system'''
-        self.camera = camera
         if(True):
             '''Creates a camera that has a position on the robot'''
             self.robotCamera = [(camera, self.cameraToRobot)]
         else:
             '''sets up a camera for the sim'''
-            self.camera = SimVisionSystem(name, camDaigFov, self.cameraToRobot, maxLEDRange, cameraResWidth, cameraResHeight, minTargetArea)
+            self.camera = SimVisionSystem(self.name, self.camDaigFov, self.cameraToRobot, self.maxLEDRange, self.cameraResWidth, self.cameraResHeight, self.minTargetArea)
         
         '''grabs this year's feild data'''
         'atfl means AprilTagFieldLayout'
