@@ -181,7 +181,7 @@ class Breadbox(ConfigBaseCommandRobot):
             commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm_rotation])
         )
 
-        armCommands.createArmPositionCommands(self.mech_controller_hid, self.mech_controller, self.robot_arm_controller, self.robot_arm_rotation)
+        # armCommands.createArmPositionCommands(self.mech_controller_hid, self.mech_controller, self.robot_arm_controller, self.robot_arm_rotation)
 
     def trackAngle(self):
         self.moveArmDegrees(

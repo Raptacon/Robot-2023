@@ -8,7 +8,6 @@ from subsystems.drivetrains.westcoast import Westcoast
 import wpilib
 import navx
 import logging
-from enum import Enum
 
 log = logging.getLogger("Auto")
 class Autonomous(commands2.SequentialCommandGroup):
