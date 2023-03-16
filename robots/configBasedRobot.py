@@ -68,7 +68,7 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
         except OSError:
             return "unknown"
         except json.JSONDecodeError:
-            return "bad json in deploy file check for unescaped \ "
+            return "bad json in deploy file check for unescaped "
 
     def teleopPeriodic(self) -> None:
         super().teleopPeriodic()
