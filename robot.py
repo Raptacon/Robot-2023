@@ -6,9 +6,6 @@ import typing
 import wpilib
 import commands2
 
-# from robots.configBasedRobot import ConfigBaseCommandRobot
-# from robots.greenBot import GreenBot
-# from robots.dumboBot import Dumbo
 from utils import botFactory
 
 
@@ -32,13 +29,6 @@ class MyRobot(commands2.TimedCommandRobot):
         # get a robot (with defined motors, subsystems, etc based on the robot name or config file
         # TODO rename container to robot or something more obvious?
         self.container = botFactory.get_bot(self.setRobotNameFromEnv())
-
-        # if False:
-        #     self.container = GreenBot()
-        # if True:
-        #     self.container = ConfigBaseCommandRobot()
-        #  if True:
-        # self.container = Dumbo()
 
     def setRobotNameFromEnv(self) -> str:
         """Attempts to get the robot name from the environment variable ROBOT_NAME

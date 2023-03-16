@@ -8,10 +8,6 @@ from pathlib import Path
 # https://github.com/gruns/icecream
 from icecream import ic
 
-import commands2
-
-import utils.configMapper
-
 # Imported just to define the object returned from the BotFactory
 from robots.configBasedRobot import ConfigBasedCommandRobot
 
@@ -22,12 +18,10 @@ log.setLevel(logging.DEBUG)
 
 
 class BotFactory(object):
-   
-    robot_full_name = None # nameBot"
-    raw_name        = None # Whatever ws given to the Factory as a name
-    robot_class_name= None # NameBot
-    
-    
+    robot_full_name = None  # nameBot"
+    raw_name = None  # Whatever ws given to the Factory as a name
+    robot_class_name = None  # NameBot
+
     def __init__(self, name: str) -> ConfigBasedCommandRobot:
         """BotFactory will get the configs and create the bot for the supplied name.
         If no name is supplied, then it will query the filesystem for ~/robotConfig and
@@ -71,7 +65,9 @@ class BotFactory(object):
             self._validate_bot_config_exists(botName)
             self._validate_bot_python_exists(botName)
         except Exception as e:
-            raise AssertionError( "The " + botName + " could not be found or had errors. error=" + e)
+            raise AssertionError(
+                "The " + botName + " could not be found or had errors. error=" + e
+            )
 
         # If we made it here, we know our botName is valid and the python for the bot exists and the config for the bot exists
         ic(botName)
@@ -79,7 +75,7 @@ class BotFactory(object):
 
     def _normalize_bot_name(self, robotName: str) -> str:
         """Takes in a name of <robot name>Bot.py, <robot name>, <robot name>Bot <robot name>Bot.yml/yaml and
-        will normalize to just <robot name> and then assign to 
+        will normalize to just <robot name> and then assign to internal vars for future use
 
         Args:
             name (str): The name of the robot in the form of <robot name> or <robot name>Bot.yml/yaml
@@ -95,11 +91,11 @@ class BotFactory(object):
         else:
             name = robotName[:pos]
         ic(f"name={name}")
-        
+
         self.raw_name = robotName
         self.name = name
-        self.robot_full_name   = f"{name}Bot"
-        self.robot_class_name  = f"{name.capitalize()}Bot"
+        self.robot_full_name = f"{name}Bot"
+        self.robot_class_name = f"{name.capitalize()}Bot"
         self.robot_module_name = f"robots.{self.robot_full_name}"
 
         return self.name
@@ -172,14 +168,14 @@ class BotFactory(object):
         return True
 
     def _get_name_from_config_file(self) -> str:
-        """Locates a config file in ~/robotConfig and if found, will read the name of bot 
+        """Locates a config file in ~/robotConfig and if found, will read the name of bot
 
         Raises:
             LookupError: If the fully qualified robotConfig file can't be opened
             LookupError: If the robotConfig can't be read
 
         Returns:
-            str: The stripped contents of the config file 
+            str: The stripped contents of the config file
         """
         ic()
         # Need to supply a sane value to findConfig in the form of <botname>Bot.yml
@@ -237,7 +233,7 @@ class BotFactory(object):
         # module = importlib.import_module(lib)
         module = importlib.import_module(self.robot_module_name)
         ic(module)
-        # Dynamically get the robot_class_name (ie DumboBot,LabBot, etc) and use getattr() to call the class in the 
+        # Dynamically get the robot_class_name (ie DumboBot,LabBot, etc) and use getattr() to call the class in the
         # imported module
         return getattr(module, self.robot_class_name)()
 
