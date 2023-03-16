@@ -18,7 +18,7 @@ class Winch(commands2.CommandBase):
         super().__init__()
         motorSettings = {
             "type":"SparkMax",
-            "inverted": False,
+            "inverted": True,
             "motorType": "kBrushless",
             "sensorPhase": True,
             "channel": 60

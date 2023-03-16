@@ -5,7 +5,7 @@ description: "Arm extension for breadBox. Future may be more general arm"
 motor:
   channel: 60
   #type: "motor.SparkMax"
-  inverted: False
+  inverted: True
   motorType: "kBrushless"
   sensorPhase: True
   pid: Null
