@@ -19,4 +19,3 @@ class PositionChooser():
     def getPosition(self):
         return self.chooser.getSelected() 
 
-  

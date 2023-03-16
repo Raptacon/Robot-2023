@@ -5,7 +5,6 @@ import wpilib
 import commands2
 
 from robots.configBasedRobot import ConfigBaseCommandRobot
-from robots.greenBot import GreenBot
 from robots.breadboxBot import Breadbox
 
 
