@@ -6,6 +6,7 @@ import wpilib.interfaces
 hwFactory = utils.hardwareFactory.getHardwareFactory()
 import utils.sensorFactory
 import utils.motorHelper
+from typing import Callable
 
 log = logging.getLogger("winch")
 
@@ -34,7 +35,6 @@ class Winch(commands2.CommandBase):
         self.encoder = utils.sensorFactory.create("wpilib.DutyCycleEncoder", encoderSettings)
         self.encoder.reset()
 
-
     def setDistance(self, distance : float):
         self.wayPoint = distance
         if self.encoder.getPositionOffset() > self.wayPoint:
@@ -42,26 +42,9 @@ class Winch(commands2.CommandBase):
         else:
             self.forward = True
 
-    def setSpeed(self, speed : float):
-        self.motor.setVoltage(speed * 12)
+    def setSpeed(self, speed :  Callable[[], float]):
+        self.speed = speed()
+        self.motor.setVoltage(self.speed * 12)
 
     def getPosition(self):
         return self.encoder.getPositionOffset()
-
-    def execute(self) -> None:
-        self.distance = self.encoder.getPositionOffset()
-        if self.forward and self.distance < self.wayPoint:
-            self.motor.setVoltage(8)
-        elif not self.forward and self.distance > self.wayPoint:
-            self.motor.setVoltage(-8)
-
-    def end(self, interrupted: bool) -> None:
-        self.motor.setVoltage(0)
-        self.encoder.reset()
-
-    def isFinished(self) -> bool:
-        if self.forward and self.distance >= self.wayPoint:
-            return True
-        elif not self.forward and self.distance <= self.wayPoint:
-            return True
-        return False

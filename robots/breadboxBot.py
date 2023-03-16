@@ -36,7 +36,6 @@ class Breadbox(ConfigBaseCommandRobot):
             self.robot_arm_extension = self.subsystems["winch"]
             #TODO fix this way this setter works
             self.robot_arm_controller.setArmRotationSubsystem(self.robot_arm_rotation)
-            self.robot_arm_controller.setArmExtensionSubsystem(self.robot_arm_extension)
             #self.robot_arm_controller.setArmExtensionSubsystem(self.robot_arm_extension)
 
             cameraserver.CameraServer.launch()
@@ -85,10 +84,9 @@ class Breadbox(ConfigBaseCommandRobot):
         self.balance = Balance(Input().getButton("XButton", self.driver_controller), self.driveTrain)
         self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, lambda: self.getCreeperMode(), self.driveTrain)
 
-
     def teleopPeriodic(self) -> None:
         # if Input.getButton("XButton", self.XboxController):
-        self.robot_arm_extension.setSpeed(Input.getCurrentStick(self.mech_controller.Axis.kRightY, 1, False))
+        self.robot_arm_extension.setSpeed(Input.getStick(self.mech_controller.Axis.kRightY, 1, False))
         if self.driver_controller.getAButton():
             if (not self.balanceing):
                 commands2.CommandScheduler.getInstance().cancelAll()
@@ -173,7 +171,6 @@ class Breadbox(ConfigBaseCommandRobot):
         and then passing it to a JoystickButton.
         """
 
-
         #track smart dashboad on left click
         self.mech_controller_hid.POVLeft().onTrue(
             commands2.cmd.runOnce(lambda: self.trackAngle(), [self.robot_arm_rotation])
@@ -185,7 +182,6 @@ class Breadbox(ConfigBaseCommandRobot):
         )
 
         armCommands.createArmPositionCommands(self.mech_controller_hid, self.mech_controller, self.robot_arm_controller, self.robot_arm_rotation)
-        armCommands.createArmExtensionCommands(self.mech_controller_hid, self.mech_controller, self.robot_arm_controller, self.robot_arm_extension)
 
     def trackAngle(self):
         self.moveArmDegrees(

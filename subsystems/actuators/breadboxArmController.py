@@ -16,13 +16,9 @@ class ArmController(commands2.SubsystemBase):
 
         self.configMapper = kwargs["configMapper"]
         self.setAnglesDegrees = kwargs["setArmAnglesDegrees"]
-        self.setArmLength = kwargs["setArmLengthUnits"]
 
     def setArmRotationSubsystem(self, armRotationSubsystem):
         self.armRotationSS = armRotationSubsystem
-
-    def setArmExtensionSubsystem(self, armExtensionSubsystem):
-        self.armExtensionSS = armExtensionSubsystem
 
     def getArmRotation(self):
         """TODO Make this work by lookup in future
@@ -37,12 +33,6 @@ class ArmController(commands2.SubsystemBase):
             #TODO
             #self.getArmRotation = self.configMapper.getSubsystem("armRotation")
             #return self.armRotationSS
-
-    def getArmExtension(self):
-        if hasattr(self, "armExtensionSS"):
-            return self.armExtensionSS
-        else:
-            return None
 
     def isArmPositioned(self, tolerance = None):
         """
@@ -65,11 +55,6 @@ class ArmController(commands2.SubsystemBase):
         """
         self.getArmRotation().setSetpointDegrees(angleDegrees)
         self.getArmRotation().enable()
-
-    def setExtension(self, armLength):
-        self.getArmExtension().setDistance(armLength)
-        self.getArmExtension().execute()
-
 
     def setFrontBottom(self):
         """
@@ -112,15 +97,6 @@ class ArmController(commands2.SubsystemBase):
         sets the manipulator to the back bottom position
         """
         self.setManipulator(self.setAnglesDegrees["backBottom"])
-
-    def setLow(self):
-        self.setExtension(self.setArmLength["low"])
-
-    def setMid(self):
-        self.setExtension(self.setArmLength["mid"])
-
-    def setHigh(self):
-        self.setExtension(self.setArmLength["high"])
 
 def getArmFunctionalCommand(armController: ArmController, func: Callable, tolerance = 0.1):
     """
