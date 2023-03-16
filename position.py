@@ -4,7 +4,7 @@ import wpilib
 class EPosition(Enum):
     LEFT = 1
     CENTER = 2
-    RIGHT = 3 
+    RIGHT = 3
 class PositionChooser():
 
     def position(self) -> None:
@@ -14,8 +14,8 @@ class PositionChooser():
         self.chooser.addOption("Right", EPosition.RIGHT)
         self.chooser.addOption("None", None)
 
-        wpilib.SmartDashboard.putData("Autonomous Mode", self.chooser) 
+        wpilib.SmartDashboard.putData("Autonomous Mode", self.chooser)
 
     def getPosition(self):
-        return self.chooser.getSelected() 
+        return self.chooser.getSelected()
 

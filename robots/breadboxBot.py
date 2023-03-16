@@ -10,7 +10,6 @@ from commands.balance import Balance
 from position import PositionChooser
 from selector import Selector
 from wpilib import cameraserver
-from enum import Enum
 
 from .configBasedRobot import ConfigBaseCommandRobot
 from subsystems.actuators.breadboxArmRotation import ArmRotation
