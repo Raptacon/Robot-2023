@@ -9,9 +9,9 @@ class PositionChooser():
 
     def position(self) -> None:
         self.chooser = wpilib.SendableChooser()
-        self.chooser.setDefaultOption("Left", EPosition.LEFT)
-        self.chooser.addOption("Center", EPosition.CENTER)
-        self.chooser.addOption("Right", EPosition.RIGHT)
+        self.chooser.setDefaultOption("Left", 1)
+        self.chooser.addOption("Center", 2)
+        self.chooser.addOption("Right", 3)
         self.chooser.addOption("None", None)
 
         wpilib.SmartDashboard.putData("Autonomous Mode", self.chooser)
