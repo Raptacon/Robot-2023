@@ -3,13 +3,13 @@ name: "Dumbo Arm Controller"
 description:  "Handles the rotation, extension, and manipulator"
 
 setArmAnglesDegrees:
-    frontBottom: 0
+    frontBottom: 4
     frontMiddle: 30
-    frontTop: 60
+    frontTop: 53
     top: 100
     backTop: 161.0
     backMiddle: 196.0
-    backBottom: 200
+    backBottom: 208
 
 #TODO once arm elevator if set, control here
 setArmLengthUnits:
