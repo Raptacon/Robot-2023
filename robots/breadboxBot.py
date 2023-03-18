@@ -24,10 +24,10 @@ class Breadbox(ConfigBaseCommandRobot):
     robot_arm_controller: ArmController
     def __init__(self, period: float = 0.02) -> None:
         super().__init__(period)
-        
+
         self.Position = PositionChooser()
         self.Position.position()
-        
+
         # Attempt assignments from subsystems and if something is empty, throw an exception
         try:
             self.robot_arm_rotation = self.subsystems["armRotation"]
@@ -55,11 +55,9 @@ class Breadbox(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.setPersistent("Auto Distance 1")
         wpilib.SmartDashboard.setPersistent("Auto Distance 2")
 
-
     def getAutonomousCommand(self):
-        self.Position.getPosition()
-        return(Autonomous(self.driveTrain, self.navx, self.robot_arm_controller, self.robot_Grabber))
-        
+        return(Autonomous(self.driveTrain, self.navx, self.robot_arm_controller, self.robot_Grabber, self.Position.getPosition()))
+
     def teleopInit(self) -> None:
         self.driver_controller = commands2.button.CommandXboxController(0)
         self.mech_controller = commands2.button.CommandXboxController(1)
