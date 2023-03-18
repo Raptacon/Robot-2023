@@ -63,8 +63,8 @@ class Breadbox(ConfigBaseCommandRobot):
         self.selector = Selector()
 
         self.tankDrive = TankDrive(
-            Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
-            Input.getStick(wpilib.XboxController.Axis.kRightY, 0, True),
+            lambda: self.getStick(wpilib.XboxController.Axis.kLeftY),
+            lambda: self.getStick(wpilib.XboxController.Axis.kRightY),
             lambda: self.getCreeperMode(),
             self.driveTrain,
         )
@@ -81,6 +81,11 @@ class Breadbox(ConfigBaseCommandRobot):
         self.balance = Balance(Input().getButton("XButton", self.driver_controller), self.driveTrain)
         self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, lambda: self.getCreeperMode(), self.driveTrain)
 
+    def getStick(self, axis) -> float:
+        if(Input().getButton("RightTrigger", self.driver_controller) >= 0.2):
+            return Input.getStick(self.driver_controller.Axis.kLeftY, 0, True)
+        else:
+            return Input.getStick(axis, 0, True)
 
     def teleopPeriodic(self) -> None:
         # if Input.getButton("XButton", self.XboxController):
@@ -112,7 +117,7 @@ class Breadbox(ConfigBaseCommandRobot):
             self.robot_Grabber.useOutputCubes(self.mech_controller.getLeftTriggerAxis())
         elif self.mech_controller.getLeftBumper():
             self.robot_Grabber.useIntakeCubes(self.mech_controller.getLeftBumper())
-        if Input().getButton("RightTrigger", self.driver_controller):
+        if Input().getButton("LeftTrigger", self.driver_controller):
             self.creeperMode = True
         else:
             self.creeperMode = False
