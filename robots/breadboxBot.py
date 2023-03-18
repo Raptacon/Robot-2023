@@ -79,7 +79,8 @@ class Breadbox(ConfigBaseCommandRobot):
         self.driveTrain = self.subsystems["drivetrain"]
         # self.balance = Balance(Input.getButton("XButton", self.XboxController), self.driveTrain)
         self.balance = Balance(Input().getButton("XButton", self.driver_controller), self.driveTrain)
-        self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, lambda: self.getCreeperMode(), self.driveTrain)
+        self.balancePower = self.balance.dobalance()
+        self.balanceDrive = TankDrive(lambda: self.balancePower,lambda: self.balancePower, lambda: self.getCreeperMode(), self.driveTrain)
 
 
     def teleopPeriodic(self) -> None:
@@ -87,6 +88,7 @@ class Breadbox(ConfigBaseCommandRobot):
         if self.driver_controller.getAButton():
             if (not self.balanceing):
                 commands2.CommandScheduler.getInstance().cancelAll()
+            self.balancePower = self.balance.dobalance()
             self.driveTrain.setDefaultCommand(self.balanceDrive)
             self.balanceing = True
             self.balance.execute()
