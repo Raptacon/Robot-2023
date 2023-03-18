@@ -46,12 +46,16 @@ class ArmController(commands2.SubsystemBase):
             self.getArmExtension = self.configMapper.getSubsystem("armExtension")
             return self.armExtensionSS
 
-    def isArmPositioned(self):
+    def isArmPositioned(self, tolerance = None):
         """
         Returns if arm is in postion
         """
         #TODO add support for length
-        return self.getArmRotation().atSetpoint()
+        if tolerance:
+            return self.getArmRotation().closeToSetpoint(tolerance)
+        else:
+            return self.getArmRotation().atSetpoint()
+    isArmPositioned
 
     def getReqSubsystems(self) -> list[commands2.Subsystem]:
         return [self, self.getArmRotation()]
@@ -109,7 +113,7 @@ class ArmController(commands2.SubsystemBase):
 
 
 
-def getArmFunctionalCommand(armController: ArmController, func: Callable):
+def getArmFunctionalCommand(armController: ArmController, func: Callable, tolerance = 0.1):
     """
     Creates a functional command for the arm
     Args:
@@ -122,6 +126,24 @@ def getArmFunctionalCommand(armController: ArmController, func: Callable):
     #cmd = getArmFunctionalCommand(self.robot_arm_controller, self.robot_arm_controller.setTop)
     #commands2.CommandScheduler.schedule(commands2.CommandScheduler.getInstance(), cmd)
 
-    cmd = commands2.FunctionalCommand(func, lambda *args, **kwargs: None, lambda x: print("Done"), armController.isArmPositioned)
+    cmd = commands2.FunctionalCommand(func, lambda *args, **kwargs: None, lambda x: print("Done"), lambda : armController.isArmPositioned(tolerance))
+    cmd.addRequirements(armController.getReqSubsystems())
+    return cmd
+
+
+def getArmInstantCommand(armController: ArmController, func: Callable, tolerance = 0.1):
+    """
+    Creates a functional command for the arm
+    Args:
+        armController (ArmController): arm controller to use
+        func (Callable): function from arm controller to run
+    Returns: functional command
+    """
+
+    #example usage without command group
+    #cmd = getArmFunctionalCommand(self.robot_arm_controller, self.robot_arm_controller.setTop)
+    #commands2.CommandScheduler.schedule(commands2.CommandScheduler.getInstance(), cmd)
+
+    cmd = commands2.InstantCommand(func)
     cmd.addRequirements(armController.getReqSubsystems())
     return cmd

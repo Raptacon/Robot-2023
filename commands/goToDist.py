@@ -21,6 +21,8 @@ class GoToDist(commands2.CommandBase):
 
     def initialize(self) -> None:
         """Called when the command is initially scheduled."""
+        print("Init drive2distance")
+        self.pid.reset()
         self.drive.drive(0, 0)
         self.drive.reset()
         self.startingDistance = abs(self.drive.getRightEncoder())

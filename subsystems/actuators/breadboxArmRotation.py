@@ -140,6 +140,9 @@ class ArmRotation(commands2.PIDSubsystem):
     def atSetpoint(self) -> bool:
         return self.getController().atSetpoint()
 
+    def closeToSetpoint(self, tolerance) -> bool:
+        return self.getController().getPositionError() < tolerance
+
     def toggleBrake(self) -> None:
         if self.motor.getIdleMode() == rev.CANSparkMax.IdleMode.kBrake:
             log.warning("Setting to coast")

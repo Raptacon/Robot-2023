@@ -3,10 +3,12 @@ import commands2
 import commands2.cmd
 import commands2.button
 from commands.tankDrive import TankDrive
+from auto import Autonomous
 import math
 from input import Input
 from commands.balance import Balance
 from commands.breadbox import armCommands
+
 from selector import Selector
 from wpilib import cameraserver
 
@@ -50,8 +52,8 @@ class Breadbox(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.setPersistent("Auto Distance 1")
         wpilib.SmartDashboard.setPersistent("Auto Distance 2")
 
-
-
+    def getAutonomousCommand(self):
+        return(Autonomous(self.driveTrain, self.navx, self.robot_arm_controller, self.robot_Grabber))
 
     def teleopInit(self) -> None:
         self.driver_controller = commands2.button.CommandXboxController(0)
@@ -105,7 +107,7 @@ class Breadbox(ConfigBaseCommandRobot):
         if self.mech_controller.getRightTriggerAxis() > 0.2:
             self.robot_Grabber.useOutputCones(self.mech_controller.getRightTriggerAxis())
         elif self.mech_controller.getRightBumper():
-            self.robot_Grabber.useIntakehCones(self.mech_controller.getRightBumper())
+            self.robot_Grabber.useIntakeCones(self.mech_controller.getRightBumper())
         elif self.mech_controller.getLeftTriggerAxis() > 0.2:
             self.robot_Grabber.useOutputCubes(self.mech_controller.getLeftTriggerAxis())
         elif self.mech_controller.getLeftBumper():
@@ -118,7 +120,7 @@ class Breadbox(ConfigBaseCommandRobot):
         if Input().getButton("RightTrigger", self.mech_controller) != 0:
             self.robot_Grabber.useOutputCones(Input().getButton("RightTrigger", self.mech_controller))
         elif Input().getButton("RightBumper", self.mech_controller):
-            self.robot_Grabber.useIntakehCones(Input().getButton("RightBumper", self.mech_controller))
+            self.robot_Grabber.useIntakeCones(Input().getButton("RightBumper", self.mech_controller))
         elif Input().getButton("LeftTrigger", self.mech_controller) != 0:
             self.robot_Grabber.useOutputCubes(Input().getButton("LeftTrigger", self.mech_controller))
         elif Input().getButton("LeftBumper", self.mech_controller):
