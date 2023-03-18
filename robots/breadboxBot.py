@@ -14,6 +14,7 @@ from wpilib import cameraserver
 from .configBasedRobot import ConfigBaseCommandRobot
 from subsystems.actuators.breadboxArmRotation import ArmRotation
 from subsystems.actuators.breadboxArmController import ArmController
+from commands.breadbox import armCommands
 from subsystems.arm.grader import Grabber
 
 class Breadbox(ConfigBaseCommandRobot):
@@ -181,7 +182,7 @@ class Breadbox(ConfigBaseCommandRobot):
             commands2.cmd.runOnce(lambda: self.disablePIDSubsystems(), [self.robot_arm_rotation])
         )
 
-        # armCommands.createArmPositionCommands(self.mech_controller_hid, self.mech_controller, self.robot_arm_controller, self.robot_arm_rotation)
+        armCommands.createArmPositionCommands(self.mech_controller_hid, self.mech_controller, self.robot_arm_controller, self.robot_arm_rotation)
 
     def trackAngle(self):
         self.moveArmDegrees(
