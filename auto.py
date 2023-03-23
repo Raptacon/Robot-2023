@@ -32,7 +32,7 @@ class Autonomous(commands2.SequentialCommandGroup):
                 GoToDist(distance1, drive),
                 commands2.PrintCommand(f"GoToDist finished {distance1}")
                 )
-        if position == 1:
+        if position == EPosition.LEFT:
             pass
         if position == 3:
             pass
