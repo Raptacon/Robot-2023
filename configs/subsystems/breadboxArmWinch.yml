@@ -1,0 +1,19 @@
+subsystem: "actuators.breadboxWinch.Winch"
+name: "armExtension"
+description: "Arm extension for breadBox. Future may be more general arm"
+
+motor:
+  channel: 60
+  #type: "motor.SparkMax"
+  inverted: True
+  motorType: "kBrushless"
+  sensorPhase: True
+  pid: Null
+
+encoder:
+  #type: "sensor.wpilib.DutyCycleEncoder"
+  channel: 1
+  offset: 0.0
+  unitsPerRotation: 6.28318530718 #2Pi
+  minDutyCycle: 0.0
+  maxDutyCycle: 1.0
