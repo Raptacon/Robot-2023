@@ -22,7 +22,7 @@ class Autonomous(commands2.SequentialCommandGroup):
         log.info(f"Auto Distance 2: {distance2}")
         log.info(f"Auto Turn Angle: {turnAngle}")
        
-        if (position == 2):
+        if (position == EPosition.CENTER):
             self.addCommands(
                 getArmInstantCommand(armController, armController.setBackTop),
                 commands2.WaitCommand(2),
