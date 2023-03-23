@@ -10,7 +10,7 @@ class PositionChooser():
     def position(self) -> None:
         self.chooser = wpilib.SendableChooser()
         self.chooser.setDefaultOption("Left", EPosition.LEFT)
-        self.chooser.addOption("Center", 2)
+        self.chooser.addOption("Center", EPosition.CENTER)
         self.chooser.addOption("Right", EPosition.RIGHT)
 
         self.chooser.addOption("None", None)
