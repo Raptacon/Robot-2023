@@ -7,14 +7,14 @@ from auto import Autonomous
 import math
 from input import Input
 from commands.balance import Balance
-from commands.breadbox import armCommands
-
+from position import PositionChooser
 from selector import Selector
 from wpilib import cameraserver
 
 from .configBasedRobot import ConfigBaseCommandRobot
 from subsystems.actuators.breadboxArmRotation import ArmRotation
 from subsystems.actuators.breadboxArmController import ArmController
+from commands.breadbox import armCommands
 from subsystems.arm.grader import Grabber
 
 class Breadbox(ConfigBaseCommandRobot):
@@ -24,6 +24,9 @@ class Breadbox(ConfigBaseCommandRobot):
     robot_arm_controller: ArmController
     def __init__(self, period: float = 0.02) -> None:
         super().__init__(period)
+
+        self.Position = PositionChooser()
+        self.Position.position()
 
         # Attempt assignments from subsystems and if something is empty, throw an exception
         try:
@@ -53,7 +56,7 @@ class Breadbox(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.setPersistent("Auto Distance 2")
 
     def getAutonomousCommand(self):
-        return(Autonomous(self.driveTrain, self.navx, self.robot_arm_controller, self.robot_Grabber))
+        return(Autonomous(self.driveTrain, self.navx, self.robot_arm_controller, self.robot_Grabber, self.Position.getPosition()))
 
     def teleopInit(self) -> None:
         self.driver_controller = commands2.button.CommandXboxController(0)
@@ -131,6 +134,7 @@ class Breadbox(ConfigBaseCommandRobot):
         if Input().getButton("BButton", self.mech_controller):
             self.selector.GetSelection(self.mech_controller)
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm_rotation.getPostion())
+
         return super().teleopPeriodic()
 
 
@@ -189,3 +193,4 @@ class Breadbox(ConfigBaseCommandRobot):
 
     def getCreeperMode(self):
         return self.creeperMode
+
