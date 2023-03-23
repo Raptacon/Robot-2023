@@ -8,7 +8,7 @@ from subsystems.drivetrains.westcoast import Westcoast
 import wpilib
 import navx
 import logging
-
+from position import EPosition
 log = logging.getLogger("Auto")
 class Autonomous(commands2.SequentialCommandGroup):
     def __init__(self, drive : Westcoast, navx : navx.AHRS, armController : ArmController, grabber : Grabber, position : int) -> None:
