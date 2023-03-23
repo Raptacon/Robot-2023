@@ -2,6 +2,7 @@ import commands2
 import commands2.cmd
 from commands.goToDist import GoToDist
 from commands.autoGrabber import AutoGrabber
+from commands.goToDistBalance import GoToDistBalance
 from subsystems.actuators.breadboxArmController import ArmController, getArmInstantCommand
 from commands.turnToAngle import TurnToAngle
 from subsystems.arm.grader import Grabber
@@ -30,20 +31,21 @@ class Autonomous(commands2.SequentialCommandGroup):
                 commands2.PrintCommand("Arm movement finished"),
                 AutoGrabber(grabber, 1, False),
                 commands2.PrintCommand("output cone"),
-                GoToDist(distance1, drive),
+                GoToDistBalance(distance1, drive),
                 commands2.PrintCommand(f"GoToDist finished {distance1}")
                 )
         if position == EPosition.LEFT:
-                        self.addCommands(
+            self.addCommands(
                 getArmInstantCommand(armController, armController.setBackTop),
                 commands2.WaitCommand(2),
                 commands2.PrintCommand("Arm movement finished"),
                 AutoGrabber(grabber, 1, False),
                 commands2.PrintCommand("output cone"),
-                GoToDist(distance1, drive),
+                GoToDist(distance2, drive),
                 commands2.PrintCommand(f"GoToDist finished {distance1}"),
-                TurnToAngle(turnAngle, drive, navx),
-                GoToDist(distance2, drive)
+                getArmInstantCommand(armController, armController.setFrontBottom),
+                commands2.WaitCommand(2),
+                TurnToAngle(30, drive, navx),
                 )
         if position == EPosition.RIGHT:
             pass

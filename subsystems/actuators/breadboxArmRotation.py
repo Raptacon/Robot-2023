@@ -102,11 +102,11 @@ class ArmRotation(commands2.PIDSubsystem):
         wpilib.SmartDashboard.putNumber("Arm Angle Degrees", math.degrees(currPos))
 
         if self.motor.getFault(self.motor.FaultID.kHardLimitFwd):
-            log.info("Forward Limit hit")
+            #log.info("Forward Limit hit")
             self.forwardHit = True
 
         if self.motor.getFault(self.motor.FaultID.kHardLimitRev):
-            log.info("Forward Limit hit")
+            #log.info("Forward Limit hit")
             self.reverseHit = True
 
 

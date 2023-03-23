@@ -15,7 +15,7 @@ class GoToDist(commands2.CommandBase):
         super().__init__()
         self.targetDist = feet * 10_000 #The encoders read in 10,000ths of a foot so we need to multiply it by 10000
         self.drive = drive
-        self.pid = wpimath.controller.PIDController(0.001, 0.01, 0.001)
+        self.pid = wpimath.controller.PIDController(0.1, 0.0, 0.0)
         self.pid.setTolerance(5, 10)
         self.addRequirements(drive)
 
