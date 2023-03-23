@@ -34,6 +34,6 @@ class Autonomous(commands2.SequentialCommandGroup):
                 )
         if position == EPosition.LEFT:
             pass
-        if position == 3:
+        if position == EPosition.RIGHT:
             pass
 
