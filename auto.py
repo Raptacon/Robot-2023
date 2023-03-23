@@ -3,6 +3,7 @@ import commands2.cmd
 from commands.goToDist import GoToDist
 from commands.autoGrabber import AutoGrabber
 from subsystems.actuators.breadboxArmController import ArmController, getArmInstantCommand
+from commands.turnToAngle import TurnToAngle
 from subsystems.arm.grader import Grabber
 from subsystems.drivetrains.westcoast import Westcoast
 import wpilib
@@ -15,7 +16,7 @@ class Autonomous(commands2.SequentialCommandGroup):
 
         distance1 = wpilib.SmartDashboard.getNumber("Auto Distance 1", 7.25)
         distance2 = wpilib.SmartDashboard.getNumber("Auto Distance 2", 7.25)
-        turnAngle = 180
+        turnAngle = 30
 
         log.info(f"Auto Distance 1: {distance1}")
         log.info(f"Auto Distance 2: {distance2}")
@@ -28,5 +29,14 @@ class Autonomous(commands2.SequentialCommandGroup):
             AutoGrabber(grabber, 1, False),
             commands2.PrintCommand("output cone"),
             GoToDist(distance1, drive),
-            commands2.PrintCommand(f"GoToDist finished {distance1}")
+            commands2.PrintCommand(f"GoToDist finished {distance1}"),
+            getArmInstantCommand(armController, armController.setFrontBottom),
+            commands2.WaitCommand(2),
+            TurnToAngle(turnAngle, drive, navx),
+            AutoGrabber(grabber, 1, False),
+            GoToDist(distance2, drive),
+            GoToDist(-distance2, drive),
+            TurnToAngle(-turnAngle, drive, navx),
+            GoToDist(distance1, drive),
+            AutoGrabber(grabber, 1, True)
         )
