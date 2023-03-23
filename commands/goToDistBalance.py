@@ -3,7 +3,7 @@ import commands2.cmd
 import wpimath.controller
 from subsystems.drivetrains.westcoast import Westcoast as DriveTrain
 
-class GoToDist(commands2.CommandBase):
+class GoToDistBalance(commands2.CommandBase):
     targetDist = 0
     tolerance = 5
     def __init__(self, feet: float, drive: DriveTrain) -> None:
