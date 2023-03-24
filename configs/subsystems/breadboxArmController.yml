@@ -10,14 +10,3 @@ setArmAnglesDegrees:
     backTop: 161.0
     backMiddle: 196.0
     backBottom: 208
-
-#TODO once arm elevator if set, control here
-setArmLengthUnits:
-    frontBottom: 0
-    frontMiddle: 0
-    frontTop: 0
-    top: 0
-    backTop: 0
-    backMiddle: 0
-    backBottom: 0
-

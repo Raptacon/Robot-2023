@@ -7,14 +7,15 @@ from auto import Autonomous
 import math
 from input import Input
 from commands.balance import Balance
-from commands.breadbox import armCommands
-
+from position import PositionChooser
 from selector import Selector
 from wpilib import cameraserver
 
 from .configBasedRobot import ConfigBaseCommandRobot
 from subsystems.actuators.breadboxArmRotation import ArmRotation
 from subsystems.actuators.breadboxArmController import ArmController
+from subsystems.actuators.breadboxWinch import Winch
+from commands.breadbox import armCommands
 from subsystems.arm.grader import Grabber
 
 class Breadbox(ConfigBaseCommandRobot):
@@ -22,8 +23,12 @@ class Breadbox(ConfigBaseCommandRobot):
     robot_arm_rotation: ArmRotation
     robot_Grabber: Grabber
     robot_arm_controller: ArmController
+    robot_arm_extension : Winch
     def __init__(self, period: float = 0.02) -> None:
         super().__init__(period)
+
+        self.Position = PositionChooser()
+        self.Position.position()
 
         # Attempt assignments from subsystems and if something is empty, throw an exception
         try:
@@ -31,6 +36,7 @@ class Breadbox(ConfigBaseCommandRobot):
             self.driveTrain = self.subsystems["drivetrain"]
             self.robot_Grabber = self.subsystems["grabber"]
             self.robot_arm_controller = self.subsystems["armController"]
+            self.robot_arm_extension = self.subsystems["winch"]
             #TODO fix this way this setter works
             self.robot_arm_controller.setArmRotationSubsystem(self.robot_arm_rotation)
             #self.robot_arm_controller.setArmExtensionSubsystem(self.robot_arm_extension)
@@ -53,7 +59,7 @@ class Breadbox(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.setPersistent("Auto Distance 2")
 
     def getAutonomousCommand(self):
-        return(Autonomous(self.driveTrain, self.navx, self.robot_arm_controller, self.robot_Grabber))
+        return(Autonomous(self.driveTrain, self.navx, self.robot_arm_controller, self.robot_Grabber, self.Position.getPosition()))
 
     def teleopInit(self) -> None:
         self.driver_controller = commands2.button.CommandXboxController(0)
@@ -81,9 +87,9 @@ class Breadbox(ConfigBaseCommandRobot):
         self.balance = Balance(Input().getButton("XButton", self.driver_controller), self.driveTrain)
         self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, lambda: self.getCreeperMode(), self.driveTrain)
 
-
     def teleopPeriodic(self) -> None:
         # if Input.getButton("XButton", self.XboxController):
+        self.robot_arm_extension.setSpeed(Input.getStick(self.mech_controller.Axis.kRightY, 1, False))
         if self.driver_controller.getAButton():
             if (not self.balanceing):
                 commands2.CommandScheduler.getInstance().cancelAll()
@@ -98,6 +104,9 @@ class Breadbox(ConfigBaseCommandRobot):
 
         wpilib.SmartDashboard.putNumber(
             "curr ang", self.robot_arm_rotation.getPostion() * math.pi / 180.0
+        )
+        wpilib.SmartDashboard.putNumber(
+            "Cur Pos", self.robot_arm_extension.getPosition()
         )
         if Input().getButton("RightTrigger", self.driver_controller) > 0.2:
             self.creeperMode = True
@@ -131,6 +140,7 @@ class Breadbox(ConfigBaseCommandRobot):
         if Input().getButton("BButton", self.mech_controller):
             self.selector.GetSelection(self.mech_controller)
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm_rotation.getPostion())
+
         return super().teleopPeriodic()
 
 
@@ -165,7 +175,6 @@ class Breadbox(ConfigBaseCommandRobot):
         and then passing it to a JoystickButton.
         """
 
-
         #track smart dashboad on left click
         self.mech_controller_hid.POVLeft().onTrue(
             commands2.cmd.runOnce(lambda: self.trackAngle(), [self.robot_arm_rotation])
@@ -189,3 +198,4 @@ class Breadbox(ConfigBaseCommandRobot):
 
     def getCreeperMode(self):
         return self.creeperMode
+
