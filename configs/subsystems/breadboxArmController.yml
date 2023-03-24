@@ -4,7 +4,7 @@ description:  "Handles the rotation, extension, and manipulator"
 
 setArmAnglesDegrees:
     frontBottom: 4
-    frontMiddle: 30
+    frontMiddle: 51
     frontTop: 175
     top: 100
     backTop: 161.0
