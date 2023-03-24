@@ -19,6 +19,10 @@ subsystems:
       required: False
       type: yaml
       file: "grader.yml"
+    winch:
+      required: False
+      type: yaml
+      file: "breadboxArmWinch.yml"
 
 commands:
     driveController:
