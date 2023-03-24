@@ -1,6 +1,7 @@
 import commands2
 import commands2.cmd
 from commands.goToDist import GoToDist
+from commands.goToDistBalance import GoToDistBalance
 from commands.autoGrabber import AutoGrabber
 from commands.goToDistBalance import GoToDistBalance
 from subsystems.actuators.breadboxArmController import ArmController, getArmInstantCommand
@@ -15,7 +16,7 @@ log = logging.getLogger("Auto")
 class Autonomous(commands2.SequentialCommandGroup):
     def __init__(self, drive : Westcoast, navx : navx.AHRS, armController : ArmController, grabber : Grabber, position : int) -> None:
         super().__init__()
-       
+
         distance1 = wpilib.SmartDashboard.getNumber("Auto Distance 1", 7.25)
         distance2 = wpilib.SmartDashboard.getNumber("Auto Distance 2", 7.25)
         turnAngle = 30
@@ -23,7 +24,7 @@ class Autonomous(commands2.SequentialCommandGroup):
         log.info(f"Auto Distance 1: {distance1}")
         log.info(f"Auto Distance 2: {distance2}")
         log.info(f"Auto Turn Angle: {turnAngle}")
-       
+
         if (position == EPosition.CENTER):
             self.addCommands(
                 getArmInstantCommand(armController, armController.setBackTop),
@@ -31,6 +32,7 @@ class Autonomous(commands2.SequentialCommandGroup):
                 commands2.PrintCommand("Arm movement finished"),
                 AutoGrabber(grabber, 1, False),
                 commands2.PrintCommand("output cone"),
+                GoToDistBalance(distance1, drive),
                 GoToDistBalance(distance1, drive),
                 commands2.PrintCommand(f"GoToDist finished {distance1}")
                 )
@@ -45,8 +47,8 @@ class Autonomous(commands2.SequentialCommandGroup):
                 commands2.PrintCommand(f"GoToDist finished {distance1}"),
                 getArmInstantCommand(armController, armController.setFrontBottom),
                 commands2.WaitCommand(2),
-                TurnToAngle(30, drive, navx),
+                TurnToAngle(-30, drive, navx),
+                commands2.PrintCommand("Finished GoToAngle")
                 )
         if position == EPosition.RIGHT:
             pass
-

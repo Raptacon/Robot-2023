@@ -15,7 +15,7 @@ class GoToDist(commands2.CommandBase):
         super().__init__()
         self.targetDist = feet * 10_000 #The encoders read in 10,000ths of a foot so we need to multiply it by 10000
         self.drive = drive
-        self.pid = wpimath.controller.PIDController(0.1, 0.0, 0.0)
+        self.pid = wpimath.controller.PIDController(0.1, 0.02, 0.0)
         self.pid.setTolerance(5, 10)
         self.addRequirements(drive)
 
@@ -33,6 +33,7 @@ class GoToDist(commands2.CommandBase):
         self.totalOffset = self.targetDist - self.dist
         self.speed = self.pid.calculate(self.targetDist / 10_000, self.dist / 10_000)
         self.drive.drive(-1 * self.speed, -1 * self.speed)
+        print(self.speed)
 
     def end(self, interrupted: bool) -> None:
         """Called once the command ends or is interrupted."""
