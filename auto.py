@@ -47,8 +47,16 @@ class Autonomous(commands2.SequentialCommandGroup):
                 commands2.PrintCommand(f"GoToDist finished {distance1}"),
                 getArmInstantCommand(armController, armController.setFrontBottom),
                 commands2.WaitCommand(2),
-                TurnToAngle(-30, drive, navx),
-                commands2.PrintCommand("Finished GoToAngle")
                 )
         if position == EPosition.RIGHT:
-            pass
+            self.addCommands(
+                getArmInstantCommand(armController, armController.setBackTop),
+                commands2.WaitCommand(2),
+                commands2.PrintCommand("Arm movement finished"),
+                AutoGrabber(grabber, 1, False),
+                commands2.PrintCommand("output cone"),
+                GoToDist(distance2, drive),
+                commands2.PrintCommand(f"GoToDist finished {distance1}"),
+                getArmInstantCommand(armController, armController.setFrontBottom),
+                commands2.WaitCommand(2),
+                )
