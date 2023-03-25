@@ -17,7 +17,7 @@ class AutoGrabber(commands2.CommandBase):
         if self.intaking:
             self.grabber.useIntakeCones(True)
         else:
-            self.grabber.useOutputCones(1)
+            self.grabber.useOutputCones(0.5)
     
     def isFinished(self) -> bool:
         return self.currentTime >= self.maxTime

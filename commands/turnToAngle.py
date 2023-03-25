@@ -19,7 +19,7 @@ class TurnToAngle(commands2.CommandBase):
         self.turnAngle = degrees
         self.drive = drive
         self.navx = navx
-        self.pid = wpimath.controller.PIDController(0.001, 0.001, 0.001, 0.01)
+        self.pid = wpimath.controller.PIDController(-0.02, 0.001, 0.0, 0.02)
         self.pid.setTolerance(.8)
         self.addRequirements(drive)
 
@@ -47,7 +47,7 @@ class TurnToAngle(commands2.CommandBase):
 
     def execute(self) -> None:
         """Called every time the scheduler runs while the command is scheduled."""
-        self.speed = self.pid.calculate(self.change)
+        self.speed = self.pid.calculate(self.nextHeading, self.navx.getFusedHeading())
         self.drive.arcadeDrive(0, self.speed)
         self.calcHeading()
 
@@ -60,4 +60,6 @@ class TurnToAngle(commands2.CommandBase):
 
     def isFinished(self) -> bool:
         """Returns true when the command should end."""
-        return abs(self.change) < self.tolerance
+        print(self.change)
+        print(self.tolerance)
+        return abs(self.nextHeading) < self.tolerance
