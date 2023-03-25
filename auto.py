@@ -1,7 +1,6 @@
 import commands2
 import commands2.cmd
 from commands.goToDist import GoToDist
-from commands.goToDistBalance import GoToDistBalance
 from commands.autoGrabber import AutoGrabber
 from commands.goToDistBalance import GoToDistBalance
 from subsystems.actuators.breadboxArmController import ArmController, getArmInstantCommand
