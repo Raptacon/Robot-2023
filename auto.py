@@ -32,7 +32,6 @@ class Autonomous(commands2.SequentialCommandGroup):
                 AutoGrabber(grabber, 1, False),
                 commands2.PrintCommand("output cone"),
                 GoToDistBalance(distance1, drive),
-                GoToDistBalance(distance1, drive),
                 commands2.PrintCommand(f"GoToDist finished {distance1}")
                 )
         if position == EPosition.LEFT:
