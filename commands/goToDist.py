@@ -30,6 +30,7 @@ class GoToDist(commands2.CommandBase):
     def execute(self) -> None:
         """Called every time the scheduler runs while the command is scheduled."""
         self.dist = abs(self.drive.getRightEncoder()) - self.startingDistance
+        #TODO investigate https://github.com/Raptacon/Robot-2023/pull/152/files#r1148391038 
         if(self.targetDist >= 0):
             self.totalOffset = self.targetDist - self.dist
         else:

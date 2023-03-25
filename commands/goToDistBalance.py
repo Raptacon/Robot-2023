@@ -7,7 +7,7 @@ class GoToDistBalance(commands2.CommandBase):
     targetDist = 0
     tolerance = 5
     def __init__(self, feet: float, drive: DriveTrain) -> None:
-        """Creates a new DriveDistance. This command will drive your your robot for a desired distance at
+        """Creates a new DriveDistance. This command will drive your robot for a desired distance at
         a desired speed.
         inches: The number of inches the robot will drive
         drive:  The drivetrain subsystem on which this command will run

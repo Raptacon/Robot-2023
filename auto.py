@@ -23,6 +23,7 @@ class Autonomous(commands2.SequentialCommandGroup):
         log.info(f"Auto Distance 2: {distance2}")
         log.info(f"Auto Turn Angle: {turnAngle}")
 
+        #TODO https://github.com/Raptacon/Robot-2023/pull/152/files#r1148391001 
         if (position == EPosition.CENTER):
             self.addCommands(
                 getArmInstantCommand(armController, armController.setBackTop),
