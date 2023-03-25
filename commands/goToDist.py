@@ -31,12 +31,9 @@ class GoToDist(commands2.CommandBase):
         """Called every time the scheduler runs while the command is scheduled."""
         self.dist = abs(self.drive.getRightEncoder()) - self.startingDistance
         #TODO investigate https://github.com/Raptacon/Robot-2023/pull/152/files#r1148391038
-        if(self.targetDist >= 0):
-            self.totalOffset = self.targetDist - self.dist
-        else:
-            self.totalOffset = self.targetDist + self.dist
-        self.speed = self.pid.calculate(self.dist / 10_000, self.targetDist / 10_000)
-        self.drive.drive(self.speed, self.speed)
+        self.totalOffset = self.targetDist - self.dist
+        self.speed = self.pid.calculate(self.targetDist / 10_000, self.dist / 10_000)
+        self.drive.drive(-1 * self.speed, -1 * self.speed)
         print(self.totalOffset)
 
     def end(self, interrupted: bool) -> None:
@@ -48,4 +45,4 @@ class GoToDist(commands2.CommandBase):
     def isFinished(self) -> bool:
         """Returns true when the command should end."""
         # Compare distance travelled from start to desired distance
-        return abs(self.totalOffset) < self.tolerance
+        return self.totalOffset < self.tolerance

@@ -23,7 +23,7 @@ class Autonomous(commands2.SequentialCommandGroup):
         log.info(f"Auto Distance 2: {distance2}")
         log.info(f"Auto Turn Angle: {turnAngle}")
 
-        #TODO https://github.com/Raptacon/Robot-2023/pull/152/files#r1148391001 
+        #TODO https://github.com/Raptacon/Robot-2023/pull/152/files#r1148391001
         if (position == EPosition.CENTER):
             self.addCommands(
                 getArmInstantCommand(armController, armController.setBackTop),
@@ -42,9 +42,10 @@ class Autonomous(commands2.SequentialCommandGroup):
                 AutoGrabber(grabber, 1, False),
                 commands2.PrintCommand("output cone"),
                 GoToDist(distance2, drive),
-                commands2.PrintCommand(f"GoToDist finished {distance1}"),
+                commands2.PrintCommand(f"GoToDist finished {distance2}"),
                 getArmInstantCommand(armController, armController.setFrontBottom),
                 commands2.WaitCommand(2),
+                AutoGrabber(grabber, 3, False),
                 )
         if position == EPosition.RIGHT:
             self.addCommands(
@@ -54,7 +55,7 @@ class Autonomous(commands2.SequentialCommandGroup):
                 AutoGrabber(grabber, 1, False),
                 commands2.PrintCommand("output cone"),
                 GoToDist(distance2, drive),
-                commands2.PrintCommand(f"GoToDist finished {distance1}"),
+                commands2.PrintCommand(f"GoToDist finished {distance2}"),
                 getArmInstantCommand(armController, armController.setFrontBottom),
-                commands2.WaitCommand(2),
+                AutoGrabber(grabber, 3, False),
                 )
