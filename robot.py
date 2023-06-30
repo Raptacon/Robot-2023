@@ -10,6 +10,7 @@ import ntcore
 from photonvision import PhotonCamera
 from wpimath.geometry import Translation2d
 from wpimath.geometry import Pose2d
+from wpimath.geometry import Rotation2d
 from robots.configBasedRobot import ConfigBaseCommandRobot
 from robots.greenBot import GreenBot
 from robots.breadboxBot import Breadbox
@@ -108,29 +109,26 @@ class MyRobot(commands2.TimedCommandRobot):
         """This function is called periodically during operator control"""
         self.container.teleopPeriodic()
 
-        '''updates the visual feild representation'''
-        '''changes the 3d pose gotten from the april tags to a 2D pose'''
-        '''this should also probably be in other periodics'''
-        robotPose3D = self.AprilTags.updatePose()
-        robotPose2D = robotPose3D.toPose2d()
-        self.field.setRobotPose(robotPose2D)
-        print(robotPose2D)
+        
         
     def testInit(self) -> None:
         # Cancels all running commands at the start of test mode
         commands2.CommandScheduler.getInstance().cancelAll()
         self.container.testInit()
         if(self.camera.hasTargets()):
-            getInitPos = aprilTags.AprilTags.updatePose
             initPos = self.AprilTags.updatePose()
-            oneMeter = Translation2d(x = 1, y = 0).X()
-            finalPos = Pose2d(x = initPos.translation().X() + oneMeter, y = initPos.translation().Y(), rotation = initPos.rotation().toRotation2d())
-            self.pathFinder = pathFinder.PathFinder(self.container.driveTrain, getInitPos, finalPos)
-
+            finalPos = Pose2d(x = initPos.translation().X() + self.AprilTags.distToTag() - 1, y = initPos.translation().Y(), rotation = Rotation2d.fromDegrees(0))
+            self.pathFinder = pathFinder.PathFinder(self.container.driveTrain, finalPos, self.AprilTags)
 
     def testPeriodic(self) -> None:
         self.container.testPeriodic()
         self.pathFinder.execute()
+
+        '''updates the visual feild representation'''
+        '''changes the 3d pose gotten from the april tags to a 2D pose'''
+        robotPose3D = self.AprilTags.updatePose()
+        robotPose2D = robotPose3D.toPose2d()
+        self.field.setRobotPose(robotPose2D)
 
 
 if __name__ == "__main__":
