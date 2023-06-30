@@ -1,5 +1,6 @@
 import math
 import ctre
+import rev
 import wpilib
 
 class SteerController ():
@@ -49,14 +50,14 @@ class SteerController ():
         elif (referenceAngleRadians - currentAngleRadiansMod) < -math.pi:
             adjustedReferenceAngleRadians += 2.0 * math.pi
         wpilib.SmartDashboard.putNumber(f"{self.module.steerId}Steer", adjustedReferenceAngleRadians / motorEncoderPositionCoefficient)
-        motor.set(ctre.TalonFXControlMode.Position, adjustedReferenceAngleRadians / motorEncoderPositionCoefficient)
+        motor.getPIDController().setReference(adjustedReferenceAngleRadians / motorEncoderPositionCoefficient, rev.CANSparkMaxLowLevel.ControlType.kPosition)
         self.referenceAngleRadians = referenceAngleRadians
 
     def getStateAngle(self) -> float:
         '''
         gets current postion in radians
         '''
-        motorAngleRadians = self.module.getSteerMotor().getSelectedSensorPosition() * self.module.getSteerSensorPositionCoefficient()
+        motorAngleRadians = self.module.getSteerMotor().getAbsoluteEncoder(rev.SparkMaxAbsoluteEncoder.Type.kDutyCycle).getPosition() * self.module.getSteerSensorPositionCoefficient()
         motorAngleRadians %= 2.0 * math.pi
         if motorAngleRadians < 0.0:
             motorAngleRadians += 2.0 * math.pi

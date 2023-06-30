@@ -1,5 +1,5 @@
 import navx
-from swerve.swerveModule import SwerveModuleMk4L1FalcFalcCanCoder as SwerveModule
+from swerve.swerveModule import SwerveModuleMk4L1SparkMaxFalcCanCoder as SwerveModule
 
 import commands2
 import wpimath.kinematics
@@ -66,7 +66,12 @@ class Drivetrain(commands2.SubsystemBase):
             self.swerveModules[2].getTranslation()
         )
 
-        self.odometry = wpimath.kinematics.SwerveDrive4Odometry(self.kinematics, self.getHeading())
+        self.moduleRotations = []
+        for module in self.swerveModules:
+            self.moduleRotations.append(module.getPosition())
+        self.moduleRotations = tuple(self.moduleRotations)
+
+        self.odometry = wpimath.kinematics.SwerveDrive4Odometry(self.kinematics, self.getHeading(), self.moduleRotations)
         self.setFieldDriveRelative(False)
         self.ang = 0
         self.iteration = 0
