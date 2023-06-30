@@ -35,13 +35,19 @@ class Drivetrain(commands2.SubsystemBase):
 #58 -  128.0
 #55 - -294.4
 #61 - -273.4
+
+#new offests as of 6/30/2023 for swerve chasis
+#52 - 31.992
+#55 - 153.193
+#58 - -23.555
+#61 - 34.717
     def __init__(self):
         super().__init__()
         self.swerveModules = []
         NetworkTables.initialize()
         self.table = NetworkTables.getTable("Drivetrain")
         assert(self.table)
-        for module in Drivetrain.kModuleProps:
+        for module in Drivetrain.kModulePropsNoCal:
             name = module["name"]
             subTable = self.table.getSubTable(name)
             assert(subTable)

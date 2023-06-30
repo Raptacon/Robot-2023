@@ -4,6 +4,7 @@ import ctre
 import wpimath.geometry
 import wpimath.kinematics
 import wpilib
+import rev
 
 from .steerController import SteerController
 import networktables
@@ -75,9 +76,9 @@ class SwerveModuleMk4L1Consts(SwerveModuleConsts):
         self._moduleType = "Mk4L1"
 
 
-class SwerveModuleMk4L1FalcFalcCanCoder() :
+class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
     '''
-    Module for Mk4L1 with 2 faclon 500 and a cancoder swerve drive
+    Module for Mk4L1 with 2 brushless neos and a cancoder swerve drive
     '''
     driveId : int
     steerId: int
@@ -134,7 +135,7 @@ class SwerveModuleMk4L1FalcFalcCanCoder() :
         supplyCurrConfig.enable = True
         motorConfig.supplyCurrLimit = supplyCurrConfig
 
-        self.driveMotor = ctre.WPI_TalonFX(self.driveId)
+        self.driveMotor = rev.CANSparkMax(self.driveId, rev.CANSparkMaxLowLevel.MotorType.kBrushless)
 
         status = self.driveMotor.configAllSettings(motorConfig, 250)
 
