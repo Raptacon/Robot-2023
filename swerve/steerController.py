@@ -24,7 +24,7 @@ class SteerController ():
         motor = self.module.getSteerMotor()
         motorEncoderVelocityCoefficient = self.module.getSteerSensorVelocityCoefficient()
         motorEncoderPositionCoefficient = self.module.getSteerSensorPositionCoefficient()
-        currentAngleRadians = motor.getSelectedSensorPosition() * motorEncoderPositionCoefficient
+        currentAngleRadians = self.module.steerEncoder.getPosition() * motorEncoderPositionCoefficient
         #print(f"ang {referenceAngleRadians} ({math.degrees(referenceAngleRadians)}), vel: {motorEncoderVelocityCoefficient} , pos {motorEncoderPositionCoefficient}")
         #currentAngleRadians = math.radians(motor.getSelectedSensorPosition()) * motorEncoderPositionCoefficient
         '''
@@ -50,14 +50,14 @@ class SteerController ():
         elif (referenceAngleRadians - currentAngleRadiansMod) < -math.pi:
             adjustedReferenceAngleRadians += 2.0 * math.pi
         wpilib.SmartDashboard.putNumber(f"{self.module.steerId}Steer", adjustedReferenceAngleRadians / motorEncoderPositionCoefficient)
-        motor.getPIDController().setReference(adjustedReferenceAngleRadians / motorEncoderPositionCoefficient, rev.CANSparkMaxLowLevel.ControlType.kPosition)
+        self.module.steerPIDController.setReference(adjustedReferenceAngleRadians / motorEncoderPositionCoefficient, rev.CANSparkMaxLowLevel.ControlType.kPosition)
         self.referenceAngleRadians = referenceAngleRadians
 
     def getStateAngle(self) -> float:
         '''
         gets current postion in radians
         '''
-        motorAngleRadians = self.module.getSteerMotor().getAbsoluteEncoder(rev.SparkMaxAbsoluteEncoder.Type.kDutyCycle).getPosition() * self.module.getSteerSensorPositionCoefficient()
+        motorAngleRadians = self.module.steerEncoder.getPosition() * self.module.getSteerSensorPositionCoefficient()
         motorAngleRadians %= 2.0 * math.pi
         if motorAngleRadians < 0.0:
             motorAngleRadians += 2.0 * math.pi

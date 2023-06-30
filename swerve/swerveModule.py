@@ -145,6 +145,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         self.driveMotor.enableVoltageCompensation(True)
         # self.driveMotor.setNeutralMode(ctre.NeutralMode.Brake)
         self.driveMotor.setInverted(self.consts.getDriveInverted())
+        self.driveEncoder = self.driveMotor.getAbsoluteEncoder(rev.SparkMaxAbsoluteEncoder.Type.kDutyCycle)
         # self.driveMotor.setSensorPhase(True)
 
         status = ctre.ErrorCode.OK # self.driveMotor.setStatusFramePeriod(ctre.StatusFrameEnhanced.Status_1_General, self.kCanStatusFrameMs, 250)
@@ -156,6 +157,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         self.steerSensorPositionCoefficient = 2.0 * math.pi / self.kTicksPerRotation * self.consts.getSteerReduction()
         self.steerSensorVelocityCoefficient = self.steerSensorPositionCoefficient * 10.0
         self.steerMotor = rev.CANSparkMax(self.steerId, rev.CANSparkMaxLowLevel.MotorType.kBrushless)
+        self.steerEncoder = self.steerMotor.getAbsoluteEncoder(rev.SparkMaxAbsoluteEncoder.Type.kDutyCycle)
 
         # motorConfig = ctre.TalonFXConfiguration()
         # motorConfig.slot0.kP = self.kSteerPID[0]
@@ -214,7 +216,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
 
     def getDriveVelocity(self):
         '''gets module drive voltage (speed)'''
-        return self.driveMotor.getAbsoluteEncoder(rev.SparkMaxAbsoluteEncoder.Type.kDutyCycle).getVelocity() * self.driveSensorVelocityCoefficient
+        return self.driveEncoder.getVelocity() * self.driveSensorVelocityCoefficient
     def getSteerAngle(self):
         '''gets current angle in radians of module setpoint'''
         return self.steerController.getStateAngle()
