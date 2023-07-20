@@ -18,10 +18,10 @@ class Drivetrain(commands2.SubsystemBase):
     kMaxAngularVelocityRadPS = kMaxVelocityMPS / math.hypot(kWheelBaseMeters / 2.0, kTrackBaseMeters / 2.0)
 
     kModuleProps = [
-            {"name": "frontLeft", "channel": 50, "encoderCal": 244.5, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
-            {"name": "frontRight", "channel": 53, "encoderCal": 334.0, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
-            {"name": "rearLeft", "channel": 56, "encoderCal": 121.5, "trackbase": kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 },
-            {"name": "rearRight", "channel": 59, "encoderCal": 211.5, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 }
+            {"name": "frontLeft", "channel": 50, "encoderCal": 31.992, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
+            {"name": "frontRight", "channel": 53, "encoderCal": 153.193, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
+            {"name": "rearLeft", "channel": 56, "encoderCal": -23.555, "trackbase": kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 },
+            {"name": "rearRight", "channel": 59, "encoderCal": 34.717, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 }
     ]
     kModulePropsNoCal = [
             {"name": "frontLeft", "channel": 50, "encoderCal": 0.0, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
@@ -47,7 +47,7 @@ class Drivetrain(commands2.SubsystemBase):
         NetworkTables.initialize()
         self.table = NetworkTables.getTable("Drivetrain")
         assert(self.table)
-        for module in Drivetrain.kModulePropsNoCal:
+        for module in Drivetrain.kModuleProps:
             name = module["name"]
             subTable = self.table.getSubTable(name)
             assert(subTable)

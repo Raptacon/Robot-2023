@@ -157,7 +157,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         self.steerSensorPositionCoefficient = 2.0 * math.pi / self.kTicksPerRotation * self.consts.getSteerReduction()
         self.steerSensorVelocityCoefficient = self.steerSensorPositionCoefficient * 10.0
         self.steerMotor = rev.CANSparkMax(self.steerId, rev.CANSparkMaxLowLevel.MotorType.kBrushless)
-        self.steerEncoder = self.steerMotor.getAbsoluteEncoder(rev.SparkMaxAbsoluteEncoder.Type.kDutyCycle)
+        self.steerEncoder = self.encoder
 
         # motorConfig = ctre.TalonFXConfiguration()
         # motorConfig.slot0.kP = self.kSteerPID[0]
@@ -170,15 +170,15 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         # status = self.steerMotor.configAllSettings(motorConfig, 250)
 
         self.steerPIDController = self.steerMotor.getPIDController()
-        self.steerPIDController.setP(0)
-        self.steerPIDController.setI(1)
-        self.steerPIDController.setD(2)
+        self.steerPIDController.setP(0.001)
+        self.steerPIDController.setI(0)
+        self.steerPIDController.setD(0)
 
         status = ctre.ErrorCode.OK
         if status != ctre.ErrorCode.OK:
             raise RuntimeError(f"Failed to configure Steer Motor on id {self.steerId}. Error {status}")
 
-        self.steerMotor.enableVoltageCompensation(True)
+        # self.steerMotor.enableVoltageCompensation(True)
 
         # status = self.steerMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor, 0, 250)
         if status != ctre.ErrorCode.OK:
@@ -219,7 +219,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         return self.driveEncoder.getVelocity() * self.driveSensorVelocityCoefficient
     def getSteerAngle(self):
         '''gets current angle in radians of module setpoint'''
-        return self.steerController.getStateAngle()
+        return self.encoder.getAbsolutePosition()
     def getCurrentAngle(self):
         return self.encoder.getAbsolutePosition()
 
