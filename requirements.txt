@@ -7,9 +7,9 @@ flake8
 coverage
 wheel
 
-robotpy[commands2,ctre,navx,rev,sim,pathplannerlib,photonvision,playingwithfusion] ==2022.*
+robotpy[commands2,ctre,navx,rev,sim,pathplannerlib,photonvision,playingwithfusion] #==2022.*
 
 # If installed on OSX (joystick support) it seems to fail?
-pyfrc == 2022.*
+pyfrc # == 2022.*
 robotpy-halsim-gui
 pynetworktables
