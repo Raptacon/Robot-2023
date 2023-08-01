@@ -219,7 +219,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         return self.driveEncoder.getVelocity() * self.driveSensorVelocityCoefficient
     def getSteerAngle(self):
         '''gets current angle in radians of module setpoint'''
-        return self.encoder.getAbsolutePosition()
+        return math.radians(self.encoder.getAbsolutePosition())
     def getCurrentAngle(self):
         return self.encoder.getAbsolutePosition()
 
@@ -242,7 +242,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         #if steerAngle < 0.0:
         #    steerAngle += 2.0 * math.pi
 
-        currVel, currAngle = self.getPosition()
+        # currVel, currAngle = self.getPosition()
 
         steerDiff = steerAngle - self.getSteerAngle()
         #print(f"steer deg {steerAngleDeg}, steerAngle {steerAngle} diff {steerDiff}")

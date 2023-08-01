@@ -1,6 +1,6 @@
 import wpilib
 
-#from wpilib.interfaces import Gene1ricHID
+#from wpilib.interfaces import GenericHID
 import wpimath.filter
 import wpimath
 import commands2.button

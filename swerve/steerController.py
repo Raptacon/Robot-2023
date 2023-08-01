@@ -24,7 +24,7 @@ class SteerController ():
         motor = self.module.getSteerMotor()
         motorEncoderVelocityCoefficient = self.module.getSteerSensorVelocityCoefficient()
         motorEncoderPositionCoefficient = self.module.getSteerSensorPositionCoefficient()
-        currentAngleRadians = self.module.getSteerAngle() * motorEncoderPositionCoefficient
+        currentAngleRadians = self.module.getSteerAngle() # * motorEncoderPositionCoefficient
         #print(f"ang {referenceAngleRadians} ({math.degrees(referenceAngleRadians)}), vel: {motorEncoderVelocityCoefficient} , pos {motorEncoderPositionCoefficient}")
         #currentAngleRadians = math.radians(motor.getSelectedSensorPosition()) * motorEncoderPositionCoefficient
         '''
