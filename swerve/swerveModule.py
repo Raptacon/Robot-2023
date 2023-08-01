@@ -3,6 +3,7 @@ import math
 import ctre
 import wpimath.geometry
 import wpimath.kinematics
+import wpimath.controller
 import wpilib
 import rev
 
@@ -70,7 +71,6 @@ class SwerveModuleMk4L1Consts(SwerveModuleConsts):
         '''init Mk4L1 values'''
         self._wheelDiameter = 0.10033
         self._driveReduction = (14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0)
-        self._driveInverted = True
         self._steerReduction = (15.0 / 32.0) * (10.0 / 60.0)
         self._steerInverted = True
         self._moduleType = "Mk4L1"
@@ -96,7 +96,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
     kSteerPID = (0.2, 0.0, 0.1)
     kCanStatusFrameMs = 10
 
-    def __init__(self, location : tuple[float, float, str], channelBase: int, encoderCal: float = 0, table = networktables.NetworkTable):
+    def __init__(self, location : tuple[float, float, str], channelBase: int, inverted, encoderCal: float = 0, table = networktables.NetworkTable):
         '''
         Creates a new swerve module at location in robot. With channesl channelBase = drive
         channelBase + 1 = steer
@@ -137,6 +137,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         motorConfig.supplyCurrLimit = supplyCurrConfig
 
         self.driveMotor = rev.CANSparkMax(self.driveId, rev.CANSparkMaxLowLevel.MotorType.kBrushless)
+        self.driveMotor.setInverted(inverted)
 
         # status = self.driveMotor.configAllSettings(motorConfig, 250)
 
@@ -144,7 +145,8 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
             raise RuntimeError(f"Failed to configure Drive Motor on id {self.driveId}. Error {status}")
         self.driveMotor.enableVoltageCompensation(True)
         # self.driveMotor.setNeutralMode(ctre.NeutralMode.Brake)
-        self.driveMotor.setInverted(self.consts.getDriveInverted())
+        # Inversion should come on a motor by motor basis
+        # self.driveMotor.setInverted(self.consts.getDriveInverted())
         self.driveEncoder = self.driveMotor.getAbsoluteEncoder(rev.SparkMaxAbsoluteEncoder.Type.kDutyCycle)
         # self.driveMotor.setSensorPhase(True)
 
@@ -169,10 +171,8 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
 
         # status = self.steerMotor.configAllSettings(motorConfig, 250)
 
-        self.steerPIDController = self.steerMotor.getPIDController()
-        self.steerPIDController.setP(0.001)
-        self.steerPIDController.setI(0)
-        self.steerPIDController.setD(0)
+        self.steerPIDController = wpimath.controller.PIDController(0.06,0,0)
+        self.steerPIDController.setTolerance(0.008)
 
         status = ctre.ErrorCode.OK
         if status != ctre.ErrorCode.OK:

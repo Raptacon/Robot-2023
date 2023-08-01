@@ -72,10 +72,26 @@ class RobotSwerve:
         # this line or comment it out.
         #if self.autonomousCommand:
         #    self.autonomousCommand.cancel()
-        pass
+        self.driveController = wpilib.XboxController(kDriveControllerIdx)
+        self.MaxMps = 1
+        self.RotationRate = 1
 
     def teleopPeriodic(self) -> None:
         """This function is called periodically during operator control"""
+        LeftX = self.driveController.getRawAxis(wpilib.XboxController.Axis.kLeftX)
+        LeftY = self.driveController.getRawAxis(wpilib.XboxController.Axis.kLeftY)
+        RightX = self.driveController.getRawAxis(wpilib.XboxController.Axis.kRightX)
+
+        if abs(LeftX) < .05:
+            LeftX = 0
+        if abs(LeftY) < .05:
+            LeftY = 0
+        if abs(RightX) < .05:
+            RightX = 0
+
+        self.driveTrain.drive(-1 * LeftY * self.MaxMps, LeftX * self.MaxMps, RightX * self.RotationRate, False)
+
+
 
     testModes = ["Drive Disable", "Wheels Select", "Wheels Drive", "Enable Cal", "Disable Cal"]
     def testInit(self) -> None:

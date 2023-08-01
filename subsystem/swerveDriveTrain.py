@@ -18,16 +18,16 @@ class Drivetrain(commands2.SubsystemBase):
     kMaxAngularVelocityRadPS = kMaxVelocityMPS / math.hypot(kWheelBaseMeters / 2.0, kTrackBaseMeters / 2.0)
 
     kModuleProps = [
-            {"name": "frontLeft", "channel": 50, "encoderCal": 31.992, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
-            {"name": "frontRight", "channel": 53, "encoderCal": 153.193, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
-            {"name": "rearLeft", "channel": 56, "encoderCal": -23.555, "trackbase": kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 },
-            {"name": "rearRight", "channel": 59, "encoderCal": 34.717, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 }
+            {"name": "frontLeft", "channel": 50, "encoderCal": 31.992, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0, "inverted": False },
+            {"name": "frontRight", "channel": 53, "encoderCal": 153.193, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0, "inverted": True },
+            {"name": "rearLeft", "channel": 56, "encoderCal": -23.555, "trackbase": kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0, "inverted": False },
+            {"name": "rearRight", "channel": 59, "encoderCal": 34.717, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0, "inverted": True }
     ]
     kModulePropsNoCal = [
-            {"name": "frontLeft", "channel": 50, "encoderCal": 0.0, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
-            {"name": "frontRight", "channel": 53, "encoderCal": 0.0, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0 },
-            {"name": "rearLeft", "channel": 56, "encoderCal": 0.0, "trackbase": kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 },
-            {"name": "rearRight", "channel": 59, "encoderCal": 0.0, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0 }
+            {"name": "frontLeft", "channel": 50, "encoderCal": 0.0, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0, "inverted": False },
+            {"name": "frontRight", "channel": 53, "encoderCal": 0.0, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0, "inverted": True },
+            {"name": "rearLeft", "channel": 56, "encoderCal": 0.0, "trackbase": kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0, "inverted": False },
+            {"name": "rearRight", "channel": 59, "encoderCal": 0.0, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0, "inverted": True }
     ]
 
 
@@ -55,7 +55,8 @@ class Drivetrain(commands2.SubsystemBase):
             trackbase = module["trackbase"]
             channel = module["channel"]
             encoderCal = module["encoderCal"]
-            self.swerveModules.append(SwerveModule((trackbase, wheelbase, name), channel, encoderCal, subTable))
+            inverted = module["inverted"]
+            self.swerveModules.append(SwerveModule((trackbase, wheelbase, name), channel, inverted, encoderCal, subTable))
 
         self.imu = navx.AHRS.create_spi()
 
@@ -82,7 +83,8 @@ class Drivetrain(commands2.SubsystemBase):
 
     def drive(self, xSpeed: float, ySpeed: float, rot: float, fieldRelative: bool):
         #convert to proper units
-        rot = rot * 180.0
+        #actually don't
+        rot = rot# * 180.0
 
         #print(f"drive: x {xSpeed}, y {ySpeed}, rot {rot}, field {fieldRelative}")
         #xSpeed = 0.0

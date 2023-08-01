@@ -50,7 +50,8 @@ class SteerController ():
         elif (referenceAngleRadians - currentAngleRadiansMod) < -math.pi:
             adjustedReferenceAngleRadians += 2.0 * math.pi
         wpilib.SmartDashboard.putNumber(f"{self.module.steerId}Steer", adjustedReferenceAngleRadians / motorEncoderPositionCoefficient)
-        self.module.steerPIDController.setReference(adjustedReferenceAngleRadians / motorEncoderPositionCoefficient, rev.CANSparkMaxLowLevel.ControlType.kPosition)
+        self.speed = self.module.steerPIDController.calculate(currentAngleRadians, adjustedReferenceAngleRadians)
+        motor.set(self.speed)
         self.referenceAngleRadians = referenceAngleRadians
 
     def getStateAngle(self) -> float:
