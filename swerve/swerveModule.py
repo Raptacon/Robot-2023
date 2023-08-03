@@ -171,7 +171,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
 
         # status = self.steerMotor.configAllSettings(motorConfig, 250)
 
-        self.steerPIDController = wpimath.controller.PIDController(0.06,0,0)
+        self.steerPIDController = wpimath.controller.PIDController(0.3,1,0)
         self.steerPIDController.setTolerance(0.008)
 
         status = ctre.ErrorCode.OK
@@ -289,7 +289,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
     def getTranslation(self) -> wpimath.geometry.Translation2d:
         return self.translation
 
-    def getPosition(self) -> wpimath.kinematics.SwerveModulePosition:
+    def getPosition(self):
         vel = self.getDriveVelocity()
 
         # calculate total distance traveled
