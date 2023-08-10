@@ -32,9 +32,9 @@ class RobotSwerve:
         commands2.button.JoystickButton(self.driveController, 1).whenPressed(ToggleFieldDrive(self.driveTrain))
         self.driveTrain.setDefaultCommand(DefaultDrive(
             self.driveTrain,
-            lambda: -self.xLimiter.calculate(wpimath.applyDeadband(self.driveController.getLeftY(), 0.02)),
-            lambda: self.yLimiter.calculate(wpimath.applyDeadband(self.driveController.getLeftX(), 0.02)),
-            lambda: -self.rotLimiter.calculate(wpimath.applyDeadband(self.driveController.getRightX(), 0.02)),
+            lambda: - self.xLimiter.calculate(wpimath.applyDeadband(self.driveController.getLeftX(), 0.02)),
+            lambda: self.yLimiter.calculate(wpimath.applyDeadband(self.driveController.getLeftY(), 0.02)),
+            lambda: self.rotLimiter.calculate(wpimath.applyDeadband(self.driveController.getRightY(), 0.1)),
             lambda: self.driveTrain.getFieldDriveRelative()
         ))
 
@@ -92,16 +92,16 @@ class RobotSwerve:
 
         LeftX = wpimath.applyDeadband(self.driveController.getLeftX(), 0.02)
         LeftY = wpimath.applyDeadband(self.driveController.getLeftY(), 0.02)
-
+        RightY = wpimath.applyDeadband(self.driveController.getRightY(), 0.1)
 
         #self.driveTrain.drive(-1 * LeftY * self.MaxMps, LeftX * self.MaxMps, RightX * self.RotationRate, False)
-        ang = (math.degrees(math.atan2(LeftY, LeftX)) +90.0) %360.0
-        if(abs(LeftX) < 0.8 and abs(LeftY) < 0.8):
-            pass
-            print("pass")
-        else:
-            print(f"Set {ang}")
-            self.driveTrain.setSteer(ang)
+        #ang = (math.degrees(math.atan2(LeftY, LeftX)) +90.0) %360.0
+        #if(abs(LeftX) < 0.8 and abs(LeftY) < 0.8):
+            #pass
+            #print("pass")
+        #else:
+            #print(f"Set {ang}")
+            #self.driveTrain.setSteer(ang)
 
 
     testModes = ["Drive Disable", "Wheels Select", "Wheels Drive", "Enable Cal", "Disable Cal"]
@@ -145,7 +145,6 @@ class RobotSwerve:
                     print("pass")
                     self.driveTrain.setSteer(ang)
                     self.driveTrain.setDrive(RightY)
-
                 else:
                     print(f"Set {ang}")
                     lastDeg = ang
