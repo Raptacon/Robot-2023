@@ -151,7 +151,7 @@ class RobotSwerve:
                     self.driveTrain.setSteer(ang)
                     self.driveTrain.setDrive(RightY)
             case "Wheels Drive":
-                self.driveTrain.setDrive(wheelSpeed)
+                self.driveTrain.setDrive(RightY)
             case "Enable Cal":
                 if not self.calEn:
                     self.driveTrain.calWheels(True)
@@ -160,4 +160,9 @@ class RobotSwerve:
                 self.driveTrain.calWheels(False)
             case _:
                 print(f"Unknown {self.testChooser.getSelected()}")
+
+        for m in self.driveTrain.swerveModules:
+            break
+            print(f"{m.name} {m.driveMotor.getAppliedOutput()} {m.driveMotor.get()}")
+
 

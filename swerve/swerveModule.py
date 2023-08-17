@@ -4,8 +4,8 @@ import ctre
 import wpimath.geometry
 import wpimath.kinematics
 import wpimath.controller
-import wpilib
 import rev
+
 
 from .steerController import SteerController
 import networktables
@@ -143,7 +143,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
 
         if status != ctre.ErrorCode.OK:
             raise RuntimeError(f"Failed to configure Drive Motor on id {self.driveId}. Error {status}")
-        self.driveMotor.enableVoltageCompensation(True)
+        self.driveMotor.enableVoltageCompensation(12.0)
         # self.driveMotor.setNeutralMode(ctre.NeutralMode.Brake)
         # Inversion should come on a motor by motor basis
         # self.driveMotor.setInverted(self.consts.getDriveInverted())
@@ -171,7 +171,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
 
         # status = self.steerMotor.configAllSettings(motorConfig, 250)
 
-        self.steerPIDController = wpimath.controller.PIDController(0.3,1,0)
+        self.steerPIDController = wpimath.controller.PIDController(0.3 ,1 ,0)#Test Values P: 0.3, I: 1, D: 0
         self.steerPIDController.setTolerance(0.008)
 
         status = ctre.ErrorCode.OK
@@ -209,9 +209,12 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
 
     def setDriveVoltage(self, voltage : float):
         '''sets module drive voltage (speed)'''
-        self.driveMotor.set(voltage / self.kNominalVoltage)
+        #print(f"Voltage: {voltage} ")
+        self.driveMotor.setVoltage(voltage)
+
     def setDrivePercent(self, percent : float):
-        '''sets module drive percent (0-1.0)'''
+        '''sets module drive percent (-1.0-1.0)'''
+        #print(f"set {self.name}: {percent}")
         self.driveMotor.set(percent)
 
     def getDriveVelocity(self):

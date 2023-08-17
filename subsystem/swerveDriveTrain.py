@@ -3,7 +3,9 @@ from swerve.swerveModule import SwerveModuleMk4L1SparkMaxFalcCanCoder as SwerveM
 
 import commands2
 import wpimath.kinematics
-from wpimath.geometry import Rotation2d
+from wpimath.kinematics import SwerveModuleState
+import wpimath.geometry
+from wpimath.geometry._geometry import Rotation2d
 import math
 import wpilib
 
@@ -151,8 +153,6 @@ class Drivetrain(commands2.SubsystemBase):
 
 
     def setDrive(self, speedPercent: float):
-        if speedPercent> 100:
-            speedPercent = 100
         for m in self.swerveModules:
             m.setDrivePercent(speedPercent)
 
