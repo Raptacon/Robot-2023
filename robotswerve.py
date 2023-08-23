@@ -32,9 +32,9 @@ class RobotSwerve:
         commands2.button.JoystickButton(self.driveController, 1).whenPressed(ToggleFieldDrive(self.driveTrain))
         self.driveTrain.setDefaultCommand(DefaultDrive(
             self.driveTrain,
-            lambda: - self.xLimiter.calculate(wpimath.applyDeadband(self.driveController.getLeftX(), 0.02)),
-            lambda: self.yLimiter.calculate(wpimath.applyDeadband(self.driveController.getLeftY(), 0.02)),
-            lambda: self.rotLimiter.calculate(wpimath.applyDeadband(self.driveController.getRightY(), 0.1)),
+            lambda: wpimath.applyDeadband(self.driveController.getLeftX(), 0.02),
+            lambda: wpimath.applyDeadband(self.driveController.getLeftY(), 0.02),
+            lambda: wpimath.applyDeadband(self.driveController.getRightY(), 0.1),
             lambda: self.driveTrain.getFieldDriveRelative()
         ))
 

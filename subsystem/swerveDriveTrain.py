@@ -105,10 +105,12 @@ class Drivetrain(commands2.SubsystemBase):
 
         #return
 
-        ang = (math.degrees(math.atan2(xSpeed, ySpeed)) - 180) %360.0
+        ang = (math.degrees(math.atan2(ySpeed, xSpeed)) +90.0) %360.0
         if(abs(xSpeed) < 0.8 and abs(ySpeed) < 0.8):
-            self.setDrive(0)
             pass
+            print("pass")
+            self.setSteer(ang)
+            self.setDrive(rot)
         else:
             print(f"Set {ang}")
             self.setSteer(ang)
