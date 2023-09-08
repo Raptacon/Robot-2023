@@ -104,7 +104,7 @@ class Drivetrain(commands2.SubsystemBase):
         #    mod.set(xSpeed * self.kMaxVoltage, rot)
 
         #return
-        if(xSpeed >= ySpeed):
+        if (xSpeed >= ySpeed):
             speed = xSpeed
         else:
             speed = ySpeed
@@ -113,11 +113,11 @@ class Drivetrain(commands2.SubsystemBase):
             pass
             print("pass")
             self.setSteer(ang)
-            self.setDrive(speed)
+            self.setDrive(abs(speed))
         else:
             print(f"Set {ang}")
             self.setSteer(ang)
-            self.setDrive(speed)
+            self.setDrive(abs(speed))
 
         # chassisSpeeds = None
         # if not fieldRelative:
