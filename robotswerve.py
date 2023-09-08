@@ -73,9 +73,9 @@ class RobotSwerve:
         # this line or comment it out.
         #if self.autonomousCommand:
         #    self.autonomousCommand.cancel()
-        self.driveController = wpilib.XboxController(kDriveControllerIdx)
-        self.MaxMps = 1
-        self.RotationRate = 1
+        #self.MaxMps = 1
+        #self.RotationRate = 1
+        pass
 
     def teleopPeriodic(self) -> None:
         """This function is called periodically during operator control"""
@@ -164,5 +164,3 @@ class RobotSwerve:
         for m in self.driveTrain.swerveModules:
             break
             print(f"{m.name} {m.driveMotor.getAppliedOutput()} {m.driveMotor.get()}")
-
-
