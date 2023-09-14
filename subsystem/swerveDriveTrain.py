@@ -63,9 +63,9 @@ class Drivetrain(commands2.SubsystemBase):
         self.imu = navx.AHRS.create_spi()
 
         self.kinematics = wpimath.kinematics.SwerveDrive4Kinematics(
-            self.swerveModules[0].getTranslation(),
             self.swerveModules[1].getTranslation(),
-            self.swerveModules[2].getTranslation(),
+            self.swerveModules[3].getTranslation(),
+            self.swerveModules[0].getTranslation(),
             self.swerveModules[2].getTranslation()
         )
 
