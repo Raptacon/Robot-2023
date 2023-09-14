@@ -104,10 +104,7 @@ class Drivetrain(commands2.SubsystemBase):
         #    mod.set(xSpeed * self.kMaxVoltage, rot)
 
         #return
-        if (xSpeed >= ySpeed):
-            speed = xSpeed
-        else:
-            speed = ySpeed
+        speed = max(abs(xSpeed), abs(ySpeed))
         ang = (math.degrees(math.atan2(ySpeed, xSpeed)) +90.0) %360.0
         if(abs(xSpeed) < 0.8 and abs(ySpeed) < 0.8):
             pass
