@@ -270,7 +270,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
             steerAngle += 2.0 * math.pi
 
         self.setDriveVoltage(driveVoltage)
-        self.steerController.setReferenceAngle(steerAngle)
+        self.steerController.setReferenceAngle(math.radians(steerAngleDeg))
 
         if self.table:
             self.table.putNumber("set steer deg", math.degrees(steerAngle))

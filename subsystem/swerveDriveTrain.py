@@ -104,31 +104,31 @@ class Drivetrain(commands2.SubsystemBase):
         #    mod.set(xSpeed * self.kMaxVoltage, rot)
 
         #return
-        speed = max(abs(xSpeed), abs(ySpeed))
-        ang = (math.degrees(math.atan2(ySpeed, xSpeed)) +90.0) %360.0
-        if(abs(xSpeed) < 0.8 and abs(ySpeed) < 0.8):
-            pass
-            print("pass")
-            self.setSteer(ang)
-            self.setDrive(abs(speed))
-        else:
-            print(f"Set {ang}")
-            self.setSteer(ang)
-            self.setDrive(abs(speed))
-
-        # chassisSpeeds = None
-        # if not fieldRelative:
-        #     #print("robot relative")
-        #     chassisSpeeds = wpimath.kinematics.ChassisSpeeds(xSpeed, ySpeed, rot)
+        #speed = max(abs(xSpeed), abs(ySpeed))
+        #ang = (math.degrees(math.atan2(ySpeed, xSpeed)) +90.0) %360.0
+        # if(abs(xSpeed) < 0.8 and abs(ySpeed) < 0.8):
+        #     pass
+        #     print("pass")
+        #     self.setSteer(ang)
+        #     self.setDrive(abs(speed))
         # else:
-        #     #print("field relative")
-        #     chassisSpeeds = wpimath.kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, self.getHeading())
+        #     print(f"Set {ang}")
+        #     self.setSteer(ang)
+        #     self.setDrive(abs(speed))
 
-        # swerveModuleStates = self.kinematics.toSwerveModuleStates(chassisSpeeds)
-        # self.kinematics.desaturateWheelSpeeds(swerveModuleStates, self.kMaxVelocityMPS)
+        chassisSpeeds = None
+        if not fieldRelative:
+             #print("robot relative")
+             chassisSpeeds = wpimath.kinematics.ChassisSpeeds(xSpeed, ySpeed, rot)
+        else:
+             #print("field relative")
+             chassisSpeeds = wpimath.kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, self.getHeading())
 
-        # for mod, state in zip(self.swerveModules, swerveModuleStates):
-        #     mod.setSwerveModuleState(state, self.kMaxVelocityMPS)
+        swerveModuleStates = self.kinematics.toSwerveModuleStates(chassisSpeeds)
+        self.kinematics.desaturateWheelSpeeds(swerveModuleStates, self.kMaxVelocityMPS)
+
+        for mod, state in zip(self.swerveModules, swerveModuleStates):
+            mod.setSwerveModuleState(state, self.kMaxVelocityMPS)
 
     def updateOdometry(self):
         self.odometry.update(self.getHeading(),
