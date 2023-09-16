@@ -39,7 +39,7 @@ class GreenBot(ConfigBaseCommandRobot):
                                    lambda:False,
                                    self.driveTrain)
         self.arcadeDrive = ArcadeDrive(Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
-                                   Input.getStick(wpilib.XboxController.Axis.kRightX, 0, False),
+                                   Input.getStick(wpilib.XboxController.Axis.kRightX, 0, True),
                                    self.driveTrain)
 
         # self.driveModeSelect = commands2.SelectCommand(
@@ -47,6 +47,6 @@ class GreenBot(ConfigBaseCommandRobot):
         # )
 
     def teleopInit(self) -> None:
-        self.driveTrain.setDefaultCommand(self.tankDrive)
+        self.driveTrain.setDefaultCommand(self.arcadeDrive)
         super().teleopInit()
 

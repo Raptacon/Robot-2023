@@ -26,8 +26,8 @@ class ArcadeDrive(commands2.CommandBase):
         '''
         speed = self.speed()
         mix = self.mix()
-        left = speed * mix
-        right = speed * -mix
+        left = speed + mix
+        right = speed + -mix
         print(f"l {left}, r {right}")
         self.driveTrain.drive(left, right)
 
