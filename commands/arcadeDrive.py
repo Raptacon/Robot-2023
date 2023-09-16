@@ -6,7 +6,7 @@ class ArcadeDrive(commands2.CommandBase):
     '''
     Command for converting joystick input to drive train output
     '''
-    def __init__(self, speed: Callable[[], float], mix: Callable[[], float], driveTrain):
+    def __init__(self, speed: Callable[[], float], mix: Callable[[], float], driveTrain, mix_mult: float=1.0):
         '''
         Takes a left, right callerable to get tank drive controls
         Takes driveTrain on which to operate. Requires drive train with left, right drive call.
@@ -16,6 +16,7 @@ class ArcadeDrive(commands2.CommandBase):
         self.speed = speed
         self.mix = mix
         self.driveTrain = driveTrain
+        self.mix_mult = mix_mult
 
         #setup subsystem
         self.addRequirements(self.driveTrain)
@@ -25,7 +26,7 @@ class ArcadeDrive(commands2.CommandBase):
         Called repeatably when this command is scheduled to run.
         '''
         speed = self.speed()
-        mix = self.mix()
+        mix = self.mix() * self.mix_mult
         left = speed + mix
         right = speed + -mix
         print(f"l {left}, r {right}")

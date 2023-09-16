@@ -40,7 +40,8 @@ class GreenBot(ConfigBaseCommandRobot):
                                    self.driveTrain)
         self.arcadeDrive = ArcadeDrive(Input.getStick(wpilib.XboxController.Axis.kLeftY, 0, True),
                                    Input.getStick(wpilib.XboxController.Axis.kRightX, 0, True),
-                                   self.driveTrain)
+                                   self.driveTrain,
+                                   0.5)
 
         # self.driveModeSelect = commands2.SelectCommand(
         #    self.DrivetrainMode.TANK
