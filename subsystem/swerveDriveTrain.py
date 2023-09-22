@@ -66,7 +66,7 @@ class Drivetrain(commands2.SubsystemBase):
             self.swerveModules[1].getTranslation(),
             self.swerveModules[3].getTranslation(),
             self.swerveModules[0].getTranslation(),
-            self.swerveModules[2].getTranslation()
+            self.swerveModules[2].getTranslation(),
         )
 
         self.moduleRotations = []
@@ -74,6 +74,7 @@ class Drivetrain(commands2.SubsystemBase):
             self.moduleRotations.append(module.getPosition())
         self.moduleRotations = tuple(self.moduleRotations)
 
+        self.headingOffset = 0
         self.odometry = wpimath.kinematics.SwerveDrive4Odometry(self.kinematics, self.getHeading(), self.moduleRotations)
         self.setFieldDriveRelative(True)
         self.ang = 0
@@ -81,10 +82,10 @@ class Drivetrain(commands2.SubsystemBase):
 
 
     def getHeading(self) -> Rotation2d:
-        return Rotation2d.fromDegrees(self.imu.getFusedHeading())
+        return Rotation2d.fromDegrees(self.imu.getFusedHeading() - self.headingOffset)
 
     def resetHeading(self):
-        self.imu.reset()
+        self.headingOffset = self.imu.getFusedHeading()
 
     def drive(self, xSpeed: float, ySpeed: float, rot: float, fieldRelative: bool):
         #convert to proper units
@@ -122,10 +123,10 @@ class Drivetrain(commands2.SubsystemBase):
         chassisSpeeds = None
         if not fieldRelative:
              #print("robot relative")
-             chassisSpeeds = wpimath.kinematics.ChassisSpeeds(xSpeed, ySpeed, rot)
+             chassisSpeeds = wpimath.kinematics.ChassisSpeeds(ySpeed, -xSpeed, rot)
         else:
              #print("field relative")
-             chassisSpeeds = wpimath.kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, self.getHeading())
+             chassisSpeeds = wpimath.kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, -xSpeed, rot, self.getHeading())
 
         swerveModuleStates = self.kinematics.toSwerveModuleStates(chassisSpeeds)
         self.kinematics.desaturateWheelSpeeds(swerveModuleStates, self.kMaxVelocityMPS)
