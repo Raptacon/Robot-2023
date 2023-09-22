@@ -75,13 +75,16 @@ class Drivetrain(commands2.SubsystemBase):
         self.moduleRotations = tuple(self.moduleRotations)
 
         self.odometry = wpimath.kinematics.SwerveDrive4Odometry(self.kinematics, self.getHeading(), self.moduleRotations)
-        self.setFieldDriveRelative(False)
+        self.setFieldDriveRelative(True)
         self.ang = 0
         self.iteration = 0
 
 
     def getHeading(self) -> Rotation2d:
         return Rotation2d.fromDegrees(self.imu.getFusedHeading())
+
+    def resetHeading(self):
+        self.imu.reset()
 
     def drive(self, xSpeed: float, ySpeed: float, rot: float, fieldRelative: bool):
         #convert to proper units
