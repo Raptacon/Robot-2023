@@ -56,7 +56,7 @@ jobs:
 
   StaticCritical:
     name: Critical Static Analysis
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v1
 
@@ -75,7 +75,7 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
   ExtraStaticAnalysis:
     name: Extra Static Analysis
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v1
 
