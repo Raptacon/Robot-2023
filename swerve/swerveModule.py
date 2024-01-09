@@ -75,6 +75,27 @@ class SwerveModuleMk4L1Consts(SwerveModuleConsts):
         self._steerInverted = True
         self._moduleType = "Mk4L1"
 
+class SwerveModuleMK4I_L2Consts(SwerveModuleConsts):
+    '''
+    https://github.com/SwerveDriveSpecialties/swerve-lib/blob/f6f4de65808d468ed01cc5ca39bf322383838fcd/src/main/java/com/swervedrivespecialties/swervelib/SdsModuleConfigurations.java#L19
+        public static final ModuleConfiguration MK4_L1 = new ModuleConfiguration(
+            0.10033,
+            (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0),
+            true,
+            (14.0 / 50.0) * (10.0 / 60.0),
+            false
+    );
+    wheelDiameter, driveDreuction, driveInverted, steerReduction, steerInverted
+        '''
+    def __init__(self) -> None:
+        '''init Mk4I_L2 values'''
+        self._wheelDiameter = 0.10033
+        self._driveReduction = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0)
+        self._steerReduction = (14.0 / 50.0) * (10.0 / 60.0)
+        self._steerInverted = True
+        self._moduleType = "Mk4I_L2"
+
+
 
 class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
     '''
@@ -104,7 +125,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         and the encoders rotated by encoderCal.
         location [x (trackbase + is left side), y (wheelbase + is front), name]
         '''
-        self.consts = SwerveModuleMk4L1Consts()
+        self.consts = SwerveModuleMK4I_L2Consts()
         self.driveId = channelBase + 0
         self.steerId = channelBase + 1
         self.cancoderId = channelBase + 2
