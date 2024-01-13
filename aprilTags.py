@@ -4,6 +4,7 @@ from photonvision import RobotPoseEstimator
 from photonvision import SimVisionSystem
 from wpimath import geometry
 import robotpy_apriltag
+from wpilib import RobotBase
 
 '''
 The april tag class is used to get a position on the feild using photon vision
@@ -28,7 +29,7 @@ class AprilTags():
     '''
     These next variables are the postion of the camera to the center of the robot
     TODO: change the variable to allign with where the camera is on the robot
-    TODO: to make this more modular these variables should probs be class parameters
+    TODO: to make this more modular: these variables should probs be class parameters
     '''
     cameraPitch = 0
     cameraHeight = 0
@@ -46,20 +47,21 @@ class AprilTags():
         sets up the pose estimator with all the information it needs, so when updatePose is called, you get a pose on the feild 
         '''
         self.camera = camera
-        '''Check whether the camera is running on the robot, and sets the camera up for beign on the robot or being in the sim'''
-        '''TODO: change the if statemnt below to detect whether the sim is running, if it is run sim vision system'''
-        if(True):
+        '''Check whether the camera is running on the robot, and sets the camera up for being on the robot or being in the sim'''
+        if(RobotBase.isReal()):
             '''Creates a camera that has a position on the robot'''
             self.robotCamera = [(camera, self.cameraToRobot)]
         else:
             '''sets up a camera for the sim'''
-            self.camera = SimVisionSystem(self.name, self.camDaigFov, self.cameraToRobot, self.maxLEDRange, self.cameraResWidth, self.cameraResHeight, self.minTargetArea)
+            self.robotCamera = SimVisionSystem(self.name, self.camDaigFov, self.cameraToRobot, self.maxLEDRange, self.cameraResWidth, self.cameraResHeight, self.minTargetArea)
         
         '''atft(short for april tag feild layout) is set to a file containing the date for a years feild date'''
         '''TODO: change the file it looks to to be the correct year's file when a new year happens'''
         atfl = robotpy_apriltag.loadAprilTagLayoutField(robotpy_apriltag.AprilTagField.k2023ChargedUp)
         '''TODO: look at diffrent pose strategys and choose the best one for the year'''
         self.estimator = RobotPoseEstimator(atfl, PoseStrategy.AVERAGE_BEST_TARGETS, self.robotCamera)
+
+        self.lastPose = geometry.Pose3d()
 
 
 
@@ -72,7 +74,7 @@ class AprilTags():
 
         uses the pose estimator to get our current position
         '''
-
+        print(self.camera.getLatestResult().hasTargets())
         '''checks whether the camera has any april tag targets'''
         if(self.camera.getLatestResult().hasTargets()):
             '''the estimator.update() returns a tuple, the 3d pose is the first element'''
@@ -80,7 +82,7 @@ class AprilTags():
             retVal = estimatorTuple[0]
             '''TODO: i removed a (hopefully) unesseary if statement for the next line, double check it still works'''
             self.lastPose = retVal
-
+    
             return(retVal)
         else:
             '''if the camera doesnt have a target, it returns the last pose it got'''

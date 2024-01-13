@@ -54,15 +54,17 @@ class MyRobot(commands2.TimedCommandRobot):
         SmartDashboard.putData("Field", self.field)
 
         '''sets up network tables'''
-        nt = ntcore.NetworkTableInstance.getDefault()
-        nt.startClient3("test code")
-        nt.setServer("10.32.0.13")
+        self.nt = ntcore.NetworkTableInstance.getDefault()
+        self.nt.setServer("10.32.0.13")
+        self.nt.startClient3("test code")
         '''lets people know whether it was connected'''
-        if nt.isConnected():
+        if self.nt.isConnected():
             print('Network tables Connected')
+        else:
+            print('Network tables not connected')
 
         '''connects a camera object to the network tables'''
-        self.camera = PhotonCamera(nt, aprilTags.AprilTags.name)
+        self.camera = PhotonCamera(self.nt, aprilTags.AprilTags.name)
 
         '''starts april tags'''
         self.AprilTags = aprilTags.AprilTags(self.camera)
@@ -115,20 +117,27 @@ class MyRobot(commands2.TimedCommandRobot):
         # Cancels all running commands at the start of test mode
         commands2.CommandScheduler.getInstance().cancelAll()
         self.container.testInit()
-        if(self.camera.hasTargets()):
-            initPos = self.AprilTags.updatePose()
-            finalPos = Pose2d(x = initPos.translation().X() + self.AprilTags.distToTag() - 1, y = initPos.translation().Y(), rotation = Rotation2d.fromDegrees(0))
-            self.pathFinder = pathFinder.PathFinder(self.container.driveTrain, finalPos, self.AprilTags)
+        # if(self.camera.hasTargets()):
+        #     initPos = self.AprilTags.updatePose()
+        #     finalPos = Pose2d(x = initPos.translation().X() + self.AprilTags.distToTag() - 1, y = initPos.translation().Y(), rotation = Rotation2d.fromDegrees(0))
+        #     self.pathFinder = pathFinder.PathFinder(self.container.driveTrain, finalPos, self.AprilTags)
 
     def testPeriodic(self) -> None:
         self.container.testPeriodic()
-        self.pathFinder.execute()
+        # self.pathFinder.execute()
+        if self.nt.isConnected():
+            print('Network tables Connected')
+        else:
+            print('Network tables not connected')
+        #print(self.camera.getDriverMode())
+        pos = self.AprilTags.updatePose()
+        # print(pos)
 
-        '''updates the visual feild representation'''
-        '''changes the 3d pose gotten from the april tags to a 2D pose'''
-        robotPose3D = self.AprilTags.updatePose()
-        robotPose2D = robotPose3D.toPose2d()
-        self.field.setRobotPose(robotPose2D)
+        # '''updates the visual feild representation'''
+        # '''changes the 3d pose gotten from the april tags to a 2D pose'''
+        # robotPose3D = self.AprilTags.updatePose()
+        # robotPose2D = robotPose3D.toPose2d()
+        # self.field.setRobotPose(robotPose2D)
 
 
 if __name__ == "__main__":
