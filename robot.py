@@ -55,13 +55,8 @@ class MyRobot(commands2.TimedCommandRobot):
 
         '''sets up network tables'''
         self.nt = ntcore.NetworkTableInstance.getDefault()
-        self.nt.setServer("10.32.0.13")
-        self.nt.startClient3("test code")
-        '''lets people know whether it was connected'''
-        if self.nt.isConnected():
-            print('Network tables Connected')
-        else:
-            print('Network tables not connected')
+        self.nt.setServer("10.32.0.79")
+        self.nt.startClient3("3200 robot")
 
         '''connects a camera object to the network tables'''
         self.camera = PhotonCamera(self.nt, aprilTags.AprilTags.name)
@@ -131,7 +126,7 @@ class MyRobot(commands2.TimedCommandRobot):
             print('Network tables not connected')
         #print(self.camera.getDriverMode())
         pos = self.AprilTags.updatePose()
-        # print(pos)
+        print(pos)
 
         # '''updates the visual feild representation'''
         # '''changes the 3d pose gotten from the april tags to a 2D pose'''

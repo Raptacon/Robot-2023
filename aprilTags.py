@@ -18,7 +18,7 @@ class AprilTags():
 
 
     '''variables for camera simulation, which currently isnt implemented'''
-    name = "Camera"
+    name = "Arducam"
     camDaigFov = 68.06
     maxLEDRange = 9000
     cameraResWidth = 320
