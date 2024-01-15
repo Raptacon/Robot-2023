@@ -13,8 +13,6 @@ class PathFinder():
         a drive train object from the drive train class
         a wpimath.geometry.pose2d that indicates where the robot should end up
         an april tag object from the april tag class
-
-        this is not the role playing game "Pathfinder"
     '''
     def __init__(self, driveTrain:DriveTrain, finalPos:wpimath.geometry.Pose2d, apriltags:aprilTags.AprilTags):
         '''Makes variables class variable'''

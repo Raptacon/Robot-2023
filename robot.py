@@ -115,13 +115,20 @@ class MyRobot(commands2.TimedCommandRobot):
         # Cancels all running commands at the start of test mode
         commands2.CommandScheduler.getInstance().cancelAll()
         self.container.testInit()
+        initPos = self.AprilTags.updatePose()
+        finalPos = Pose2d(x = initPos.translation().X() + self.AprilTags.distToTag() - 1, y = initPos.translation().Y(), rotation = Rotation2d.fromDegrees(0))
+        self.pathFinder = pathFinder.PathFinder(self.container.driveTrain, finalPos, self.AprilTags)
 
     def testPeriodic(self) -> None:
         self.container.testPeriodic()
 
-        # gets and prints the position gotten through april tags
-        pos = self.AprilTags.updatePose()
-        print(pos)
+        self.pathFinder.execute()
+
+        '''updates the visual feild representation'''
+        '''changes the 3d pose gotten from the april tags to a 2D pose'''
+        robotPose3D = self.AprilTags.updatePose()
+        robotPose2D = robotPose3D.toPose2d()
+        self.field.setRobotPose(robotPose2D)
 
 
 if __name__ == "__main__":
