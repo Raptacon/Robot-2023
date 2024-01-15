@@ -45,23 +45,26 @@ class MyRobot(commands2.TimedCommandRobot):
             self.container = Breadbox()
 
 
-        '''starts the camera server for apriltags'''
+        #starts the camera server for apriltags
         wpilib.CameraServer.launch()
-        '''starts feild representation in smartdashboard'''
+        #starts feild representation in smartdashboard
 
-        '''starts the feild available on glass'''
+        #starts the feild available on glass
         self.field = Field2d()
         SmartDashboard.putData("Field", self.field)
 
-        '''sets up network tables'''
+        # Sets up Apriltag network tables
         self.nt = ntcore.NetworkTableInstance.getDefault()
         self.nt.setServer("10.32.0.79")
         self.nt.startClient3("3200 robot")
 
-        '''connects a camera object to the network tables'''
-        self.camera = PhotonCamera(self.nt, aprilTags.AprilTags.name)
+        # The camera name accoridng to the photonvision client (ipAddress:5800/#/dashboard)
+        # Should be changed from being hard coded, or set a standard camera name
+        cameraName = "Arducam"
+        #connects a camera object to the network tables
+        self.camera = PhotonCamera(self.nt, cameraName)
 
-        '''starts april tags'''
+        #starts april tags
         self.AprilTags = aprilTags.AprilTags(self.camera)
 
     def disabledInit(self) -> None:
@@ -112,27 +115,13 @@ class MyRobot(commands2.TimedCommandRobot):
         # Cancels all running commands at the start of test mode
         commands2.CommandScheduler.getInstance().cancelAll()
         self.container.testInit()
-        # if(self.camera.hasTargets()):
-        #     initPos = self.AprilTags.updatePose()
-        #     finalPos = Pose2d(x = initPos.translation().X() + self.AprilTags.distToTag() - 1, y = initPos.translation().Y(), rotation = Rotation2d.fromDegrees(0))
-        #     self.pathFinder = pathFinder.PathFinder(self.container.driveTrain, finalPos, self.AprilTags)
 
     def testPeriodic(self) -> None:
         self.container.testPeriodic()
-        # self.pathFinder.execute()
-        if self.nt.isConnected():
-            print('Network tables Connected')
-        else:
-            print('Network tables not connected')
-        #print(self.camera.getDriverMode())
+
+        # gets and prints the position gotten through april tags
         pos = self.AprilTags.updatePose()
         print(pos)
-
-        # '''updates the visual feild representation'''
-        # '''changes the 3d pose gotten from the april tags to a 2D pose'''
-        # robotPose3D = self.AprilTags.updatePose()
-        # robotPose2D = robotPose3D.toPose2d()
-        # self.field.setRobotPose(robotPose2D)
 
 
 if __name__ == "__main__":
