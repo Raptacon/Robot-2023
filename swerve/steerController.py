@@ -1,5 +1,5 @@
 import math
-import ctre
+import phoenix5
 import rev
 import wpilib
 

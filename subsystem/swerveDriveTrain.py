@@ -9,7 +9,7 @@ from wpimath.geometry._geometry import Rotation2d
 import math
 import wpilib
 
-from networktables import NetworkTables
+import ntcore
 
 class Drivetrain(commands2.SubsystemBase):
     kMaxVoltage = 12.0
@@ -46,8 +46,8 @@ class Drivetrain(commands2.SubsystemBase):
     def __init__(self):
         super().__init__()
         self.swerveModules = []
-        NetworkTables.initialize()
-        self.table = NetworkTables.getTable("Drivetrain")
+        datatable = ntcore.NetworkTableInstance.getDefault()
+        self.table = datatable.getTable("Drivetrain")
         assert(self.table)
         for module in Drivetrain.kModuleProps:
             name = module["name"]

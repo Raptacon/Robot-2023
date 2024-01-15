@@ -30,8 +30,8 @@ class RobotSwerve:
         self.yLimiter = wpimath.filter.SlewRateLimiter(3)
         self.rotLimiter = wpimath.filter.SlewRateLimiter(3)
 
-        commands2.button.JoystickButton(self.driveController, 1).whenPressed(ToggleFieldDrive(self.driveTrain))
-        commands2.button.JoystickButton(self.driveController, 2).whenPressed(ResetFieldDrive(self.driveTrain))
+        commands2.button.JoystickButton(self.driveController, 1).onTrue(ToggleFieldDrive(self.driveTrain))
+        commands2.button.JoystickButton(self.driveController, 2).onTrue(ResetFieldDrive(self.driveTrain))
         self.driveTrain.setDefaultCommand(DefaultDrive(
             self.driveTrain,
             lambda: wpimath.applyDeadband(self.driveController.getLeftX(), 0.06),
