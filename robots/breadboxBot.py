@@ -66,6 +66,12 @@ class Breadbox(ConfigBaseCommandRobot):
         self.mech_controller = commands2.button.CommandXboxController(1)
         self.mech_controller_hid = commands2.button.CommandGenericHID(1)
         self.configureButtonBindings()
+
+        if not self.driver_controller.isConnected():
+            print("\n\nWarning! Driver controller is not connected\n\n")
+        if not self.mech_controller.isConnected():
+            print("\n\nWarning! Mech controller is not connected\n\n")
+
         self.selector = Selector()
 
         self.tankDrive = TankDrive(
@@ -86,11 +92,13 @@ class Breadbox(ConfigBaseCommandRobot):
         # self.balance = Balance(Input.getButton("XButton", self.XboxController), self.driveTrain)
         self.balance = Balance(Input().getButton("XButton", self.driver_controller), self.driveTrain)
         self.balanceDrive = TankDrive(self.balance.dobalance,self.balance.dobalance, lambda: self.getCreeperMode(), self.driveTrain)
+        
+        self.creeperMode = False
 
     def teleopPeriodic(self) -> None:
         # if Input.getButton("XButton", self.XboxController):
         self.robot_arm_extension.setSpeed(Input.getStick(self.mech_controller.Axis.kRightY, 1, False))
-        if self.driver_controller.getAButton():
+        if self.driver_controller.isConnected() and self.driver_controller.getAButton():
             if (not self.balanceing):
                 commands2.CommandScheduler.getInstance().cancelAll()
             self.driveTrain.setDefaultCommand(self.balanceDrive)
@@ -108,37 +116,40 @@ class Breadbox(ConfigBaseCommandRobot):
         wpilib.SmartDashboard.putNumber(
             "Cur Pos", self.robot_arm_extension.getPosition()
         )
-        if Input().getButton("RightTrigger", self.driver_controller) > 0.2:
-            self.creeperMode = True
-        else:
-            self.creeperMode = False
+        
+        if self.driver_controller.isConnected():
+            if Input().getButton("RightTrigger", self.driver_controller) > 0.2:
+                self.creeperMode = True
+            else:
+                self.creeperMode = False
 
-        if self.mech_controller.getRightTriggerAxis() > 0.2:
-            self.robot_Grabber.useOutputCones(self.mech_controller.getRightTriggerAxis())
-        elif self.mech_controller.getRightBumper():
-            self.robot_Grabber.useIntakeCones(self.mech_controller.getRightBumper())
-        elif self.mech_controller.getLeftTriggerAxis() > 0.2:
-            self.robot_Grabber.useOutputCubes(self.mech_controller.getLeftTriggerAxis())
-        elif self.mech_controller.getLeftBumper():
-            self.robot_Grabber.useIntakeCubes(self.mech_controller.getLeftBumper())
-        if Input().getButton("RightTrigger", self.driver_controller):
-            self.creeperMode = True
-        else:
-            self.creeperMode = False
+            if self.mech_controller.getRightTriggerAxis() > 0.2:
+                self.robot_Grabber.useOutputCones(self.mech_controller.getRightTriggerAxis())
+            elif self.mech_controller.getRightBumper():
+                self.robot_Grabber.useIntakeCones(self.mech_controller.getRightBumper())
+            elif self.mech_controller.getLeftTriggerAxis() > 0.2:
+                self.robot_Grabber.useOutputCubes(self.mech_controller.getLeftTriggerAxis())
+            elif self.mech_controller.getLeftBumper():
+                self.robot_Grabber.useIntakeCubes(self.mech_controller.getLeftBumper())
+            if Input().getButton("RightTrigger", self.driver_controller):
+                self.creeperMode = True
+            else:
+                self.creeperMode = False
+            
+            if Input().getButton("RightTrigger", self.mech_controller) != 0:
+                self.robot_Grabber.useOutputCones(Input().getButton("RightTrigger", self.mech_controller))
+            elif Input().getButton("RightBumper", self.mech_controller):
+                self.robot_Grabber.useIntakeCones(Input().getButton("RightBumper", self.mech_controller))
+            elif Input().getButton("LeftTrigger", self.mech_controller) != 0:
+                self.robot_Grabber.useOutputCubes(Input().getButton("LeftTrigger", self.mech_controller))
+            elif Input().getButton("LeftBumper", self.mech_controller):
+                self.robot_Grabber.useIntakeCubes(Input().getButton("LeftBumper", self.mech_controller))
+            else:
+                self.robot_Grabber.stop()
 
-        if Input().getButton("RightTrigger", self.mech_controller) != 0:
-            self.robot_Grabber.useOutputCones(Input().getButton("RightTrigger", self.mech_controller))
-        elif Input().getButton("RightBumper", self.mech_controller):
-            self.robot_Grabber.useIntakeCones(Input().getButton("RightBumper", self.mech_controller))
-        elif Input().getButton("LeftTrigger", self.mech_controller) != 0:
-            self.robot_Grabber.useOutputCubes(Input().getButton("LeftTrigger", self.mech_controller))
-        elif Input().getButton("LeftBumper", self.mech_controller):
-            self.robot_Grabber.useIntakeCubes(Input().getButton("LeftBumper", self.mech_controller))
-        else:
-            self.robot_Grabber.stop()
+            if Input().getButton("BButton", self.mech_controller):
+                self.selector.GetSelection(self.mech_controller)
 
-        if Input().getButton("BButton", self.mech_controller):
-            self.selector.GetSelection(self.mech_controller)
         wpilib.SmartDashboard.putNumber("curr rad", self.robot_arm_rotation.getPostion())
 
         return super().teleopPeriodic()
@@ -174,7 +185,10 @@ class Breadbox(ConfigBaseCommandRobot):
         instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
         and then passing it to a JoystickButton.
         """
-
+        #TODO continue to check for controller connection to configure controller properly
+        if not self.mech_controller.isConnected():
+            return
+        
         #track smart dashboad on left click
         self.mech_controller_hid.POVLeft().onTrue(
             commands2.cmd.runOnce(lambda: self.trackAngle(), [self.robot_arm_rotation])
