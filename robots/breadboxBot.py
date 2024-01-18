@@ -5,6 +5,7 @@ import commands2.button
 from commands.tankDrive import TankDrive
 from auto import Autonomous
 import math
+import logging as log
 from input import Input
 from commands.balance import Balance
 from position import PositionChooser
@@ -68,9 +69,11 @@ class Breadbox(ConfigBaseCommandRobot):
         self.configureButtonBindings()
 
         if not self.driver_controller.isConnected():
-            print("\n\nWarning! Driver controller is not connected\n\n")
+            print("\n\nWarning! Driver controller is not connected.\n\n")
+            log.warning("Driver controller is not connected.")
         if not self.mech_controller.isConnected():
             print("\n\nWarning! Mech controller is not connected\n\n")
+            log.warning("Mech controller is not connected.")
 
         self.selector = Selector()
 
