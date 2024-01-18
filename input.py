@@ -7,26 +7,16 @@ class Input:
     def getStickSlew(axis: wpilib.XboxController.Axis, port : int, invert: bool = False):
         sign = -1.0 if invert else 1.0
         slew = wpimath.filter.SlewRateLimiter(3)
-        if wpilib.XboxController(port).isConnected():
-            return lambda: slew.calculate(wpimath.applyDeadband(sign * wpilib.XboxController(port).getRawAxis(axis), 0.1))
-        else:
-            return lambda: 0.0
+        return lambda: slew.calculate(wpimath.applyDeadband(sign * wpilib.XboxController(port).getRawAxis(axis), 0.1))
 
     def getStick(axis: wpilib.XboxController.Axis, port : int, invert: bool = False):
         sign = -1.0 if invert else 1.0
-        
-        if wpilib.XboxController(port).isConnected():
-            return lambda: wpimath.applyDeadband(sign *  wpilib.XboxController(port).getRawAxis(axis), 0.1)
-        else:
-            return lambda: 0.0
+        return lambda: wpimath.applyDeadband(sign *  wpilib.XboxController(port).getRawAxis(axis), 0.1)
 
     def getButton(self, ButtonName : str, XboxController : wpilib.XboxController):
         """
         Takes in a string which acts as the key for a button and returns whether or not the button is pressed.
         """
-        #Check if controller exists
-        if not XboxController.isConnected(): 
-            return False
 
         buttons = {
             "XButton" : XboxController.getXButton(),
