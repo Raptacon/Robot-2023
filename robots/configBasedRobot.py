@@ -32,10 +32,9 @@ class  ConfigBaseCommandRobot(commands2.TimedCommandRobot):
     def getAutonomousCommand(self):
         return(Autonomous(self.driveTrain, self.navx))
 
-
     def teleopInit(self) -> None:
         super().teleopInit()
-
+    
     #TODO move to a better way, demo purposes
     def getStick(self, axis: wpilib.XboxController.Axis, invert: bool = False):
         sign = -1.0 if invert else 1.0

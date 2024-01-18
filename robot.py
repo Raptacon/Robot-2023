@@ -7,7 +7,6 @@ from robots.greenBot import GreenBot
 from robots.configBasedRobot import ConfigBaseCommandRobot
 from robots.breadboxBot import Breadbox
 
-
 class MyRobot(commands2.TimedCommandRobot):
     """
     Our default robot class, pass it to wpilib.run

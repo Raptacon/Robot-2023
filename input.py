@@ -11,18 +11,25 @@ class Input:
 
     def getStick(axis: wpilib.XboxController.Axis, port : int, invert: bool = False):
         sign = -1.0 if invert else 1.0
-        return lambda: wpimath.applyDeadband(sign * wpilib.XboxController(port).getRawAxis(axis), 0.1)
+        return lambda: wpimath.applyDeadband(sign *  wpilib.XboxController(port).getRawAxis(axis), 0.1)
 
     def getButton(self, ButtonName : str, XboxController : wpilib.XboxController):
         """
         Takes in a string which acts as the key for a button and returns whether or not the button is pressed.
         """
-        buttons = {"XButton" : XboxController.getXButton(),
-        "AButton" : XboxController.getAButton(),"BButton" : XboxController.getBButton(),
-        "YButton" : XboxController.getYButton(), "RightTrigger" : XboxController.getRightTriggerAxis(),
-        "RightBumper" : XboxController.getRightBumper(), "LeftTrigger" : XboxController.getLeftTriggerAxis(),
-        "LeftBumper" : XboxController.getLeftBumper(), "RightStickButton" : XboxController.getRightStickButton(),
-        "LeftStickButton" : XboxController.getLeftStickButton()}
+
+        buttons = {
+            "XButton" : XboxController.getXButton(),
+            "AButton" : XboxController.getAButton(),
+            "BButton" : XboxController.getBButton(),
+            "YButton" : XboxController.getYButton(), 
+            "RightTrigger" : XboxController.getRightTriggerAxis(),
+            "RightBumper" : XboxController.getRightBumper(), 
+            "LeftTrigger" : XboxController.getLeftTriggerAxis(),
+            "LeftBumper" : XboxController.getLeftBumper(), 
+            "RightStickButton" : XboxController.getRightStickButton(),
+            "LeftStickButton" : XboxController.getLeftStickButton()
+        }
         return buttons[ButtonName]
 
     def getPOV(self, XboxController : wpilib.XboxController) -> int:
