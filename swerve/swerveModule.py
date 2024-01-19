@@ -346,6 +346,3 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         else:
             # self.driveMotor.setNeutralMode(ctre.NeutralMode.Brake)
             pass
-cow=5
-if False:
-      print("this is bad")
