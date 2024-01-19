@@ -6,6 +6,7 @@ import wpimath.geometry
 import wpimath.kinematics
 import wpimath.controller
 import rev
+import logging as log
 
 
 from .steerController import SteerController
@@ -339,6 +340,9 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
             encoderConfig.magnetOffsetDegrees = 0
             encoderConfig.sensorDirection = True
             status = self.encoder.configAllSettings(encoderConfig, 250)
+            if status != 0:
+                log.error(f"{self.name} failed to set val {status}")
+                
         else:
             # self.driveMotor.setNeutralMode(ctre.NeutralMode.Brake)
             pass
