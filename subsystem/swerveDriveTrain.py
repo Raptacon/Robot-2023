@@ -3,7 +3,6 @@ from swerve.swerveModule import SwerveModuleMk4L1SparkMaxFalcCanCoder as SwerveM
 
 import commands2
 import wpimath.kinematics
-from wpimath.kinematics import SwerveModuleState
 import wpimath.geometry
 from wpimath.geometry._geometry import Rotation2d
 import math
@@ -122,11 +121,11 @@ class Drivetrain(commands2.SubsystemBase):
 
         chassisSpeeds = None
         if not fieldRelative:
-             #print("robot relative")
-             chassisSpeeds = wpimath.kinematics.ChassisSpeeds(ySpeed, -xSpeed, rot)
+            #print("robot relative")
+            chassisSpeeds = wpimath.kinematics.ChassisSpeeds(ySpeed, -xSpeed, rot)
         else:
-             #print("field relative")
-             chassisSpeeds = wpimath.kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, -xSpeed, rot, self.getHeading())
+            #print("field relative")
+            chassisSpeeds = wpimath.kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, -xSpeed, rot, self.getHeading())
 
         swerveModuleStates = self.kinematics.toSwerveModuleStates(chassisSpeeds)
         self.kinematics.desaturateWheelSpeeds(swerveModuleStates, self.kMaxVelocityMPS)
