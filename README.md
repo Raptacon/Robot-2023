@@ -100,6 +100,16 @@ breadboxBot.yml or greenBot.yml etc
 ```powershell
 echo breadboxBot.yml > ~/robotConfig
 ```
+=======
+
+
+# Enable Power shell
+Power shell does not allow sccripts on windows now by default
+
+* run power shell as admin
+* run `set-executionpolicy remotesigned`
+* Select A when prompted
+>>>>>>> ad7e0ef862389d91723a336a9e63fe0e7932085f
 
 # Information
 

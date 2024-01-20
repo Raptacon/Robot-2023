@@ -4,9 +4,7 @@ import typing
 import wpilib
 import commands2
 
-from robots.configBasedRobot import ConfigBaseCommandRobot
-from robots.greenBot import GreenBot
-from robots.breadboxBot import Breadbox
+from robotswerve import RobotSwerve
 
 
 class MyRobot(commands2.TimedCommandRobot):
@@ -25,16 +23,8 @@ class MyRobot(commands2.TimedCommandRobot):
         """
         # Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         # autonomous chooser on the dashboard.
-
-        #determine the robot based on the config file
-        #TODO
-
-        if False:
-            self.container = GreenBot()
-        if False:
-            self.container = ConfigBaseCommandRobot()
-        if True:
-            self.container = Breadbox()
+        #self.container = RobotContainer()
+        self.container = RobotSwerve()
 
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""
@@ -47,15 +37,10 @@ class MyRobot(commands2.TimedCommandRobot):
     def autonomousInit(self) -> None:
         """This autonomous runs the autonomous command selected by your RobotContainer class."""
         self.container.autonomousInit()
-        self.autonomousCommand = None
+        #self.autonomousCommand = self.container.getAutonomousCommand()
 
-        try:
-            self.autonomousCommand = self.container.getAutonomousCommand()
-        except Exception as err:
-            wpilib.reportError(f"Autonoms command not found. {err}", True)
-
-        if self.autonomousCommand:
-            self.autonomousCommand.schedule()
+        #if self.autonomousCommand:
+        #    self.autonomousCommand.schedule()
 
     def autonomousPeriodic(self) -> None:
         """This function is called periodically during autonomous"""
@@ -66,8 +51,8 @@ class MyRobot(commands2.TimedCommandRobot):
         # teleop starts running. If you want the autonomous to
         # continue until interrupted by another command, remove
         # this line or comment it out.
-        if self.autonomousCommand:
-            self.autonomousCommand.cancel()
+        #if self.autonomousCommand:
+        #    self.autonomousCommand.cancel()
         self.container.teleopInit()
 
     def teleopPeriodic(self) -> None:
@@ -76,7 +61,7 @@ class MyRobot(commands2.TimedCommandRobot):
 
     def testInit(self) -> None:
         # Cancels all running commands at the start of test mode
-        commands2.CommandScheduler.getInstance().cancelAll()
+        #commands2.CommandScheduler.getInstance().cancelAll()
         self.container.testInit()
 
     def testPeriodic(self) -> None:
@@ -85,4 +70,3 @@ class MyRobot(commands2.TimedCommandRobot):
 
 if __name__ == "__main__":
     wpilib.run(MyRobot)
-

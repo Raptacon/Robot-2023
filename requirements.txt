@@ -1,13 +1,16 @@
-#cryptography==3.2.1
-#pyflakes
-#py2app
-#macholib
-#modulegraph
+cryptography==3.2.1
+pyflakes
+py2app
+macholib
+modulegraph
 flake8
-pyyaml
 coverage
-#wheel
-pyfrc
-wpilib
+wheel
+phoenix6
 
-robotpy[commands2,ctre,navx,rev,sim,pathplannerlib,photonvision,playingwithfusion]==2023.*
+robotpy[commands2,ctre,navx,rev,sim,pathplannerlib,photonvision,playingwithfusion] #==2023.*
+
+# If installed on OSX (joystick support) it seems to fail?
+pyfrc # == 2023.*
+robotpy-halsim-gui
+pynetworktables

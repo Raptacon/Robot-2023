@@ -8,11 +8,12 @@ from subsystems.drivetrains.westcoast import Westcoast
 import wpilib
 import navx
 import logging
+from position import EPosition
 log = logging.getLogger("Auto")
 class Autonomous(commands2.SequentialCommandGroup):
-    def __init__(self, drive : Westcoast, navx : navx.AHRS, armController : ArmController, grabber : Grabber) -> None:
+    def __init__(self, drive : Westcoast, navx : navx.AHRS, armController : ArmController, grabber : Grabber, position : int) -> None:
         super().__init__()
-
+       
         distance1 = wpilib.SmartDashboard.getNumber("Auto Distance 1", 7.25)
         distance2 = wpilib.SmartDashboard.getNumber("Auto Distance 2", 7.25)
         turnAngle = 180
@@ -20,13 +21,19 @@ class Autonomous(commands2.SequentialCommandGroup):
         log.info(f"Auto Distance 1: {distance1}")
         log.info(f"Auto Distance 2: {distance2}")
         log.info(f"Auto Turn Angle: {turnAngle}")
+       
+        if (position == EPosition.CENTER):
+            self.addCommands(
+                getArmInstantCommand(armController, armController.setBackTop),
+                commands2.WaitCommand(2),
+                commands2.PrintCommand("Arm movement finished"),
+                AutoGrabber(grabber, 1, False),
+                commands2.PrintCommand("output cone"),
+                GoToDist(distance1, drive),
+                commands2.PrintCommand(f"GoToDist finished {distance1}")
+                )
+        if position == EPosition.LEFT:
+            pass
+        if position == EPosition.RIGHT:
+            pass
 
-        self.addCommands(
-            getArmInstantCommand(armController, armController.setBackTop),
-            commands2.WaitCommand(2),
-            commands2.PrintCommand("Arm movement finished"),
-            AutoGrabber(grabber, 1, False),
-            commands2.PrintCommand("output cone"),
-            GoToDist(distance1, drive),
-            commands2.PrintCommand(f"GoToDist finished {distance1}")
-        )
