@@ -51,23 +51,17 @@ class PathFinder():
         '''gets the distance to the wanted pose'''
         self.Xdist = abs(self.finalPos.X()- self.initPos.X())
 
-        '''prints, but not every time execute is called'''
-        self.i += 1
-        if self.i % 3 == 0:
-            print("Distance")
-            print("---------")
-            print(f"{self.Xdist} | {self.initPos.translation().X()} | {self.initPos.translation().Y()}")
-            print(f"{self.finalPos.translation().X()} | {self.finalPos.translation().Y()}")
-
         '''checks the distance to the wanted pos, drives at a different speed so we don't overshoot'''
         # could add a backwards movement if we overshoot or get hit too far
         if(self.Xdist > 0.5 and self.drive):
-            self.driveTrain.drive(0.5, 0.5)
+            self.driveTrain.drive(0.3, 0.3)
         elif(self.Xdist > 0.15 and self.drive):
             self.driveTrain.drive(0.3, 0.3)
         else:
             self.driveTrain.drive(0,0)
             self.drive = False
+            for i in range(1, 10):
+                print("Done!")
 
     def turnToFinal(self):
         '''turns to the angle given in the wanted pos'''
@@ -113,7 +107,7 @@ class PathFinder():
         '''runs the path finder code'''
         self.initPos = self.apriltags.updatePose()
 
-        ''''''
+        '''testing statements'''        
         self.Xdist = abs(self.finalPos.X()- self.initPos.X())
         self.i += 1
         if self.i % 3 == 0:
@@ -121,6 +115,7 @@ class PathFinder():
             print("---------")
             print(f"{self.Xdist} | {self.initPos.translation().X()} | {self.initPos.translation().Y()}")
             print(f"{self.finalPos.translation().X()} | {self.finalPos.translation().Y()}")
+            print(self.apriltags.timeOfPhoto())
         
         
         
@@ -128,3 +123,5 @@ class PathFinder():
         #     self.turnToFinal()
         # elif(self.drive):
         #     self.driveToFinal()
+        if(self.drive):
+            self.driveToFinal()

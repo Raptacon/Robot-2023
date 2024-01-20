@@ -98,3 +98,16 @@ class AprilTags():
         photonTrackedTarget = self.camera.getLatestResult().getBestTarget()
         lenToTag = photonTrackedTarget.getBestCameraToTarget().X()
         return(lenToTag)
+        
+    
+    def timeOfPhoto(self) -> str:
+        '''
+        testing function
+        returns the time the most recent photo was taken
+        '''
+        return(self.camera.getLatestResult().getLatency())
+    #     from datetime import datetime
+    #     now = datetime.now()
+
+    #     current_time = now.strftime("%H:%M:%S")
+    #     return 
