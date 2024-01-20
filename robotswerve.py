@@ -30,8 +30,8 @@ class RobotSwerve:
         self.yLimiter = wpimath.filter.SlewRateLimiter(3)
         self.rotLimiter = wpimath.filter.SlewRateLimiter(3)
 
-        commands2.button.JoystickButton(self.driveController, 1).whenPressed(ToggleFieldDrive(self.driveTrain))
-        commands2.button.JoystickButton(self.driveController, 2).whenPressed(ResetFieldDrive(self.driveTrain))
+        commands2.button.JoystickButton(self.driveController, 1).onTrue(ToggleFieldDrive(self.driveTrain))
+        commands2.button.JoystickButton(self.driveController, 2).onTrue(ResetFieldDrive(self.driveTrain))
         self.driveTrain.setDefaultCommand(DefaultDrive(
             self.driveTrain,
             lambda: wpimath.applyDeadband(self.driveController.getLeftX(), 0.06),
@@ -73,37 +73,11 @@ class RobotSwerve:
         # teleop starts running. If you want the autonomous to
         # continue until interrupted by another command, remove
         # this line or comment it out.
-        #if self.autonomousCommand:
-        #    self.autonomousCommand.cancel()
-        #self.MaxMps = 1
-        #self.RotationRate = 1
         pass
 
     def teleopPeriodic(self) -> None:
         """This function is called periodically during operator control"""
-        # LeftX = self.driveController.getRawAxis(wpilib.XboxController.Axis.kLeftX)
-        # LeftY = self.driveController.getRawAxis(wpilib.XboxController.Axis.kLeftY)
-        # RightX = self.driveController.getRawAxis(wpilib.XboxController.Axis.kRightX)
-
-        # if abs(LeftX) < .05:
-        #     LeftX = 0
-        # if abs(LeftY) < .05:
-        #     LeftY = 0
-        # if abs(RightX) < .05:
-        #     RightX = 0
-
-        LeftX = wpimath.applyDeadband(self.driveController.getLeftX(), 0.02)
-        LeftY = wpimath.applyDeadband(self.driveController.getLeftY(), 0.02)
-        RightY = wpimath.applyDeadband(self.driveController.getRightY(), 0.1)
-
-        #self.driveTrain.drive(-1 * LeftY * self.MaxMps, LeftX * self.MaxMps, RightX * self.RotationRate, False)
-        #ang = (math.degrees(math.atan2(LeftY, LeftX)) +90.0) %360.0
-        #if(abs(LeftX) < 0.8 and abs(LeftY) < 0.8):
-            #pass
-            #print("pass")
-        #else:
-            #print(f"Set {ang}")
-            #self.driveTrain.setSteer(ang)
+        pass
 
 
     testModes = ["Drive Disable", "Wheels Select", "Wheels Drive", "Enable Cal", "Disable Cal"]
@@ -124,6 +98,8 @@ class RobotSwerve:
     def testPeriodic(self) -> None:
         wheelAngle = wpilib.SmartDashboard.getNumber("Wheel Angle", 0)
         wheelSpeed = wpilib.SmartDashboard.getNumber("Wheel Speed", 0)
+        wheelAngle #"use" value
+        wheelSpeed #"use" value
         self.driveTrain.getCurrentAngles()
         LeftX = wpimath.applyDeadband(self.driveController.getLeftX(), 0.02)
         LeftY = wpimath.applyDeadband(self.driveController.getLeftY(), 0.02)

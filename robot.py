@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import typing
-import wpilib
 import commands2
 
 from robotswerve import RobotSwerve
@@ -69,4 +68,5 @@ class MyRobot(commands2.TimedCommandRobot):
 
 
 if __name__ == "__main__":
-    wpilib.run(MyRobot)
+    print("Please run python -m robotpy <args>")
+    exit(1)
