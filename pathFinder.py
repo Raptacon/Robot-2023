@@ -104,24 +104,27 @@ class PathFinder():
         pass
 
     def execute(self):
-        '''runs the path finder code'''
-        self.initPos = self.apriltags.updatePose()
+        if(self.apriltags.hasTargets):
+            '''runs the path finder code'''
+            self.initPos = self.apriltags.updatePose()
 
-        '''testing statements'''        
-        self.Xdist = abs(self.finalPos.X()- self.initPos.X())
-        self.i += 1
-        if self.i % 3 == 0:
-            print("Distance")
-            print("---------")
-            print(f"{self.Xdist} | {self.initPos.translation().X()} | {self.initPos.translation().Y()}")
-            print(f"{self.finalPos.translation().X()} | {self.finalPos.translation().Y()}")
-            print(self.apriltags.timeOfPhoto())
-        
-        
-        
-        # if(self.turn):
-        #     self.turnToFinal()
-        # elif(self.drive):
-        #     self.driveToFinal()
-        if(self.drive):
-            self.driveToFinal()
+            '''testing statements'''        
+            self.Xdist = abs(self.finalPos.X()- self.initPos.X())
+            self.i += 1
+            if self.i % 3 == 0:
+                print("Distance")
+                print("---------")
+                print(f"{self.Xdist} | {self.initPos.translation().X()} | {self.initPos.translation().Y()}")
+                print(f"{self.finalPos.translation().X()} | {self.finalPos.translation().Y()}")
+                print(self.apriltags.timeOfPhoto())
+            
+            
+            
+            # if(self.turn):
+            #     self.turnToFinal()
+            # elif(self.drive):
+            #     self.driveToFinal()
+            if(self.drive):
+                self.driveToFinal()
+        else:
+            print("no target")

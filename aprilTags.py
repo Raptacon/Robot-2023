@@ -111,3 +111,6 @@ class AprilTags():
 
     #     current_time = now.strftime("%H:%M:%S")
     #     return 
+
+    def hasTargets(self) -> bool:
+        return(self.camera.getLatestResult().hasTargets())
