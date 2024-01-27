@@ -19,10 +19,10 @@ class Drivetrain(commands2.SubsystemBase):
     kMaxAngularVelocityRadPS = kMaxVelocityMPS / math.hypot(kWheelBaseMeters / 2.0, kTrackBaseMeters / 2.0)
 
     kModuleProps = [
-            {"name": "frontLeft", "channel": 50, "encoderCal": 31.992, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0, "inverted": False },
+            {"name": "frontLeft", "channel": 50, "encoderCal": 31.992, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0, "inverted": False,  },
             {"name": "frontRight", "channel": 53, "encoderCal": 153.193, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0, "inverted": True },
             {"name": "rearLeft", "channel": 56, "encoderCal": -23.555, "trackbase": kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0, "inverted": False },
-            {"name": "rearRight", "channel": 59, "encoderCal": 34.717, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0, "inverted": True }
+            {"name": "rearRight", "channel": 59, "encoderCal": 34.717, "trackbase": -kTrackBaseMeters/2.0, "wheelbase": -kWheelBaseMeters/2.0, "inverted": True  }
     ]
     kModulePropsNoCal = [
             {"name": "frontLeft", "channel": 50, "encoderCal": 0.0, "trackbase": kTrackBaseMeters/2.0, "wheelbase": kWheelBaseMeters/2.0, "inverted": False },

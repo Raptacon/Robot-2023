@@ -94,7 +94,7 @@ class SwerveModuleMK4I_L2Consts(SwerveModuleConsts):
         self._wheelDiameter = 0.10033
         self._driveReduction = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0)
         self._steerReduction = (14.0 / 50.0) * (10.0 / 60.0)
-        self._steerInverted = True
+        self._steerInverted = False
         self._moduleType = "Mk4I_L2"
 
 
@@ -140,7 +140,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         self.encoder = sensors.WPI_CANCoder(self.cancoderId)
         encoderConfig = sensors.CANCoderConfiguration()
         encoderConfig.absoluteSensorRange = sensors.AbsoluteSensorRange.Unsigned_0_to_360
-        encoderConfig.magnetOffsetDegrees = encoderCal
+        #encoderConfig.magnetOffsetDegrees = encoderCal
         encoderConfig.sensorDirection = True
         status = self.encoder.configAllSettings(encoderConfig, 250)
         if status != phoenix5.ErrorCode.OK:
@@ -182,6 +182,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         self.steerSensorPositionCoefficient = 2.0 * math.pi / self.kTicksPerRotation * self.consts.getSteerReduction()
         self.steerSensorVelocityCoefficient = self.steerSensorPositionCoefficient * 10.0
         self.steerMotor = rev.CANSparkMax(self.steerId, rev.CANSparkLowLevel.MotorType.kBrushless)
+        self.steerMotor.setInverted(True)
         self.steerEncoder = self.encoder
 
         # motorConfig = ctre.TalonFXConfiguration()
