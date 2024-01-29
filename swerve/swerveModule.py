@@ -1,14 +1,16 @@
 
 import math
-import ctre
+import phoenix5
+from phoenix5 import sensors
 import wpimath.geometry
 import wpimath.kinematics
 import wpimath.controller
 import rev
+import logging as log
 
 
 from .steerController import SteerController
-import networktables
+import ntcore
 
 '''
 This is a basic swerve drive module for a robot running
@@ -104,10 +106,10 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
     driveId : int
     steerId: int
     cancoderId: int
-    encoder : ctre.CANCoder
+    encoder : sensors.CANCoder
 
     kNominalVoltage = 12.0
-    kDriveCurrentLimit = 80.0
+    kDriveCurrentLimit =  20.0
     kSteerCurrentLimit = 20.0
 
     ''' https://github.com/SwerveDriveSpecialties/swerve-lib/blob/develop/src/main/java/com/swervedrivespecialties/swervelib/ctre/Falcon500DriveControllerFactoryBuilder.java '''
@@ -117,7 +119,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
     kSteerPID = (0.2, 0.0, 0.1)
     kCanStatusFrameMs = 10
 
-    def __init__(self, location : tuple[float, float, str], channelBase: int, inverted, encoderCal: float = 0, table = networktables.NetworkTable):
+    def __init__(self, location : tuple[float, float, str], channelBase: int, inverted, encoderCal: float = 0, table = ntcore.NetworkTable):
         '''
         Creates a new swerve module at location in robot. With channesl channelBase = drive
         channelBase + 1 = steer
@@ -135,34 +137,34 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         self.distTraveled = 0
 
         #create can encoder
-        self.encoder = ctre.WPI_CANCoder(self.cancoderId)
-        encoderConfig = ctre.CANCoderConfiguration()
-        encoderConfig.absoluteSensorRange = ctre.AbsoluteSensorRange.Unsigned_0_to_360
+        self.encoder = sensors.WPI_CANCoder(self.cancoderId)
+        encoderConfig = sensors.CANCoderConfiguration()
+        encoderConfig.absoluteSensorRange = sensors.AbsoluteSensorRange.Unsigned_0_to_360
         encoderConfig.magnetOffsetDegrees = encoderCal
         encoderConfig.sensorDirection = True
         status = self.encoder.configAllSettings(encoderConfig, 250)
-        if status != ctre.ErrorCode.OK:
+        if status != phoenix5.ErrorCode.OK:
             raise RuntimeError(f"Failed to configure CAN encoder on id {self.cancoderId}. Error {status}")
-        status = self.encoder.setStatusFramePeriod(ctre.CANCoderStatusFrame.SensorData, self.kCanStatusFrameMs, 250)
-        if status != ctre.ErrorCode.OK:
+        status = self.encoder.setStatusFramePeriod(sensors.CANCoderStatusFrame.SensorData, self.kCanStatusFrameMs, 250)
+        if status != phoenix5.ErrorCode.OK:
             raise RuntimeError(f"Failed to configure CAN encoder on status frame on id {self.cancoderId}. Error {status}")
 
         #create drive motor
         self.driveSensorPositionCoefficient = math.pi * self.consts.getWheelDiameter() * self.consts.getDriveReduction() / self.kTicksPerRotation
         self.driveSensorVelocityCoefficient = self.driveSensorPositionCoefficient * 10.0
-        motorConfig = ctre.TalonFXConfiguration()
+        motorConfig = phoenix5.TalonFXConfiguration()
         motorConfig.voltageCompSaturation = self.kNominalVoltage
-        supplyCurrConfig = ctre.SupplyCurrentLimitConfiguration()
+        supplyCurrConfig = phoenix5.SupplyCurrentLimitConfiguration()
         supplyCurrConfig.currentLimit = self.kDriveCurrentLimit
         supplyCurrConfig.enable = True
         motorConfig.supplyCurrLimit = supplyCurrConfig
 
-        self.driveMotor = rev.CANSparkMax(self.driveId, rev.CANSparkMaxLowLevel.MotorType.kBrushless)
+        self.driveMotor = rev.CANSparkMax(self.driveId, rev.CANSparkLowLevel.MotorType.kBrushless)
         self.driveMotor.setInverted(inverted)
 
         # status = self.driveMotor.configAllSettings(motorConfig, 250)
 
-        if status != ctre.ErrorCode.OK:
+        if status != phoenix5.ErrorCode.OK:
             raise RuntimeError(f"Failed to configure Drive Motor on id {self.driveId}. Error {status}")
         self.driveMotor.enableVoltageCompensation(12.0)
         # self.driveMotor.setNeutralMode(ctre.NeutralMode.Brake)
@@ -171,15 +173,15 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         self.driveEncoder = self.driveMotor.getAbsoluteEncoder(rev.SparkMaxAbsoluteEncoder.Type.kDutyCycle)
         # self.driveMotor.setSensorPhase(True)
 
-        status = ctre.ErrorCode.OK # self.driveMotor.setStatusFramePeriod(ctre.StatusFrameEnhanced.Status_1_General, self.kCanStatusFrameMs, 250)
+        status = phoenix5.ErrorCode.OK # self.driveMotor.setStatusFramePeriod(ctre.StatusFrameEnhanced.Status_1_General, self.kCanStatusFrameMs, 250)
 
-        if status != ctre.ErrorCode.OK:
+        if status != phoenix5.ErrorCode.OK:
             raise RuntimeError(f"Failed to configure Drive Motor Status Frame on id {self.driveId}. Error {status}")
 
         #create steer motor
         self.steerSensorPositionCoefficient = 2.0 * math.pi / self.kTicksPerRotation * self.consts.getSteerReduction()
         self.steerSensorVelocityCoefficient = self.steerSensorPositionCoefficient * 10.0
-        self.steerMotor = rev.CANSparkMax(self.steerId, rev.CANSparkMaxLowLevel.MotorType.kBrushless)
+        self.steerMotor = rev.CANSparkMax(self.steerId, rev.CANSparkLowLevel.MotorType.kBrushless)
         self.steerEncoder = self.encoder
 
         # motorConfig = ctre.TalonFXConfiguration()
@@ -195,25 +197,25 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         self.steerPIDController = wpimath.controller.PIDController(0.3 ,1 ,0)#Test Values P: 0.3, I: 1, D: 0
         self.steerPIDController.setTolerance(0.008)
 
-        status = ctre.ErrorCode.OK
-        if status != ctre.ErrorCode.OK:
+        status = phoenix5.ErrorCode.OK
+        if status != phoenix5.ErrorCode.OK:
             raise RuntimeError(f"Failed to configure Steer Motor on id {self.steerId}. Error {status}")
 
         # self.steerMotor.enableVoltageCompensation(True)
 
         # status = self.steerMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor, 0, 250)
-        if status != ctre.ErrorCode.OK:
+        if status != phoenix5.ErrorCode.OK:
             raise RuntimeError(f"Failed to configure Steer Motor Feedback on id {self.steerId}. Error {status}")
         # self.steerMotor.setSensorPhase(True)
         self.steerMotor.setInverted(self.consts.getSteerInverted())
         # self.steerMotor.setNeutralMode(ctre.NeutralMode.Brake)
         # status = self.steerMotor.setSelectedSensorPosition(self.getAbsoluteAngle() / self.steerSensorPositionCoefficient, 0, 250)
-        if status != ctre.ErrorCode.OK:
+        if status != phoenix5.ErrorCode.OK:
             raise RuntimeError(f"Failed to configure Steer Motor position on id {self.steerId}. Error {status}")
 
-        status = ctre.ErrorCode.OK # self.driveMotor.setStatusFramePeriod(ctre.StatusFrameEnhanced.Status_1_General, self.kCanStatusFrameMs, 250)
+        status = phoenix5.ErrorCode.OK # self.driveMotor.setStatusFramePeriod(ctre.StatusFrameEnhanced.Status_1_General, self.kCanStatusFrameMs, 250)
 
-        if status != ctre.ErrorCode.OK:
+        if status != phoenix5.ErrorCode.OK:
             raise RuntimeError(f"Failed to configure Steer Motor Status Frame on id {self.driveId}. Error {status}")
 
         self.steerController = SteerController(self)
@@ -298,7 +300,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
             self.table.putNumber("drive %", driveVoltage / self.kNominalVoltage)
 
 
-    def getSteerMotor(self) -> ctre.WPI_TalonFX:
+    def getSteerMotor(self) -> phoenix5.WPI_TalonFX:
         '''gets the motor for steering'''
         return self.steerMotor
     def getSteerSensorPositionCoefficient(self):
@@ -333,11 +335,14 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
     def setCal(self, enable):
         if enable:
             # self.driveMotor.setNeutralMode(ctre.NeutralMode.Coast)
-            encoderConfig = ctre.CANCoderConfiguration()
-            encoderConfig.absoluteSensorRange = ctre.AbsoluteSensorRange.Unsigned_0_to_360
+            encoderConfig = sensors.CANCoderConfiguration()
+            encoderConfig.absoluteSensorRange = sensors.AbsoluteSensorRange.Unsigned_0_to_360
             encoderConfig.magnetOffsetDegrees = 0
             encoderConfig.sensorDirection = True
             status = self.encoder.configAllSettings(encoderConfig, 250)
+            if status != 0:
+                log.error(f"{self.name} failed to set val {status}")
+                
         else:
             # self.driveMotor.setNeutralMode(ctre.NeutralMode.Brake)
             pass

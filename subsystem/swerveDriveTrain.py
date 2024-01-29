@@ -3,13 +3,12 @@ from swerve.swerveModule import SwerveModuleMk4L1SparkMaxFalcCanCoder as SwerveM
 
 import commands2
 import wpimath.kinematics
-from wpimath.kinematics import SwerveModuleState
 import wpimath.geometry
 from wpimath.geometry._geometry import Rotation2d
 import math
 import wpilib
 
-from networktables import NetworkTables
+import ntcore
 
 class Drivetrain(commands2.SubsystemBase):
     kMaxVoltage = 12.0
@@ -46,8 +45,8 @@ class Drivetrain(commands2.SubsystemBase):
     def __init__(self):
         super().__init__()
         self.swerveModules = []
-        NetworkTables.initialize()
-        self.table = NetworkTables.getTable("Drivetrain")
+        datatable = ntcore.NetworkTableInstance.getDefault()
+        self.table = datatable.getTable("Drivetrain")
         assert(self.table)
         for module in Drivetrain.kModuleProps:
             name = module["name"]
@@ -122,11 +121,11 @@ class Drivetrain(commands2.SubsystemBase):
 
         chassisSpeeds = None
         if not fieldRelative:
-             #print("robot relative")
-             chassisSpeeds = wpimath.kinematics.ChassisSpeeds(ySpeed, -xSpeed, rot)
+            #print("robot relative")
+            chassisSpeeds = wpimath.kinematics.ChassisSpeeds(ySpeed, -xSpeed, rot)
         else:
-             #print("field relative")
-             chassisSpeeds = wpimath.kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, -xSpeed, rot, self.getHeading())
+            #print("field relative")
+            chassisSpeeds = wpimath.kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, -xSpeed, rot, self.getHeading())
 
         swerveModuleStates = self.kinematics.toSwerveModuleStates(chassisSpeeds)
         self.kinematics.desaturateWheelSpeeds(swerveModuleStates, self.kMaxVelocityMPS)
