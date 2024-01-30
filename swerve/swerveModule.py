@@ -140,7 +140,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         self.encoder = sensors.WPI_CANCoder(self.cancoderId)
         encoderConfig = sensors.CANCoderConfiguration()
         encoderConfig.absoluteSensorRange = sensors.AbsoluteSensorRange.Unsigned_0_to_360
-        #encoderConfig.magnetOffsetDegrees = encoderCal
+        encoderConfig.magnetOffsetDegrees = encoderCal
         encoderConfig.sensorDirection = True
         status = self.encoder.configAllSettings(encoderConfig, 250)
         if status != phoenix5.ErrorCode.OK:

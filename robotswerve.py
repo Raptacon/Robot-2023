@@ -80,7 +80,7 @@ class RobotSwerve:
         pass
 
 
-    testModes = ["Drive Disable", "Wheels Select", "Wheels Drive", "Enable Cal", "Disable Cal"]
+    testModes = ["Drive Disable", "Wheels Select", "Wheels Drive", "Enable Cal", "Disable Cal", "Wheel Pos"]
     def testInit(self) -> None:
         # Cancels all running commands at the start of test mode
         #commands2.CommandScheduler.getInstance().cancelAll()
@@ -136,6 +136,8 @@ class RobotSwerve:
                     self.calEn = False
             case "Disable Cal":
                 self.driveTrain.calWheels(False)
+            case "Wheel Pos":
+                self.driveTrain.setSteer(wheelAngle)
             case _:
                 print(f"Unknown {self.testChooser.getSelected()}")
 
