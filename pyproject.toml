@@ -24,8 +24,3 @@ robotpy_extras = [
     #"romi",
     #"sim",
 ]
-
-# Other pip packages to install
-requires = [
-    "robotpy-commands-v2==2024.2.2"
-]
