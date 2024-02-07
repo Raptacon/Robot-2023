@@ -12,12 +12,12 @@ from commands.breadbox import armCommands
 from selector import Selector
 from wpilib import cameraserver
 
-from .configBasedRobot import ConfigBaseCommandRobot
+from .configBasedRobot import ConfigBasedCommandRobot
 from subsystems.actuators.breadboxArmRotation import ArmRotation
 from subsystems.actuators.breadboxArmController import ArmController
 from subsystems.arm.grader import Grabber
 
-class Breadbox(ConfigBaseCommandRobot):
+class BreadboxBot(ConfigBasedCommandRobot):
     balanceing = False
     robot_arm_rotation: ArmRotation
     robot_Grabber: Grabber

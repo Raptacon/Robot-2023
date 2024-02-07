@@ -4,12 +4,12 @@ import navx
 from subsystems.drivetrains.westcoast import Westcoast as Drivetrain
 from commands.tankDrive import TankDrive
 from commands.arcadeDrive import ArcadeDrive
-from .configBasedRobot import ConfigBaseCommandRobot
+from .configBasedRobot import ConfigBasedCommandRobot
 from input import Input
 
 import enum
 
-class GreenBot(ConfigBaseCommandRobot):
+class GreenBot(ConfigBasedCommandRobot):
     config_name = "GreenBot"
 
     class DrivetrainMode(enum.Enum):

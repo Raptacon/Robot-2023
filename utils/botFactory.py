@@ -22,7 +22,7 @@ class BotFactory(object):
     raw_name = None  # Whatever ws given to the Factory as a name
     robot_class_name = None  # NameBot
 
-    def __init__(self, name: str) -> ConfigBasedCommandRobot:
+    def __init__(self, name: str = None) -> ConfigBasedCommandRobot:
         """BotFactory will get the configs and create the bot for the supplied name.
         If no name is supplied, then it will query the filesystem for ~/robotConfig and
         read the robot name from the file (yaml extension not necessary) Bot is assumed at the end of the name.
@@ -70,8 +70,6 @@ class BotFactory(object):
             )
 
         # If we made it here, we know our botName is valid and the python for the bot exists and the config for the bot exists
-        ic(botName)
-        return self.get_robot()
 
     def _normalize_bot_name(self, robotName: str) -> str:
         """Takes in a name of <robot name>Bot.py, <robot name>, <robot name>Bot <robot name>Bot.yml/yaml and
@@ -231,11 +229,26 @@ class BotFactory(object):
         lib = f"robots.{self.robot_full_name}"
         ic(lib)
         # module = importlib.import_module(lib)
-        module = importlib.import_module(self.robot_module_name)
+        module = None
+        try:
+            module = importlib.import_module(self.robot_module_name)
+        except Exception as e:
+            err_msg = f"Unable to import module {self.robot_module_name} please ensure that your ~/robotConfig exists, and contents are correct. robot name from config file={self.raw_name} Exception: {e}"
+            log.error(err_msg)
+            raise ImportError(err_msg)
         ic(module)
         # Dynamically get the robot_class_name (ie DumboBot,LabBot, etc) and use getattr() to call the class in the
         # imported module
-        return getattr(module, self.robot_class_name)()
+        obj = None
+        try:
+            obj = getattr(module, self.robot_class_name)()
+        except Exception as e:
+            err_msg = f"Unable to get attributes on {module}.{self.robot_class_name} please ensure that your ~/robotConfig exists, and contents are correct. robot name={self.raw_name} Exception: {e}"
+            log.error(err_msg)
+            raise Exception(err_msg)
+
+        # return getattr(module, self.robot_class_name)()
+        return obj
 
 
 def get_bot(name: str) -> ConfigBasedCommandRobot:
@@ -248,4 +261,4 @@ def get_bot(name: str) -> ConfigBasedCommandRobot:
             ConfigBasedCommandRobot: Instance of a name of the robot like green, dumbo, teapot, lab, etc
     """
     ic(name)
-    return BotFactory(name)
+    return BotFactory(name).get_robot()
