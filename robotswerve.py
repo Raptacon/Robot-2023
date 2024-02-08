@@ -6,13 +6,18 @@ import wpimath
 import commands2.button
 
 from subsystem.swerveDriveTrain import Drivetrain
+from subsystem.swerveIntake import SwerveIntake
+from subsystem.swerveIntakePivot import SwerveIntakePivot
+from subsystem.swerveIntakePivotController import pivotController
 
+from commands.intake import Intake
 from commands.defaultdrive import DefaultDrive
 from commands.togglefielddrive import ToggleFieldDrive
 from commands.resetfielddrive import ResetFieldDrive
 
 import math
 kDriveControllerIdx = 0
+kMechControllerIdx = 1
 lastDeg =0
 
 class RobotSwerve:
@@ -22,8 +27,14 @@ class RobotSwerve:
 
     def __init__(self) -> None:
         self.driveController = wpilib.XboxController(kDriveControllerIdx)
+        self.mechController = wpilib.XboxController(kMechControllerIdx)
+
         self.driveTrain = Drivetrain()
 
+        self.intake = SwerveIntake()
+        self.pivot = SwerveIntakePivot()
+        self.intakePivotController = pivotController()
+        self.intakePivotController.setIntakeRotationSubsystem(self.pivot)
         #self.driveController = wpilib.XboxController(0)
 
         self.xLimiter = wpimath.filter.SlewRateLimiter(3)
@@ -39,7 +50,14 @@ class RobotSwerve:
             lambda: wpimath.applyDeadband(self.driveController.getRightX(), 0.1),
             lambda: self.driveTrain.getFieldDriveRelative()
         ))
-
+        self.intake.setDefaultCommand(Intake(
+            self.intake,
+            self.intakePivotController,
+            lambda: wpimath.applyDeadband(self.mechController.getLeftTriggerAxis(), 0.05),
+            lambda: self.mechController.getLeftBumper(),
+            lambda: self.mechController.getAButton(),
+            lambda: self.mechController.getBButton()
+        ))
         '''
         self.driveTrain.setDefaultCommand(DefaultDrive(
             self.driveTrain,
@@ -78,7 +96,6 @@ class RobotSwerve:
     def teleopPeriodic(self) -> None:
         """This function is called periodically during operator control"""
         pass
-
 
     testModes = ["Drive Disable", "Wheels Select", "Wheels Drive", "Enable Cal", "Disable Cal", "Wheel Pos"]
     def testInit(self) -> None:
