@@ -6,11 +6,11 @@ modulegraph
 flake8
 coverage
 wheel
-robotpy[all]
+robotpy[all]==2024.2.1.1
 pyntcore==2024.*
 
 #robotpy[ctre,navx,rev,sim,pathplannerlib,photonvision,playingwithfusion] == 2024.*
 
 # If installed on OSX (joystick support) it seems to fail?
-pyfrc == 2024.*
+pyfrc == 2024.0.1
 robotpy-halsim-gui
