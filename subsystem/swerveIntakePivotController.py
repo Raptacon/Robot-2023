@@ -53,13 +53,13 @@ class pivotController(commands2.SubsystemBase):
         """
         sets the manipulator to the ground position
         """
-        self.setManipulator(0)
+        self.setManipulator(320)
 
     def setHandOffPickup(self):
         """
         sets the manipulator to the handoff position
         """
-        self.setManipulator(90)
+        self.setManipulator(50)
 
 def getPivotFunctionalCommand(pivotController: pivotController, func: Callable, tolerance = 0.1):
     """
