@@ -10,13 +10,14 @@ class SwerveIntakePivot(commands2.PIDSubsystem):
     kRolloverDeadZoneDeg = 340
     def __init__(self) -> None:
         self.pivotMotor = rev.CANSparkMax(22, rev.CANSparkLowLevel.MotorType.kBrushless)
-        self.encoder = self.pivotMotor.getAbsoluteEncoder(rev.SparkMaxAbsoluteEncoder.Type.kDutyCycle)
+        self.encoder = wpilib.DutyCycleEncoder(0)
 
         self.pidController = wpimath.controller.PIDController(0.5, 0, 0)
         self.pidController.setTolerance(0.02)
         super().__init__(self.pidController, 0)
 
-        self.encoder.setZeroOffset(0)
+        self.encoder.setPositionOffset(0)
+        self.encoder.reset()
 
         self.motorFeedforward = wpimath.controller.SimpleMotorFeedforwardMeters(12, 0, 0)
 
@@ -27,10 +28,10 @@ class SwerveIntakePivot(commands2.PIDSubsystem):
         self.pivotMotor.setVoltage(output + feedforward)
 
     def getPostion(self) -> float:
-        absPos = math.fmod(2*math.pi - self.encoder.getPosition() * (2*math.pi), 2*math.pi)
+        absPos = math.fmod(2*math.pi - self.encoder.getAbsolutePosition() * (2*math.pi), 2*math.pi)
         currPos = absPos
         currDeg = math.degrees(currPos)
-        wpilib.SmartDashboard.putNumber("Intake offset", -self.encoder.getPosition())
+        wpilib.SmartDashboard.putNumber("Intake offset", -self.encoder.getAbsolutePosition())
         wpilib.SmartDashboard.putNumber("Intake Angle Degrees", math.degrees(currPos))
 
         if self.pivotMotor.getFault(self.pivotMotor.FaultID.kHardLimitFwd):
@@ -67,7 +68,7 @@ class SwerveIntakePivot(commands2.PIDSubsystem):
         return self.getController().getPositionError() < tolerance
 
     def getMeasurement(self) -> float:
-        return self.encoder.getPosition()
+        return self.getPostion()
 
     def setIntakePivot(self, percent : float):
         self.pivotMotor.set(percent)

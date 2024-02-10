@@ -12,8 +12,8 @@ import ntcore
 
 class Drivetrain(commands2.SubsystemBase):
     kMaxVoltage = 12.0
-    kWheelBaseMeters = 0.5461 # front to back distance
-    kTrackBaseMeters = 0.5461 # left to right distance
+    kWheelBaseMeters = 0.7112 # front to back distance
+    kTrackBaseMeters = 0.6604 # left to right distance
     #kMaxVelocityMPS = 4.14528
     kMaxVelocityMPS = 1.0
     kMaxAngularVelocityRadPS = kMaxVelocityMPS / math.hypot(kWheelBaseMeters / 2.0, kTrackBaseMeters / 2.0)

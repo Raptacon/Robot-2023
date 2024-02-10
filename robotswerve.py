@@ -97,7 +97,7 @@ class RobotSwerve:
         """This function is called periodically during operator control"""
         pass
 
-    testModes = ["Drive Disable", "Wheels Select", "Wheels Drive", "Enable Cal", "Disable Cal", "Wheel Pos"]
+    testModes = ["Drive Disable", "Wheels Select", "Wheels Drive", "Enable Cal", "Disable Cal", "Wheel Pos", "Pivot Rot"]
     def testInit(self) -> None:
         # Cancels all running commands at the start of test mode
         #commands2.CommandScheduler.getInstance().cancelAll()
@@ -110,11 +110,13 @@ class RobotSwerve:
         wpilib.SmartDashboard.putData("Test Mode", self.testChooser)
         wpilib.SmartDashboard.putNumber("Wheel Angle", 0)
         wpilib.SmartDashboard.putNumber("Wheel Speed", 0)
+        wpilib.SmartDashboard.putNumber("Pivot Angle:", 0)
 
 
     def testPeriodic(self) -> None:
         wheelAngle = wpilib.SmartDashboard.getNumber("Wheel Angle", 0)
         wheelSpeed = wpilib.SmartDashboard.getNumber("Wheel Speed", 0)
+        pivotAngle = wpilib.SmartDashboard.getNumber("Pivot Angle:", 0)
         wheelAngle #"use" value
         wheelSpeed #"use" value
         self.driveTrain.getCurrentAngles()
@@ -155,6 +157,8 @@ class RobotSwerve:
                 self.driveTrain.calWheels(False)
             case "Wheel Pos":
                 self.driveTrain.setSteer(wheelAngle)
+            case "Pivot Rot":
+                self.intakePivotController.setManipulator(pivotAngle)
             case _:
                 print(f"Unknown {self.testChooser.getSelected()}")
 

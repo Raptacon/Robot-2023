@@ -182,7 +182,7 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
         self.steerSensorPositionCoefficient = 2.0 * math.pi / self.kTicksPerRotation * self.consts.getSteerReduction()
         self.steerSensorVelocityCoefficient = self.steerSensorPositionCoefficient * 10.0
         self.steerMotor = rev.CANSparkMax(self.steerId, rev.CANSparkLowLevel.MotorType.kBrushless)
-        self.steerMotor.setInverted(True)
+        #self.steerMotor.setInverted(True)
         self.steerEncoder = self.encoder
 
         # motorConfig = ctre.TalonFXConfiguration()
