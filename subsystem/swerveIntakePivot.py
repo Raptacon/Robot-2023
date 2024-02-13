@@ -4,13 +4,10 @@ import math
 import wpilib
 import wpimath
 import wpimath.controller
-wpimath.controller
 class SwerveIntakePivot(commands2.PIDSubsystem):
     kMinPostion = 0
     kMaxPostion = 1.0 * 2 * math.pi
     kRolloverDeadZoneDeg = 340
-    #hand Off: 312
-    #ground: 50
     def __init__(self) -> None:
         self.pivotMotor = rev.CANSparkMax(22, rev.CANSparkLowLevel.MotorType.kBrushless)
         self.pivotMotor.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
@@ -34,11 +31,9 @@ class SwerveIntakePivot(commands2.PIDSubsystem):
         wpilib.SmartDashboard.putNumber("Pivot Current", self.pivotMotor.getOutputCurrent())
         wpilib.SmartDashboard.putNumber("Pivot Velocity", self.pivotRelEncoder.getVelocity())
 
-        #print(f"Setpoint: {setpoint:02.02f} Output: {output:02.02f} Feedforward: {feedforward} Position {math.degrees(self.getPostion()):02.02f}")
         self.voltage = output + feedforward
         self.voltage = max(-10, min(self.voltage, 10))
         self.pivotMotor.setVoltage(self.voltage)
-        wpilib.SmartDashboard.putNumber("Setpoint", self.voltage)
 
     def getPostion(self) -> float:
         print(f"absPos:{self.encoder.getAbsolutePosition()}")
