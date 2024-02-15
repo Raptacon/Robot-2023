@@ -29,7 +29,7 @@ class pivotController(commands2.SubsystemBase):
 
     def isPivotPositioned(self, tolerance = None):
         """
-        Returns if arm is in postion
+        Returns if pviot is in postion
         """
         #TODO add support for length
         if tolerance:
@@ -44,7 +44,7 @@ class pivotController(commands2.SubsystemBase):
     def setManipulator(self, angleDegrees):
         """Sets the angle and length of the manipulator
         Args:
-            angleDegrees (_type_): angle of arm in degrees
+            angleDegrees (_type_): angle of pivot in degrees
         """
         self.getIntakeRotation().setSetpointDegrees(angleDegrees)
         self.getIntakeRotation().enable()
@@ -53,7 +53,7 @@ class pivotController(commands2.SubsystemBase):
         """
         sets the manipulator to the ground position
         """
-        self.setManipulator(320)
+        self.setManipulator(335)
 
     def setHandOffPickup(self):
         """
@@ -63,15 +63,15 @@ class pivotController(commands2.SubsystemBase):
 
 def getPivotFunctionalCommand(pivotController: pivotController, func: Callable, tolerance = 0.1):
     """
-    Creates a functional command for the arm
+    Creates a functional command for the pivot
     Args:
-        armController (ArmController): arm controller to use
-        func (Callable): function from arm controller to run
+        pivotController (pivotController): pivot controller to use
+        func (Callable): function from pivot controller to run
     Returns: functional command
     """
 
     #example usage without command group
-    #cmd = getArmFunctionalCommand(self.robot_arm_controller, self.robot_arm_controller.setTop)
+    #cmd = getPivotFunctionalCommand(self.robot_arm_controller, self.robot_arm_controller.setTop)
     #commands2.CommandScheduler.schedule(commands2.CommandScheduler.getInstance(), cmd)
 
     cmd = commands2.FunctionalCommand(func, lambda *args, **kwargs: None, lambda x: print("Done"), lambda : pivotController.isArmPositioned(tolerance))
@@ -81,15 +81,15 @@ def getPivotFunctionalCommand(pivotController: pivotController, func: Callable, 
 
 def getPivotInstantCommand(pivotController: pivotController, func: Callable, tolerance = 0.1):
     """
-    Creates a functional command for the arm
+    Creates a functional command for the pivot
     Args:
-        armController (ArmController): arm controller to use
-        func (Callable): function from arm controller to run
+        pivotController (pivotController): pivot controller to use
+        func (Callable): function from pivot controller to run
     Returns: functional command
     """
 
     #example usage without command group
-    #cmd = getArmFunctionalCommand(self.robot_arm_controller, self.robot_arm_controller.setTop)
+    #cmd = getPivotInstantCommand(self.robot_arm_controller, self.robot_arm_controller.setTop)
     #commands2.CommandScheduler.schedule(commands2.CommandScheduler.getInstance(), cmd)
 
     cmd = commands2.InstantCommand(func)
