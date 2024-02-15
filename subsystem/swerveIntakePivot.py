@@ -41,7 +41,7 @@ class SwerveIntakePivot(commands2.PIDSubsystem):
         wpilib.SmartDashboard.putNumber("Setpoint", self.voltage)
 
     def getPostion(self) -> float:
-        print(f"absPos:{self.encoder.getAbsolutePosition()}")
+        #print(f"absPos:{self.encoder.getAbsolutePosition()}")
         absPos = (((self.encoder.getAbsolutePosition() - self.encoderOffset) % 1.0) * (2*math.pi))
         currDeg = (math.degrees(absPos))
         wpilib.SmartDashboard.putNumber("Intake Angle Degrees", currDeg)

@@ -4,6 +4,8 @@ from typing import Callable
 
 from subsystem.swerveIntakePivot import SwerveIntakePivot
 
+import wpilib
+
 class pivotController(commands2.SubsystemBase):
 
     def __init__(self,):
@@ -53,13 +55,15 @@ class pivotController(commands2.SubsystemBase):
         """
         sets the manipulator to the ground position
         """
-        self.setManipulator(320)
+        self.setManipulator(335)
+        wpilib.SmartDashboard.putBoolean("Intake grounded", True)
 
     def setHandOffPickup(self):
         """
         sets the manipulator to the handoff position
         """
         self.setManipulator(50)
+        wpilib.SmartDashboard.putBoolean("Intake grounded", False)
 
 def getPivotFunctionalCommand(pivotController: pivotController, func: Callable, tolerance = 0.1):
     """
