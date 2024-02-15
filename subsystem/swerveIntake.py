@@ -7,3 +7,4 @@ class SwerveIntake(commands2.SubsystemBase):
 
     def runIntake(self, percent : float):
         self.intakeMotor.set(percent)
+        

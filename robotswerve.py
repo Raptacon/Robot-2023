@@ -125,8 +125,6 @@ class RobotSwerve:
         RightY = wpimath.applyDeadband(self.driveController.getRightY(), 0.1)
         global lastDeg
 
-
-
         #self.driveTrain.drive(-1 * LeftY * self.MaxMps, LeftX * self.MaxMps, RightX * self.RotationRate, False)
         match self.testChooser.getSelected():
             case "Drive Disable":

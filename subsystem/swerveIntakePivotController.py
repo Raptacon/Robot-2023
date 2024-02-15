@@ -23,9 +23,6 @@ class pivotController(commands2.SubsystemBase):
             return self.intakeRotationSS
         else:
             return None
-            #TODO
-            #self.getArmRotation = self.configMapper.getSubsystem("armRotation")
-            #return self.armRotationSS
 
     def isPivotPositioned(self, tolerance = None):
         """
@@ -77,7 +74,6 @@ def getPivotFunctionalCommand(pivotController: pivotController, func: Callable, 
     cmd = commands2.FunctionalCommand(func, lambda *args, **kwargs: None, lambda x: print("Done"), lambda : pivotController.isArmPositioned(tolerance))
     cmd.addRequirements(pivotController.getReqSubsystems())
     return cmd
-
 
 def getPivotInstantCommand(pivotController: pivotController, func: Callable, tolerance = 0.1):
     """
