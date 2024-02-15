@@ -4,6 +4,7 @@ import math
 import wpilib
 import wpimath
 import wpimath.controller
+from rev import SparkMaxLimitSwitch
 class SwerveIntakePivot(commands2.PIDSubsystem):
     kMinPostion = 0
     kMaxPostion = 1.0 * 2 * math.pi
@@ -24,6 +25,9 @@ class SwerveIntakePivot(commands2.PIDSubsystem):
 
         self.motorFeedforward = wpimath.controller.SimpleMotorFeedforwardMeters(0, 0, 0)
 
+        self.topLimitSwitch = self.pivotMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)
+        self.bottomLimitSwitch = self.pivotMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)
+
         self.setSetpoint(self.getPostion())
 
     def useOutput(self, output: float, setpoint: float):
@@ -36,12 +40,22 @@ class SwerveIntakePivot(commands2.PIDSubsystem):
         self.pivotMotor.setVoltage(self.voltage)
 
     def getPostion(self) -> float:
-        print(f"absPos:{self.encoder.getAbsolutePosition()}")
-        absPos = (((self.encoder.getAbsolutePosition() - self.encoderOffset) % 1.0) * (2*math.pi))
+        absPos = (((self.getAbsolutePosition() - self.encoderOffset) % 1.0) * (2*math.pi))
+
+        if self.getReverseLimit():
+            self.encoderOffset = self.getAbsolutePosition()
+            self.setSetpoint(absPos)
+        elif self.getForwardLimit():
+            self.setSetpoint(absPos)
+
         currDeg = (math.degrees(absPos))
         wpilib.SmartDashboard.putNumber("Intake Angle Degrees", currDeg)
 
         return absPos
+    
+    def getAbsolutePosition(self):
+        #print(f"absPos:{self.encoder.getAbsolutePosition()}")
+        return self.encoder.getAbsolutePosition()
 
     def setSetpoint(self, goal: float) -> None:
         if goal < self.kMinPostion:
@@ -71,4 +85,10 @@ class SwerveIntakePivot(commands2.PIDSubsystem):
 
     def atSetpoint(self) -> bool:
         return self.getController().atSetpoint()
+    
+    def getForwardLimit(self):
+        return self.topLimitSwitch.get()
+    
+    def getReverseLimit(self):
+        return self.bottomLimitSwitch.get()
     
