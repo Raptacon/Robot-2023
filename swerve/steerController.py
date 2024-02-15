@@ -1,6 +1,4 @@
 import math
-import ctre
-import rev
 import wpilib
 
 class SteerController ():
@@ -22,7 +20,7 @@ class SteerController ():
     def setReferenceAngle(self, referenceAngleRadians : float):
         '''https://github.com/SwerveDriveSpecialties/swerve-lib/blob/f6f4de65808d468ed01cc5ca39bf322383838fcd/src/main/java/com/swervedrivespecialties/swervelib/ctre/Falcon500SteerControllerFactoryBuilder.java#L181'''
         motor = self.module.getSteerMotor()
-        motorEncoderVelocityCoefficient = self.module.getSteerSensorVelocityCoefficient()
+        #motorEncoderVelocityCoefficient = self.module.getSteerSensorVelocityCoefficient() #removed due to code below being removed
         motorEncoderPositionCoefficient = self.module.getSteerSensorPositionCoefficient()
         currentAngleRadians = self.module.getSteerAngle() # * motorEncoderPositionCoefficient
         #print(f"ang {referenceAngleRadians} ({math.degrees(referenceAngleRadians)}), vel: {motorEncoderVelocityCoefficient} , pos {motorEncoderPositionCoefficient}")

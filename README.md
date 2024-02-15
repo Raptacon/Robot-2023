@@ -11,7 +11,7 @@ test
 
 # Installation
 
-According to [Robotpy](https://robotpy.readthedocs.io/en/stable/faq.html#what-version-of-python-do-robotpy-projects-use) the "RobotPy WPILib on the roboRIO uses the latest version of Python 3 at kickoff". The version of Python for 2023 you want to install is [3.11.1](https://www.python.org/downloads/release/python-3111/)
+According to [Robotpy](https://robotpy.readthedocs.io/en/stable/faq.html#what-version-of-python-do-robotpy-projects-use) the "RobotPy WPILib on the roboRIO uses the latest version of Python 3 at kickoff". The version of Python for 2024 you want to install is [3.11.7](https://www.python.org/downloads/release/python-3117/) or [3.12.1](https://www.python.org/downloads/release/python-3121/).
 
 There is a general setup that is needed for each OS before you can build the code. Please look at the ![FRC Zero to Robot](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/frc-game-tools.html) to get the initial setup for NI and then ![WPILib](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/wpilib-setup.html) which has an amazing need to mount an ISO this year so make sure to pay attention to the "Mount" instructions. Once you have those completed in theory you can clone our code and type make. Make sure to see the OS specific instructions below.
 
@@ -41,6 +41,11 @@ raptaconVenv\Scripts\activate.bat
 pip install -r requirements.txt
 ```
 
+Another way to get thingss working is to install [Git](https://git-scm.com/) and open a command prompt. use the command "cd [the desired location]" and the "git clone [the repo's link]". This will download the repo into the location you set in the command prompt. Next open the repo in visual studio code. 
+Then create a virtual environment through the command "python -m venv .venv".
+Once the environment is created run the command "pip install -r requirements.txt" to install the necessary packages to work, and run the code.
+Now that robotpy is installed, makes sure that you have the file pyproject.toml and run the command "python -m robotpy sync". 
+
 # Hardware for the Robot
 
 ## roboRio (Gray box)
@@ -61,6 +66,10 @@ To install the roboRIO image for a v1 RIO look at the docs [here](https://docs.w
 
 Once you DO install the latest image, PLEASE LABEL the RIO with the current date and image version. This will make it easy to identify when the RIO was last updated.
 
+### RoboRio packages
+
+If you have ran the command "python -m robotpy sync" and have successfully installed the packages associated with it, connect to the robot and run the command "python -m robotpy deploy". This command runs tests based on our code, if the tests fail check what they are. You can continue deploying packages and code, but do so with caution. You should see files being downloaded on the bot. It will take a while if no packages have been installed on the bot previously. For this to work you do need to have python installed on the bot. 
+
 ## Radio Firmware (white box)
 
 See this [doc](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-3/radio-programming.html) on how to update/program the radio. Be sure to label the radio with the new SSID and firmware version!
@@ -72,6 +81,12 @@ Once you install the firmware, PLEASE LABEL the radio with the current date, fir
 Once you install the firmware, PLEASE LABEL the radio with the current date, firmware version AND SSID. This will make it easy to identify when the RIO was last updated and how to connect to the bot.
 
 TODO more documentation here around motors, controllers and how to update them.
+
+## How to deploy code on the bot
+
+Once you have run the command "python -m robotpy sync" and have connected to the bot, run the command "python -m robotpy deploy" and it will run tests to check for any obvious errors. Then it will check for variations in packages and install any missing ones. Then it deploys the code to the bot.
+
+If you don't have the driver station installed on your device, you need to do that. You can install it from [NI FRC tools](https://www.ni.com/en.html?cid=PSEA-7013q000001rC7dAAE-CONS-GOGSE_103579176918&utm_keyword=ni&gad_source=1&gclid=Cj0KCQiA-62tBhDSARIsAO7twbYEez351i8rN76k43uCC2MIVkMJ89hxuDBCPp60X1JldrEnka57xE8aApVcEALw_wcB) 
 
 # Configuration
 
