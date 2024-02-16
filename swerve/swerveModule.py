@@ -7,7 +7,7 @@ import wpimath.kinematics
 import wpimath.controller
 import rev
 import logging as log
-
+import wpilib
 
 from .steerController import SteerController
 import ntcore
@@ -219,6 +219,9 @@ class SwerveModuleMk4L1SparkMaxFalcCanCoder() :
             raise RuntimeError(f"Failed to configure Steer Motor Status Frame on id {self.driveId}. Error {status}")
 
         self.steerController = SteerController(self)
+
+        #setup steer controller scheduling
+        
 
     def getAbsoluteAngle(self) -> float:
         """gets the last abs angle encoder value radians"""

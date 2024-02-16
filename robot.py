@@ -12,8 +12,13 @@ class MyRobot(commands2.TimedCommandRobot):
     Command v2 robots are encouraged to inherit from TimedCommandRobot, which
     has an implementation of robotPeriodic which runs the scheduler for you
     """
-
+    #50 ms default period
+    kDefaultPeriod: typing.ClassVar[float] = 50.0
     autonomousCommand: typing.Optional[commands2.Command] = None
+
+    def __init__(self) -> None:
+        #setup our scheduling period. Defaulting to 20 Hz (50 ms)
+        super().__init__(period=MyRobot.kDefaultPeriod)
 
     def robotInit(self) -> None:
         """
@@ -22,7 +27,6 @@ class MyRobot(commands2.TimedCommandRobot):
         """
         # Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         # autonomous chooser on the dashboard.
-        #self.container = RobotContainer()
         self.container = RobotSwerve()
 
     def disabledInit(self) -> None:

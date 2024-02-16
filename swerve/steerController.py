@@ -19,6 +19,8 @@ class SteerController ():
 
     def setReferenceAngle(self, referenceAngleRadians : float):
         '''https://github.com/SwerveDriveSpecialties/swerve-lib/blob/f6f4de65808d468ed01cc5ca39bf322383838fcd/src/main/java/com/swervedrivespecialties/swervelib/ctre/Falcon500SteerControllerFactoryBuilder.java#L181'''
+        self.setPointRads = referenceAngleRadians
+    def run(self):
         motor = self.module.getSteerMotor()
         #motorEncoderVelocityCoefficient = self.module.getSteerSensorVelocityCoefficient() #removed due to code below being removed
         motorEncoderPositionCoefficient = self.module.getSteerSensorPositionCoefficient()
@@ -41,7 +43,7 @@ class SteerController ():
         if currentAngleRadiansMod < 0.0:
             currentAngleRadiansMod += 2.0 * math.pi
 
-        adjustedReferenceAngleRadians = referenceAngleRadians + currentAngleRadians - currentAngleRadiansMod
+        adjustedReferenceAngleRadians = self.setPointRads + currentAngleRadians - currentAngleRadiansMod
         #print(f"Curr Rad {currentAngleRadians}, adj {adjustedReferenceAngleRadians} ref {referenceAngleRadians}")
         if (referenceAngleRadians - currentAngleRadiansMod) > math.pi:
             adjustedReferenceAngleRadians -= 2.0 * math.pi
