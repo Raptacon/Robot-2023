@@ -1,5 +1,5 @@
 import navx
-from swerve.swerveModule import SwerveModuleMk4L1SparkMaxFalcCanCoder as SwerveModule
+from swerve.swerveModule import SwerveModuleMk4L1SparkMaxNeoCanCoder as SwerveModule
 
 import commands2
 import wpimath.kinematics
@@ -10,7 +10,7 @@ import wpilib
 
 import ntcore
 
-class Drivetrain(commands2.SubsystemBase):
+class Drivetrain(commands2.Subsystem):
     kMaxVoltage = 12.0
     kWheelBaseMeters = 0.5461 # front to back distance
     kTrackBaseMeters = 0.5461 # left to right distance
@@ -42,8 +42,9 @@ class Drivetrain(commands2.SubsystemBase):
 #55 - 153.193
 #58 - -23.555
 #61 - 34.717
-    def __init__(self):
+    def __init__(self, robot):
         super().__init__()
+        self.robot = robot
         self.swerveModules = []
         datatable = ntcore.NetworkTableInstance.getDefault()
         self.table = datatable.getTable("Drivetrain")
@@ -78,7 +79,8 @@ class Drivetrain(commands2.SubsystemBase):
         self.setFieldDriveRelative(True)
         self.ang = 0
         self.iteration = 0
-
+        
+        
 
     def getHeading(self) -> Rotation2d:
         return Rotation2d.fromDegrees(self.imu.getFusedHeading() - self.headingOffset)
@@ -171,3 +173,8 @@ class Drivetrain(commands2.SubsystemBase):
     def calWheels(self, enable):
         for m in self.swerveModules:
             m.setCal(enable)
+
+    def periodic(self):
+        print("I'm running")
+        for m in self.swerveModules:
+            m.periodic()

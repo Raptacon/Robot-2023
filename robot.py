@@ -4,8 +4,7 @@ import typing
 import commands2
 
 from robotswerve import RobotSwerve
-
-
+import robotpy
 class MyRobot(commands2.TimedCommandRobot):
     """
     Our default robot class, pass it to wpilib.run
@@ -20,6 +19,7 @@ class MyRobot(commands2.TimedCommandRobot):
         #setup our scheduling period. Defaulting to 20 Hz (50 ms)
         super().__init__(period=MyRobot.kDefaultPeriod)
 
+
     def robotInit(self) -> None:
         """
         This function is run when the robot is first started up and should be used for any
@@ -27,7 +27,7 @@ class MyRobot(commands2.TimedCommandRobot):
         """
         # Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         # autonomous chooser on the dashboard.
-        self.container = RobotSwerve()
+        self.container = RobotSwerve(self)
 
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""
@@ -68,9 +68,11 @@ class MyRobot(commands2.TimedCommandRobot):
         self.container.testInit()
 
     def testPeriodic(self) -> None:
+        print("I'm here")
         self.container.testPeriodic()
 
 
 if __name__ == "__main__":
     print("Please run python -m robotpy <args>")
     exit(1)
+
