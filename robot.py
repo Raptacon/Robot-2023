@@ -2,7 +2,7 @@
 
 import typing
 import commands2
-
+import wpilib
 from robotswerve import RobotSwerve
 import robotpy
 class MyRobot(commands2.TimedCommandRobot):
@@ -17,7 +17,8 @@ class MyRobot(commands2.TimedCommandRobot):
 
     def __init__(self) -> None:
         #setup our scheduling period. Defaulting to 20 Hz (50 ms)
-        super().__init__(period=MyRobot.kDefaultPeriod)
+        super().__init__(period=MyRobot.kDefaultPeriod / 1000)
+        #super().__init__()
 
 
     def robotInit(self) -> None:
@@ -65,11 +66,13 @@ class MyRobot(commands2.TimedCommandRobot):
     def testInit(self) -> None:
         # Cancels all running commands at the start of test mode
         #commands2.CommandScheduler.getInstance().cancelAll()
-        self.container.testInit()
+        #self.container.testInit()
+        self.dio = wpilib.DigitalInput(3)
+
 
     def testPeriodic(self) -> None:
-        print("I'm here")
-        self.container.testPeriodic()
+        print(self.dio.get())
+        #self.container.testPeriodic()
 
 
 if __name__ == "__main__":

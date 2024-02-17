@@ -9,6 +9,7 @@ import rev
 import logging as log
 import wpilib
 from commands2 import CommandScheduler
+import utils.sparkMaxUtils
 
 from .steerController import SteerController
 import ntcore
@@ -162,6 +163,7 @@ class SwerveModuleMk4L1SparkMaxNeoCanCoder() :
         motorConfig.supplyCurrLimit = supplyCurrConfig
 
         self.driveMotor = rev.CANSparkMax(self.driveId, rev.CANSparkLowLevel.MotorType.kBrushless)
+        utils.sparkMaxUtils.configureSparkMaxCanRates(self.driveMotor)
         self.driveMotor.setInverted(inverted)
 
         # status = self.driveMotor.configAllSettings(motorConfig, 250)
@@ -184,6 +186,7 @@ class SwerveModuleMk4L1SparkMaxNeoCanCoder() :
         self.steerSensorPositionCoefficient = 2.0 * math.pi / self.kTicksPerRotation * self.consts.getSteerReduction()
         self.steerSensorVelocityCoefficient = self.steerSensorPositionCoefficient * 10.0
         self.steerMotor = rev.CANSparkMax(self.steerId, rev.CANSparkLowLevel.MotorType.kBrushless)
+        utils.sparkMaxUtils.configureSparkMaxCanRates(self.steerMotor)
         self.steerEncoder = self.encoder
 
         # motorConfig = ctre.TalonFXConfiguration()
@@ -296,20 +299,20 @@ class SwerveModuleMk4L1SparkMaxNeoCanCoder() :
             steerAngle += 2.0 * math.pi
 
         self.driveVoltage = driveVoltage
-        self.setDriveVoltage(driveVoltage)
+        self.setDriveVoltage(self.driveVoltage)
         self.steerController.setReferenceAngle(math.radians(steerAngleDeg))
 
         if self.table:
             self.table.putNumber("set steer deg", math.degrees(steerAngle))
             self.table.putNumber("drive %", driveVoltage / self.kNominalVoltage)
 
-    def periodic(self) -> None:
-        """
-        Runs in subsystem periodic
-        """
-        print(f"swerve running {wpilib.Timer.getFPGATimestamp()}")
-        self.setDriveVoltage(self.driveVoltage)
-        self.steerController.run()
+    #def periodic(self) -> None:
+    #    """
+    #    Runs in subsystem periodic
+    #    """
+    #    #TODO replace with PID velocity controller
+    #    self.setDriveVoltage(self.driveVoltage)
+    #    self.steerController.run()
 
 
     def getSteerMotor(self) -> phoenix5.WPI_TalonFX:

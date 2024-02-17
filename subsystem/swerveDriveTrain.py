@@ -175,6 +175,5 @@ class Drivetrain(commands2.Subsystem):
             m.setCal(enable)
 
     def periodic(self):
-        print("I'm running")
         for m in self.swerveModules:
             m.periodic()
