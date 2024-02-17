@@ -14,7 +14,6 @@ from subsystem.swerveIntakePivotController import pivotController
 
 from commands.shooter import Shooter
 from subsystem.swerveShooter import SwerveShooter
-from subsystem.swerveShooterPivotController import shooterPivotController
 from subsystem.swerveShooterPivot import SwerveShooterPivot
 
 from commands.defaultdrive import DefaultDrive
@@ -44,8 +43,6 @@ class RobotSwerve:
 
         self.shooter = SwerveShooter()
         self.shooterPivot = SwerveShooterPivot()
-        self.shooterPivotController = shooterPivotController()
-        self.shooterPivotController.setShooterRotationSubsystem(self.shooterPivot)
         #self.driveController = wpilib.XboxController(0)
 
         self.xLimiter = wpimath.filter.SlewRateLimiter(3)
@@ -74,7 +71,7 @@ class RobotSwerve:
             lambda: self.mechController.getBButton(),
             lambda: self.mechController.getRightTriggerAxis(),
             self.shooterPivot,
-            lambda: self.mechController.getRightY()
+            lambda: wpimath.applyDeadband(self.mechController.getRightY(), 0.05)
             ))
         '''
         self.driveTrain.setDefaultCommand(DefaultDrive(

@@ -1,10 +1,10 @@
 import commands2
 from subsystem.swerveShooter import SwerveShooter
-from subsystem.swerveIntakePivotController import pivotController
+from subsystem.swerveShooterPivot import SwerveShooterPivot
 import typing
 
 class Shooter(commands2.CommandBase):
-    def __init__(self, shooter : SwerveShooter, intaking : typing.Callable[[], bool], outaking : typing.Callable[[], bool], shooterSpeed : typing.Callable[[], float], pivot : pivotController, pivotSpeed : typing.Callable[[], float]):
+    def __init__(self, shooter : SwerveShooter, intaking : typing.Callable[[], bool], outaking : typing.Callable[[], bool], shooterSpeed : typing.Callable[[], float], pivot : SwerveShooterPivot, pivotSpeed : typing.Callable[[], float]):
         super().__init__()
 
         self.shooter = shooter
@@ -26,3 +26,5 @@ class Shooter(commands2.CommandBase):
             self.shooter.runIntake(0)
 
         self.shooter.runShooters(self.shooterSpeed())
+
+        self.pivot.runPivot(self.pivotSpeed())
