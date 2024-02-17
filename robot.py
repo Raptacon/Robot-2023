@@ -2,7 +2,6 @@
 
 import typing
 import commands2
-import wpilib
 from robotswerve import RobotSwerve
 
 class MyRobot(commands2.TimedCommandRobot):
@@ -66,13 +65,10 @@ class MyRobot(commands2.TimedCommandRobot):
     def testInit(self) -> None:
         # Cancels all running commands at the start of test mode
         #commands2.CommandScheduler.getInstance().cancelAll()
-        #self.container.testInit()
-        self.dio = wpilib.DigitalInput(3)
-
+        self.container.testInit()
 
     def testPeriodic(self) -> None:
-        print(self.dio.get())
-        #self.container.testPeriodic()
+        self.container.testPeriodic()
 
 
 if __name__ == "__main__":
