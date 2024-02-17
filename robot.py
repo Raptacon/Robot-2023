@@ -4,7 +4,7 @@ import typing
 import commands2
 import wpilib
 from robotswerve import RobotSwerve
-import robotpy
+
 class MyRobot(commands2.TimedCommandRobot):
     """
     Our default robot class, pass it to wpilib.run

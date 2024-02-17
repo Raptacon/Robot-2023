@@ -7,8 +7,6 @@ import wpimath.kinematics
 import wpimath.controller
 import rev
 import logging as log
-import wpilib
-from commands2 import CommandScheduler
 import utils.sparkMaxUtils
 
 from .steerController import SteerController
