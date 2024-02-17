@@ -20,10 +20,9 @@ class RobotSwerve:
     Container to hold the main robot code
     """
 
-    def __init__(self, robot) -> None:
-        self.baseRobot = robot;
+    def __init__(self) -> None:
         self.driveController = wpilib.XboxController(kDriveControllerIdx)
-        self.driveTrain = Drivetrain(self)
+        self.driveTrain = Drivetrain()
 
         #self.driveController = wpilib.XboxController(0)
 
