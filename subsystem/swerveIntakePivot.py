@@ -44,7 +44,6 @@ class SwerveIntakePivot(commands2.PIDSubsystem):
 
         if self.getLimit():
             self.encoderOffset = self.getAbsolutePosition()
-            self.setSetpoint(absPos)
 
         currDeg = (math.degrees(absPos))
         wpilib.SmartDashboard.putNumber("Intake Angle Degrees", currDeg)
