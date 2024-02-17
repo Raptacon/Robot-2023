@@ -14,7 +14,8 @@ from subsystem.swerveIntakePivotController import pivotController
 
 from commands.shooter import Shooter
 from subsystem.swerveShooter import SwerveShooter
-from subsystem.swerveShooterPivot import ShooterPivot
+from subsystem.swerveShooterPivotController import shooterPivotController
+from subsystem.swerveShooterPivot import SwerveShooterPivot
 
 from commands.defaultdrive import DefaultDrive
 from commands.togglefielddrive import ToggleFieldDrive
@@ -42,7 +43,9 @@ class RobotSwerve:
         self.intakePivotController.setIntakeRotationSubsystem(self.pivot)
 
         self.shooter = SwerveShooter()
-        self.shooterPivot = ShooterPivot()
+        self.shooterPivot = SwerveShooterPivot()
+        self.shooterPivotController = shooterPivotController()
+        self.shooterPivotController.setShooterRotationSubsystem(self.shooterPivot)
         #self.driveController = wpilib.XboxController(0)
 
         self.xLimiter = wpimath.filter.SlewRateLimiter(3)
@@ -112,7 +115,7 @@ class RobotSwerve:
         """This function is called periodically during operator control"""
         pass
 
-    testModes = ["Drive Disable", "Wheels Select", "Wheels Drive", "Enable Cal", "Disable Cal", "Wheel Pos", "Pivot Rot"]
+    testModes = ["Drive Disable", "Wheels Select", "Wheels Drive", "Enable Cal", "Disable Cal", "Wheel Pos", "Pivot Rot", "Shooter Cal"]
     def testInit(self) -> None:
         # Cancels all running commands at the start of test mode
         #commands2.CommandScheduler.getInstance().cancelAll()
@@ -126,12 +129,14 @@ class RobotSwerve:
         wpilib.SmartDashboard.putNumber("Wheel Angle", 0)
         wpilib.SmartDashboard.putNumber("Wheel Speed", 0)
         wpilib.SmartDashboard.putNumber("Pivot Angle:", 40)
+        wpilib.SmartDashboard.putNumber("Shooter Angle:", 310)
 
 
     def testPeriodic(self) -> None:
         wheelAngle = wpilib.SmartDashboard.getNumber("Wheel Angle", 0)
         wheelSpeed = wpilib.SmartDashboard.getNumber("Wheel Speed", 0)
         pivotAngle = wpilib.SmartDashboard.getNumber("Pivot Angle:", 40)
+        shooterAngle = wpilib.SmartDashboard.putNumber("Shooter Angle:", 310)
         wheelAngle #"use" value
         wheelSpeed #"use" value
         self.driveTrain.getCurrentAngles()
@@ -174,6 +179,8 @@ class RobotSwerve:
                 self.driveTrain.setSteer(wheelAngle)
             case "Pivot Rot":
                 self.intakePivotController.setManipulator(pivotAngle)
+            case "Shooter Cal":
+                self.shooterPivotController.setManipulator(shooterAngle)
             case _:
                 print(f"Unknown {self.testChooser.getSelected()}")
 

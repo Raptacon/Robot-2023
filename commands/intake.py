@@ -1,7 +1,6 @@
 import commands2
 import typing
 from subsystem.swerveIntake import SwerveIntake
-from subsystem.swerveIntakePivot import SwerveIntakePivot
 from subsystem.swerveIntakePivotController import pivotController
 
 class Intake(commands2.CommandBase):
