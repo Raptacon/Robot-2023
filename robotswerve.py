@@ -167,7 +167,7 @@ class RobotSwerve:
         """
         json_object = None
         home = str(Path.home()) + os.path.sep
-        releaseFile = home + "deploy.json"
+        releaseFile = home + 'py' + os.path.sep + "deploy.json"
         try:
             # Read from ~/deploy.json
             with open(releaseFile, "r") as openfile:
