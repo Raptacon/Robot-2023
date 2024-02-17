@@ -10,7 +10,7 @@ import wpilib
 
 import ntcore
 
-class Drivetrain(commands2.Subsystem):
+class Drivetrain(commands2.SubsystemBase):
     kMaxVoltage = 12.0
     kWheelBaseMeters = 0.5461 # front to back distance
     kTrackBaseMeters = 0.5461 # left to right distance
@@ -42,9 +42,8 @@ class Drivetrain(commands2.Subsystem):
 #55 - 153.193
 #58 - -23.555
 #61 - 34.717
-    def __init__(self, robot):
+    def __init__(self):
         super().__init__()
-        self.robot = robot
         self.swerveModules = []
         datatable = ntcore.NetworkTableInstance.getDefault()
         self.table = datatable.getTable("Drivetrain")
@@ -79,7 +78,6 @@ class Drivetrain(commands2.Subsystem):
         self.setFieldDriveRelative(True)
         self.ang = 0
         self.iteration = 0
-        
         
 
     def getHeading(self) -> Rotation2d:
@@ -174,6 +172,7 @@ class Drivetrain(commands2.Subsystem):
         for m in self.swerveModules:
             m.setCal(enable)
 
-    def periodic(self):
-        for m in self.swerveModules:
-            m.periodic()
+    """Future improvment"""
+    #def periodic(self):
+    #    for m in self.swerveModules:
+    #        m.periodic()
