@@ -5,6 +5,7 @@ import wpilib
 import wpimath
 import wpimath.controller
 from rev import SparkMaxLimitSwitch
+from wpilib import DigitalInput
 class SwerveIntakePivot(commands2.PIDSubsystem):
     kMinPostion = 0
     kMaxPostion = 1.0 * 2 * math.pi
@@ -25,8 +26,7 @@ class SwerveIntakePivot(commands2.PIDSubsystem):
 
         self.motorFeedforward = wpimath.controller.SimpleMotorFeedforwardMeters(0, 0, 0)
 
-        self.topLimitSwitch = self.pivotMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)
-        self.bottomLimitSwitch = self.pivotMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)
+        self.handOffSwitch = DigitalInput(4)
 
         self.setSetpoint(self.getPostion())
 
@@ -42,10 +42,8 @@ class SwerveIntakePivot(commands2.PIDSubsystem):
     def getPostion(self) -> float:
         absPos = (((self.getAbsolutePosition() - self.encoderOffset) % 1.0) * (2*math.pi))
 
-        if self.getReverseLimit():
+        if self.getLimit():
             self.encoderOffset = self.getAbsolutePosition()
-            self.setSetpoint(absPos)
-        elif self.getForwardLimit():
             self.setSetpoint(absPos)
 
         currDeg = (math.degrees(absPos))
@@ -86,9 +84,5 @@ class SwerveIntakePivot(commands2.PIDSubsystem):
     def atSetpoint(self) -> bool:
         return self.getController().atSetpoint()
     
-    def getForwardLimit(self):
-        return self.topLimitSwitch.get()
-    
-    def getReverseLimit(self):
-        return self.bottomLimitSwitch.get()
-    
+    def getLimit(self):
+        return self.handOffSwitch.get()
