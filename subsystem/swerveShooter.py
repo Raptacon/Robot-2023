@@ -8,7 +8,7 @@ class SwerveShooter(commands2.SubsystemBase):
         self.intakeMotor.setInverted(True)
         self.leftShootMotor = rev.CANSparkMax(24, rev.CANSparkLowLevel.MotorType.kBrushless)
         self.rightShooterMotor = rev.CANSparkMax(25, rev.CANSparkLowLevel.MotorType.kBrushless)
-        self.rightShooterMotor.setInverted(True)
+        self.rightShooterMotor.setInverted(False)
 
     def runIntake(self, speed : float):
         self.intakeMotor.set(speed)
