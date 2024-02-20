@@ -63,7 +63,7 @@ class RobotSwerve:
             self.intake,
             self.intakePivotController,
             lambda: wpimath.applyDeadband(self.mechController.getLeftTriggerAxis(), 0.05),
-            lambda: self.mechController.getLeftBumper(),
+            lambda: self.mechController.getRightBumper(),
             lambda: self.mechController.getAButtonPressed(),
         ))
         self.shooter.setDefaultCommand(Shooter(
