@@ -98,7 +98,7 @@ class RobotSwerve:
         """This function is called periodically during operator control"""
         pass
 
-    testModes = ["Drive Disable", "Wheels Select", "Wheels Drive", "Enable Cal", "Disable Cal", "Wheel Pos", "Pivot Rot", "Pivot Control"]
+    testModes = ["Drive Disable", "Wheels Select", "Wheels Drive", "Enable Cal", "Disable Cal", "Wheel Pos", "Pivot Rot"]
     def testInit(self) -> None:
         # Cancels all running commands at the start of test mode
         #commands2.CommandScheduler.getInstance().cancelAll()
@@ -168,16 +168,6 @@ class RobotSwerve:
                 else:
                     print(f"calibrated : {self.intakePivotController.getIntakeRotation().getLimit()}")
                     #self.intakePivotController.setManipulator(pivotAngle)
-
-            case "Pivot Control":
-                self.intakePivotController.getIntakeRotation().getPostion()
-                if(not self.shooterCalibrated):
-                    self.intakePivotController.getIntakeRotation().pivotMotor.set(-0.2)
-                    if(self.intakePivotController.getIntakeRotation().getLimit()):
-                        self.shooterCalibrated = True
-                        self.intakePivotController.getIntakeRotation().encoderOffset = self.intakePivotController.getIntakeRotation().encoder.getAbsolutePosition()
-                else:
-                    self.intakePivotController.getIntakeRotation().pivotMotor.set(pivotSpeed)
             case _:
                 print(f"Unknown {self.testChooser.getSelected()}")
 
