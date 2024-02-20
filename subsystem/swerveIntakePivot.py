@@ -20,22 +20,22 @@ class SwerveIntakePivot(commands2.PIDSubsystem):
         self.encoder = wpilib.DutyCycleEncoder(0)
         self.encoderOffset = 0.551
 
-        self.pidController = wpimath.controller.PIDController(10, 0, 0)
+        self.pidController = wpimath.controller.PIDController(5, 0, 0)
         self.pidController.setTolerance(0.1)
         super().__init__(self.pidController, 0)
 
         self.motorFeedforward = wpimath.controller.SimpleMotorFeedforwardMeters(0, 0, 0)
 
-        self.handOffSwitch = DigitalInput(4)
+        self.handOffSwitch = self.pivotMotor.getReverseLimitSwitch(rev.SparkLimitSwitch.Type.kNormallyOpen)
 
         self.setSetpoint(self.getPostion())
 
     def useOutput(self, output: float, setpoint: float):
         feedforward = self.motorFeedforward.calculate(setpoint, 0)
         wpilib.SmartDashboard.putNumber("Pivot Current", self.pivotMotor.getOutputCurrent())
-        wpilib.SmartDashboard.putNumber("Pivot Velocity", self.pivotRelEncoder.getVelocity())
 
         self.voltage = output + feedforward
+        wpilib.SmartDashboard.putNumber("Pivot voltage", self.voltage)
         self.voltage = max(-10, min(self.voltage, 10))
         self.pivotMotor.setVoltage(self.voltage)
 
@@ -44,6 +44,7 @@ class SwerveIntakePivot(commands2.PIDSubsystem):
 
         if self.getLimit():
             self.encoderOffset = self.getAbsolutePosition()
+            #self.setSetpoint(0)
 
         currDeg = (math.degrees(absPos))
         wpilib.SmartDashboard.putNumber("Intake Angle Degrees", currDeg)

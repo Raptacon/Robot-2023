@@ -8,7 +8,15 @@ class pivotController(commands2.SubsystemBase):
 
     def __init__(self,):
         super().__init__()
+        self.calibrated = False
         #save for later use
+
+    def calibrate(self):
+        if(not self.calibrated):
+            self.getIntakeRotation().pivotMotor.set(-0.2)
+            if(self.getIntakeRotation().getLimit()):
+                self.calibrated = True
+                self.getIntakeRotation().encoderOffset = self.getIntakeRotation().encoder.getAbsolutePosition()
 
     def setIntakeRotationSubsystem(self, RotationSubsystem):
         self.intakeRotationSS = RotationSubsystem
@@ -43,6 +51,9 @@ class pivotController(commands2.SubsystemBase):
         Args:
             angleDegrees (_type_): angle of pivot in degrees
         """
+        if(not self.calibrated): 
+            self.calibrate()
+            return
         self.getIntakeRotation().setSetpointDegrees(angleDegrees)
         self.getIntakeRotation().enable()
 
@@ -50,13 +61,13 @@ class pivotController(commands2.SubsystemBase):
         """
         sets the manipulator to the ground position
         """
-        self.setManipulator(335)
+        self.setManipulator(270)
 
     def setHandOffPickup(self):
         """
         sets the manipulator to the handoff position
         """
-        self.setManipulator(50)
+        self.setManipulator(0)
 
 def getPivotFunctionalCommand(pivotController: pivotController, func: Callable, tolerance = 0.1):
     """
