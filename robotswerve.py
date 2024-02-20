@@ -43,6 +43,7 @@ class RobotSwerve:
 
         self.shooter = SwerveShooter()
         self.shooterPivot = SwerveShooterPivot()
+        self.intakePivotController.calibrate()
         #self.driveController = wpilib.XboxController(0)
 
         self.xLimiter = wpimath.filter.SlewRateLimiter(3)
@@ -142,8 +143,6 @@ class RobotSwerve:
         RightY = wpimath.applyDeadband(self.driveController.getRightY(), 0.1)
         global lastDeg
 
-
-
         #self.driveTrain.drive(-1 * LeftY * self.MaxMps, LeftX * self.MaxMps, RightX * self.RotationRate, False)
         match self.testChooser.getSelected():
             case "Drive Disable":
@@ -176,8 +175,6 @@ class RobotSwerve:
                 self.driveTrain.setSteer(wheelAngle)
             case "Pivot Rot":
                 self.intakePivotController.setManipulator(pivotAngle)
-            case "Shooter Cal":
-                self.shooterPivotController.setManipulator(shooterAngle)
             case _:
                 print(f"Unknown {self.testChooser.getSelected()}")
 
