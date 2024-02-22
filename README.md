@@ -2,7 +2,7 @@
 
 ![Build link](https://github.com/Raptacon/Robot-2023/actions/workflows/robot_ci.yml)
 
-## Welcome to Robot 2023
+## Welcome to Robot 2024
 
 Please take a look at the [wiki](https://github.com/Raptacon/Robot-2023/wiki) for the most up to date documenation
 
@@ -126,3 +126,23 @@ Power shell does not allow sccripts on windows now by default
 * Select A when prompted
 >>>>>>> ad7e0ef862389d91723a336a9e63fe0e7932085f
 
+# Information
+
+## Deployed Robot Version
+
+When code is deployed to the robot, a deploy.json file will be automatically created with deploying computer information
+
+The robot has lots of information in it. This now includes the version of code (git SHA), where it was deployed and in theory who did it. The reality is that code is deployed (like a lot) from the drive team laptop, so the who may be a bit misleading. To find this information, just look in the SmartDashboard for `Robot Version` (git SHA), `Git Branch`, `Deploy Host` and `Deploy User`.
+
+There is a /home/lvuser/deploy.json file which at the time of this writing (2023-03-03) looks like:
+```json
+{
+  "deploy-host": "DESKTOP-80HA89O",
+  "deploy-user": "ehsra",
+  "deploy-date": "2023-03-02T17:54:14",
+  "code-path": "C:\\Users\\ehsra\\Documents\\Github\\Robot-2023",
+  "git-hash": "3f4e89f138d9d78093bd4869e0cac9b61becd2b9",
+  "git-desc": "3f4e89f-dirty",
+  "git-branch": "fix-recal-nbeasley"
+}
+```

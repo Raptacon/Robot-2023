@@ -91,3 +91,26 @@ jobs:
       run: |
         pip install flake8
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --ignore E265,E232,W391,E302 --exclude */tests/pyfrc*,utils/yaml/*,.venv*/,venv*/
+      # permissions:
+      #       contents: read
+      #       packages: read
+      #       # To report GitHub Actions status checks
+      #       statuses: write
+  SuperLinter:
+    name: Super Linter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # super-linter needs the full git history to get the
+          # list of files that changed across commits
+          fetch-depth: 0
+
+      - name: Super-linter
+        uses: super-linter/super-linter/slim@v5.7.2  # x-release-please-version
+        env:
+          DEFAULT_BRANCH: main
+          DISABLE_ERRORS: true
+          # To report GitHub Actions status checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
