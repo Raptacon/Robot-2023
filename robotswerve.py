@@ -1,4 +1,7 @@
 import wpilib
+import json
+import os
+from pathlib import Path
 
 #from wpilib.interfaces import GenericHID
 import wpimath.filter
@@ -49,6 +52,15 @@ class RobotSwerve:
             lambda: self.driveTrain.getFieldDriveRelative()
         ))'''
 
+        # We should only need to do this once
+        wpilib.SmartDashboard.putString("Robot Version", self.getDeployInfo("git-hash"))
+        wpilib.SmartDashboard.putString("Git Branch", self.getDeployInfo("git-branch"))
+        wpilib.SmartDashboard.putString(
+            "Deploy Host", self.getDeployInfo("deploy-host")
+        )
+        wpilib.SmartDashboard.putString(
+            "Deploy User", self.getDeployInfo("deploy-user")
+        )
 
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""
@@ -142,3 +154,31 @@ class RobotSwerve:
         for m in self.driveTrain.swerveModules:
             break
             print(f"{m.name} {m.driveMotor.getAppliedOutput()} {m.driveMotor.get()}")
+
+    def getDeployInfo(self, key: str) -> str:
+        """Gets the Git SHA of the deployed robot by parsing ~/deploy.json and returning the git-hash from the JSON key OR if deploy.json is unavilable will return "unknown"
+           example deploy.json: '{"deploy-host": "DESKTOP-80HA89O", "deploy-user": "ehsra", "deploy-date": "2023-03-02T17:54:14", "code-path": "blah", "git-hash": "3f4e89f138d9d78093bd4869e0cac9b61becd2b9", "git-desc": "3f4e89f-dirty", "git-branch": "fix-recal-nbeasley"}
+
+        Args:
+            key (str): The desired json key to get. Popular onces are git-hash, deploy-host, deploy-user
+
+        Returns:
+            str: Returns the value of the desired deploy key
+        """
+        json_object = None
+        home = str(Path.home()) + os.path.sep
+        releaseFile = home + 'py' + os.path.sep + "deploy.json"
+        try:
+            # Read from ~/deploy.json
+            with open(releaseFile, "r") as openfile:
+                json_object = json.load(openfile)
+                print(json_object)
+                print(type(json_object))
+                if key in json_object:
+                    return json_object[key]
+                else:
+                    return f"Key: {key} Not Found in JSON"
+        except OSError:
+            return "unknown"
+        except json.JSONDecodeError:
+            return "bad json in deploy file check for unescaped "
