@@ -19,6 +19,11 @@ class SteerController ():
 
     def setReferenceAngle(self, referenceAngleRadians : float):
         '''https://github.com/SwerveDriveSpecialties/swerve-lib/blob/f6f4de65808d468ed01cc5ca39bf322383838fcd/src/main/java/com/swervedrivespecialties/swervelib/ctre/Falcon500SteerControllerFactoryBuilder.java#L181'''
+        self.referenceAngleRadians = referenceAngleRadians
+        self.run()
+
+    def run(self):
+        """calculated the motor speed and sets for this iteration"""
         motor = self.module.getSteerMotor()
         #motorEncoderVelocityCoefficient = self.module.getSteerSensorVelocityCoefficient() #removed due to code below being removed
         motorEncoderPositionCoefficient = self.module.getSteerSensorPositionCoefficient()
@@ -41,16 +46,15 @@ class SteerController ():
         if currentAngleRadiansMod < 0.0:
             currentAngleRadiansMod += 2.0 * math.pi
 
-        adjustedReferenceAngleRadians = referenceAngleRadians + currentAngleRadians - currentAngleRadiansMod
+        adjustedReferenceAngleRadians = self.referenceAngleRadians + currentAngleRadians - currentAngleRadiansMod
         #print(f"Curr Rad {currentAngleRadians}, adj {adjustedReferenceAngleRadians} ref {referenceAngleRadians}")
-        if (referenceAngleRadians - currentAngleRadiansMod) > math.pi:
+        if (self.referenceAngleRadians - currentAngleRadiansMod) > math.pi:
             adjustedReferenceAngleRadians -= 2.0 * math.pi
-        elif (referenceAngleRadians - currentAngleRadiansMod) < -math.pi:
+        elif (self.referenceAngleRadians - currentAngleRadiansMod) < -math.pi:
             adjustedReferenceAngleRadians += 2.0 * math.pi
         wpilib.SmartDashboard.putNumber(f"{self.module.steerId}Steer", adjustedReferenceAngleRadians / motorEncoderPositionCoefficient)
         self.speed = self.module.steerPIDController.calculate(currentAngleRadians, adjustedReferenceAngleRadians)
         motor.set(self.speed)
-        self.referenceAngleRadians = referenceAngleRadians
 
     def getStateAngle(self) -> float:
         '''

@@ -1,5 +1,5 @@
 import navx
-from swerve.swerveModule import SwerveModuleMk4L1SparkMaxFalcCanCoder as SwerveModule
+from swerve.swerveModule import SwerveModuleMk4L1SparkMaxNeoCanCoder as SwerveModule
 
 import commands2
 import wpimath.kinematics
@@ -78,7 +78,7 @@ class Drivetrain(commands2.SubsystemBase):
         self.setFieldDriveRelative(True)
         self.ang = 0
         self.iteration = 0
-
+        
 
     def getHeading(self) -> Rotation2d:
         return Rotation2d.fromDegrees(self.imu.getFusedHeading() - self.headingOffset)
@@ -171,3 +171,8 @@ class Drivetrain(commands2.SubsystemBase):
     def calWheels(self, enable):
         for m in self.swerveModules:
             m.setCal(enable)
+
+    """Future improvment"""
+    #def periodic(self):
+    #    for m in self.swerveModules:
+    #        m.periodic()
