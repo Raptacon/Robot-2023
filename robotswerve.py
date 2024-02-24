@@ -10,12 +10,12 @@ import commands2.button
 
 from subsystem.swerveDriveTrain import Drivetrain
 
-from commands.intake import Intake
+from commands.shortyIntake import Intake
 from subsystem.swerveIntake import SwerveIntake
 from subsystem.swerveIntakePivot import SwerveIntakePivot
 from subsystem.swerveIntakePivotController import pivotController
 
-from commands.shooter import Shooter
+from commands.shortyShooter import Shooter
 from subsystem.sparkyShooter import SparkyShooter
 from subsystem.sparkyShooterPivot import SparkyShooterPivot
 
