@@ -1,12 +1,12 @@
 import commands2
-from subsystem.sparkyShooter import SparkyShooter
-from subsystem.sparkyShooterPivot import SparkyShooterPivot
+from subsystem.sparkyShooter import Shooter
+from subsystem.sparkyShooterPivot import ShooterPivot
 import typing
 
-class Shooter(commands2.CommandBase):
+class ShooterCommand(commands2.CommandBase):
     def __init__(self,
-                 shooter : SparkyShooter,
-                 pivot: SparkyShooterPivot,
+                 shooter : Shooter,
+                 pivot: ShooterPivot,
                  intaking : typing.Callable[[], bool],
                  outaking : typing.Callable[[], bool],
                  shooterSpeed : typing.Callable[[], float],
