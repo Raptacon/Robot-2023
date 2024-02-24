@@ -19,6 +19,8 @@ from commands.shortyShooter import ShooterCommand
 from subsystem.sparkyShooter import Shooter
 from subsystem.sparkyShooterPivot import ShooterPivot
 
+from subsystem.sparyLeds import Leds
+
 from commands.defaultdrive import DefaultDrive
 from commands.togglefielddrive import ToggleFieldDrive
 from commands.resetfielddrive import ResetFieldDrive
@@ -53,6 +55,8 @@ class RobotSwerve:
         self.xLimiter = wpimath.filter.SlewRateLimiter(3)
         self.yLimiter = wpimath.filter.SlewRateLimiter(3)
         self.rotLimiter = wpimath.filter.SlewRateLimiter(3)
+
+        self.leds = Leds()
 
         commands2.button.JoystickButton(self.driveController, 1).onTrue(ToggleFieldDrive(self.driveTrain))
         commands2.button.JoystickButton(self.driveController, 2).onTrue(ResetFieldDrive(self.driveTrain))

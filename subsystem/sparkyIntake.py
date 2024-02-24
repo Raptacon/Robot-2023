@@ -1,7 +1,7 @@
 import commands2
 import rev
 
-class SparkyIntake(commands2.SubsystemBase):
+class SparkyIntake(commands2.Subsystem):
     def __init__(self) -> None:
         self.intakeMotor = rev.CANSparkMax(21, rev.CANSparkLowLevel.MotorType.kBrushless)
 
