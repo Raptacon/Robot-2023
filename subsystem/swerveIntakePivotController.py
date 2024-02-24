@@ -53,7 +53,7 @@ class pivotController(commands2.SubsystemBase):
         Args:
             angleDegrees (_type_): angle of pivot in degrees
         """
-        if(not self.calibrated): 
+        if(not self.calibrated):
             self.calibrate()
             return
         self.getIntakeRotation().setSetpointDegrees(angleDegrees)
