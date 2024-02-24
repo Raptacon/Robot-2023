@@ -94,7 +94,7 @@ class SwerveModuleMK4I_L2Consts(SwerveModuleConsts):
         self._wheelDiameter = 0.10033
         self._driveReduction = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0)
         self._steerReduction = (14.0 / 50.0) * (10.0 / 60.0)
-        self._steerInverted = True
+        self._steerInverted = False
         self._moduleType = "Mk4I_L2"
 
 
@@ -184,6 +184,7 @@ class SwerveModuleMk4L1SparkMaxNeoCanCoder() :
         self.steerSensorPositionCoefficient = 2.0 * math.pi / self.kTicksPerRotation * self.consts.getSteerReduction()
         self.steerSensorVelocityCoefficient = self.steerSensorPositionCoefficient * 10.0
         self.steerMotor = rev.CANSparkMax(self.steerId, rev.CANSparkLowLevel.MotorType.kBrushless)
+
         utils.sparkMaxUtils.configureSparkMaxCanRates(self.steerMotor)
         self.steerEncoder = self.encoder
 
