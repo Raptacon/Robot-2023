@@ -1,10 +1,10 @@
 import commands2
 import typing
-from subsystem.swerveIntake import SwerveIntake
-from subsystem.swerveIntakePivotController import pivotController
+from subsystem.sparkyIntake import SparkyIntake
+from subsystem.sparkyIntakePivotController import pivotController
 
 class Intake(commands2.CommandBase):
-    def __init__(self, intake: SwerveIntake, pivot : pivotController, intakePercent: typing.Callable[[], float], spitOut: typing.Callable[[], bool], changePivot : typing.Callable[[], bool]) -> None:
+    def __init__(self, intake: SparkyIntake, pivot : pivotController, intakePercent: typing.Callable[[], float], spitOut: typing.Callable[[], bool], changePivot : typing.Callable[[], bool]) -> None:
         super().__init__()
         self.intake = intake
         self.pivot = pivot

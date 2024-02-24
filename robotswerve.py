@@ -11,13 +11,13 @@ import commands2.button
 from subsystem.swerveDriveTrain import Drivetrain
 
 from commands.shortyIntake import Intake
-from subsystem.swerveIntake import SwerveIntake
-from subsystem.swerveIntakePivot import SwerveIntakePivot
-from subsystem.swerveIntakePivotController import pivotController
+from subsystem.sparkyIntake import SparkyIntake
+from subsystem.sparkyIntakePivot import IntakePivot
+from subsystem.sparkyIntakePivotController import pivotController
 
-from commands.shortyShooter import Shooter
-from subsystem.sparkyShooter import SparkyShooter
-from subsystem.sparkyShooterPivot import SparkyShooterPivot
+from commands.shortyShooter import ShooterCommand
+from subsystem.sparkyShooter import Shooter
+from subsystem.sparkyShooterPivot import ShooterPivot
 
 from commands.defaultdrive import DefaultDrive
 from commands.togglefielddrive import ToggleFieldDrive
@@ -40,13 +40,13 @@ class RobotSwerve:
 
         self.driveTrain = Drivetrain()
 
-        self.intake = SwerveIntake()
-        self.pivot = SwerveIntakePivot()
+        self.intake = SparkyIntake()
+        self.pivot = IntakePivot()
         self.intakePivotController = pivotController()
         self.intakePivotController.setIntakeRotationSubsystem(self.pivot)
 
-        self.shooter = SparkyShooter()
-        self.shooterPivot = SparkyShooterPivot()
+        self.shooter = Shooter()
+        self.shooterPivot = ShooterPivot()
         self.intakePivotController.calibrate()
         #self.driveController = wpilib.XboxController(0)
 
@@ -71,7 +71,7 @@ class RobotSwerve:
             lambda: self.mechController.getAButtonPressed(),
         ))
 
-        self.shooter.setDefaultCommand(Shooter(
+        self.shooter.setDefaultCommand(ShooterCommand(
             self.shooter,
             self.shooterPivot,
             lambda: self.mechController.getRightBumper(),
