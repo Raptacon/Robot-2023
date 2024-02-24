@@ -29,4 +29,3 @@ class Intake(commands2.CommandBase):
             self.pivot.setGroundPickup()
         else:
             self.pivot.setHandOffPickup()
-        
