@@ -1,11 +1,10 @@
 import commands2
 import rev
-import math
 import wpilib
 import wpimath
 import wpimath.controller
 import utils.sparkMaxUtils
-class SparkyShooterPivot(commands2.PIDSubsystem):
+class ShooterPivot(commands2.PIDSubsystem):
     def __init__(self) -> None:
         pidController = wpimath.controller.PIDController(72, 0, 0)
         pidController.setTolerance(0.1)
@@ -38,7 +37,7 @@ class SparkyShooterPivot(commands2.PIDSubsystem):
         return -self.encoder.getPosition()
 
     def setPostion(self, position: float):
-            return
+        return
 
     def useOutput(self, output: float, setpoint: float):
 

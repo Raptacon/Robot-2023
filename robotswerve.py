@@ -157,10 +157,10 @@ class RobotSwerve:
 
 
     def testPeriodic(self) -> None:
-        wheelAngle = wpilib.SmartDashboard.getNumber("Wheel Angle", 0) # noqa: E117
-        wheelSpeed = wpilib.SmartDashboard.getNumber("Wheel Speed", 0) # noqa: E117
-        pivotAngle = wpilib.SmartDashboard.getNumber("Pivot Angle:", 0.5) # noqa: E117
-        shooterAngle = wpilib.SmartDashboard.putNumber("Shooter Angle:", 310) # noqa: E117
+        wheelAngle = wpilib.SmartDashboard.getNumber("Wheel Angle", 0) # noqa: E117,F841
+        wheelSpeed = wpilib.SmartDashboard.getNumber("Wheel Speed", 0) # noqa: E117,F841
+        pivotAngle = wpilib.SmartDashboard.getNumber("Pivot Angle:", 0.5) # noqa: E117,F841
+        shooterAngle = wpilib.SmartDashboard.putNumber("Shooter Angle:", 310) # noqa: E117,F841
         wheelAngle #"use" value
         wheelSpeed #"use" value
         self.driveTrain.getCurrentAngles()

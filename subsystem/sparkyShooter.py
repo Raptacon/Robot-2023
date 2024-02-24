@@ -1,8 +1,7 @@
 import commands2
 import rev
-import wpilib
 import utils.sparkMaxUtils
-class SparkyShooter(commands2.SubsystemBase):
+class Shooter(commands2.SubsystemBase):
     def __init__(self) -> None:
         self.intakeMotor = rev.CANSparkMax(23, rev.CANSparkLowLevel.MotorType.kBrushless)
         utils.sparkMaxUtils.configureSparkMaxCanRates(self.intakeMotor)

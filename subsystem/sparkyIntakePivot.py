@@ -4,9 +4,8 @@ import math
 import wpilib
 import wpimath
 import wpimath.controller
-from rev import SparkMaxLimitSwitch
-from wpilib import DigitalInput
-class SwerveIntakePivot(commands2.PIDSubsystem):
+
+class IntakePivot(commands2.PIDSubsystem):
     kMinPostion = 0
     kMaxPostion = 1.0 * 2 * math.pi
     kRolloverDeadZoneDeg = 340
@@ -80,9 +79,6 @@ class SwerveIntakePivot(commands2.PIDSubsystem):
 
     def setIntakePivot(self, percent : float):
         self.pivotMotor.set(percent)
-
-    def atSetpoint(self) -> bool:
-        return self.getController().atSetpoint()
     
     def getLimit(self):
         return self.handOffSwitch.get()

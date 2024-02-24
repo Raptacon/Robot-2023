@@ -1,11 +1,7 @@
 import commands2
 
 from typing import Callable
-
-from subsystem.swerveIntakePivot import SwerveIntakePivot
-
-import wpilib
-
+from subsystem.sparkyIntakePivot import IntakePivot
 class pivotController(commands2.SubsystemBase):
 
     def __init__(self,):
@@ -23,7 +19,7 @@ class pivotController(commands2.SubsystemBase):
     def setIntakeRotationSubsystem(self, RotationSubsystem):
         self.intakeRotationSS = RotationSubsystem
 
-    def getIntakeRotation(self) -> SwerveIntakePivot:
+    def getIntakeRotation(self) -> IntakePivot:
         """TODO Make this work by lookup in future
 
         Returns:
