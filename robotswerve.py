@@ -16,8 +16,8 @@ from subsystem.swerveIntakePivot import SwerveIntakePivot
 from subsystem.swerveIntakePivotController import pivotController
 
 from commands.shooter import Shooter
-from subsystem.swerveShooter import SwerveShooter
-from subsystem.swerveShooterPivot import SwerveShooterPivot
+from subsystem.sparkyShooter import SparkyShooter
+from subsystem.sparkyShooterPivot import SparkyShooterPivot
 
 from commands.defaultdrive import DefaultDrive
 from commands.togglefielddrive import ToggleFieldDrive
@@ -34,6 +34,7 @@ class RobotSwerve:
     """
 
     def __init__(self) -> None:
+        wpilib.DriverStation.silenceJoystickConnectionWarning(True)
         self.driveController = wpilib.XboxController(kDriveControllerIdx)
         self.mechController = wpilib.XboxController(kMechControllerIdx)
 
@@ -44,8 +45,8 @@ class RobotSwerve:
         self.intakePivotController = pivotController()
         self.intakePivotController.setIntakeRotationSubsystem(self.pivot)
 
-        self.shooter = SwerveShooter()
-        self.shooterPivot = SwerveShooterPivot()
+        self.shooter = SparkyShooter()
+        self.shooterPivot = SparkyShooterPivot()
         self.intakePivotController.calibrate()
         #self.driveController = wpilib.XboxController(0)
 
@@ -69,14 +70,16 @@ class RobotSwerve:
             lambda: self.mechController.getRightBumper(),
             lambda: self.mechController.getAButtonPressed(),
         ))
+
         self.shooter.setDefaultCommand(Shooter(
             self.shooter,
+            self.shooterPivot,
             lambda: self.mechController.getRightBumper(),
             lambda: self.mechController.getBButton(),
             lambda: self.mechController.getRightTriggerAxis(),
-            self.shooterPivot,
-            lambda: wpimath.applyDeadband(self.mechController.getRightY(), 0.05)
+            self.mechController.getYButtonPressed
             ))
+
         '''
         self.driveTrain.setDefaultCommand(DefaultDrive(
             self.driveTrain,
@@ -125,7 +128,18 @@ class RobotSwerve:
         """This function is called periodically during operator control"""
         pass
 
-    testModes = ["Drive Disable", "Wheels Select", "Wheels Drive", "Enable Cal", "Disable Cal", "Wheel Pos", "Pivot Rot", "Shooter Cal"]
+    testModes = ["Drive Disable",
+                 "Wheels Select",
+                 "Wheels Drive",
+                 "Enable Cal",
+                 "Disable Cal",
+                 "Wheel Pos",
+                 "Pivot Rot",
+                 "Shooter Cal",
+                 "Shoot Piviot Zero",
+                 "Shoot Piviot Reverse",
+                 "Shoot Piviot Pos"]
+
     def testInit(self) -> None:
         # Cancels all running commands at the start of test mode
         #commands2.CommandScheduler.getInstance().cancelAll()
@@ -138,14 +152,14 @@ class RobotSwerve:
         wpilib.SmartDashboard.putData("Test Mode", self.testChooser)
         wpilib.SmartDashboard.putNumber("Wheel Angle", 0)
         wpilib.SmartDashboard.putNumber("Wheel Speed", 0)
-        wpilib.SmartDashboard.putNumber("Pivot Angle:", 40)
+        wpilib.SmartDashboard.putNumber("Pivot Angle:", 0.5)
         wpilib.SmartDashboard.putNumber("Shooter Angle:", 310)
 
 
     def testPeriodic(self) -> None:
         wheelAngle = wpilib.SmartDashboard.getNumber("Wheel Angle", 0)
         wheelSpeed = wpilib.SmartDashboard.getNumber("Wheel Speed", 0)
-        pivotAngle = wpilib.SmartDashboard.getNumber("Pivot Angle:", 40)
+        pivotAngle = wpilib.SmartDashboard.getNumber("Pivot Angle:", 0.5)
         shooterAngle = wpilib.SmartDashboard.putNumber("Shooter Angle:", 310)
         wheelAngle #"use" value
         wheelSpeed #"use" value
@@ -187,6 +201,15 @@ class RobotSwerve:
                 self.driveTrain.setSteer(wheelAngle)
             case "Pivot Rot":
                 self.intakePivotController.setManipulator(pivotAngle)
+            case "Shoot Piviot Zero":
+                self.shooterPivot.zeroPivot(0.2)
+            case "Shoot Piviot Reverse":
+                self.shooterPivot.maxPivot(0.2)
+            case "Shoot Piviot Pos":
+                self.shooterPivot.enable()
+                self.shooterPivot.setSetpoint(pivotAngle)
+                self.shooterPivot.periodic()
+                pass
             case _:
                 print(f"Unknown {self.testChooser.getSelected()}")
 
