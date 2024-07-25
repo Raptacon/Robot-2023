@@ -4,8 +4,13 @@ import wpilib.drive
 import ctre
 import commands2
 import logging
-import utils
-hwFactory = utils.hardwareFactory.getHardwareFactory()
+# Should we really be doing factory stuff down in drivetrains?
+# This SHOULD be an overall part of the botfactory right??
+from raptacon3200.bot_factory import (
+    hardwareFactory,
+)
+
+hwFactory = hardwareFactory.getHardwareFactory()
 
 
 log = logging.getLogger("westcoast")

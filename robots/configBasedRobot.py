@@ -7,8 +7,7 @@ import wpimath
 import navx
 from auto import Autonomous
 
-import utils.configMapper
-
+from raptacon3200.config import configMapper
 
 class ConfigBasedCommandRobot(commands2.TimedCommandRobot):
     def __init__(self, period: float = 0.02) -> None:
@@ -16,7 +15,7 @@ class ConfigBasedCommandRobot(commands2.TimedCommandRobot):
 
         # load config
         # config, configPath = utils.configMapper.findConfig("greenBot.yml")
-        config, configPath = utils.configMapper.findConfig()
+        config, configPath = configMapper.findConfig()
 
         assert (
             config
@@ -24,7 +23,7 @@ class ConfigBasedCommandRobot(commands2.TimedCommandRobot):
                         run 'echo (robotCfg.yml) > robotConfig' on roborio\n\
                         where (robotCfg.yml) is the name of the file"
 
-        self.configMapper = utils.configMapper.ConfigMapper(config, configPath)
+        self.configMapper = configMapper.ConfigMapper(config, configPath)
 
         self.subsystems = {}
         for ssName in self.configMapper.getSubsystems():
@@ -33,7 +32,6 @@ class ConfigBasedCommandRobot(commands2.TimedCommandRobot):
             self.subsystems[ssName] = subsystem
 
         self.navx = navx._navx.AHRS.create_spi()
-                
 
     def getAutonomousCommand(self):
         return Autonomous(self.driveTrain, self.navx)

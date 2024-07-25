@@ -1,7 +1,8 @@
 import commands2
 import logging
-import utils
-hwFactory = utils.hardwareFactory.getHardwareFactory()
+from raptacon3200.bot_factory import hardwareFactory
+
+hwFactory = hardwareFactory.getHardwareFactory()
 
 log = logging.getLogger("grabber")
 
@@ -42,4 +43,3 @@ class Grabber(commands2.SubsystemBase):
 
     def stop(self):
         self.graberMotor.setVoltage(0)
-

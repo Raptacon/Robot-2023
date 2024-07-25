@@ -1,4 +1,0 @@
-wpilib
-rev
-ctre
-navx

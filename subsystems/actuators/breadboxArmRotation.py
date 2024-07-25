@@ -4,11 +4,14 @@ import wpimath.controller
 import wpimath.trajectory
 import commands2
 import logging
-import utils
 import math
-hwFactory = utils.hardwareFactory.getHardwareFactory()
-import utils.sensorFactory
-import utils.motorHelper
+from raptacon3200.utils import motorHelper
+from raptacon3200.bot_factory import sensorFactory
+
+# from raptacon3200.bot_factory import hardwareFactory
+
+# hwFactory = hardwareFactory.getHardwareFactory()
+# from raptacon3200.bot_factory import sensorFactory
 import rev
 
 log = logging.getLogger("Arm Rotation")
@@ -33,11 +36,11 @@ class ArmRotation(commands2.PIDSubsystem):
 
         pidController.setTolerance(0.02)
         super().__init__(pidController, 0)
-        #TODO Fix factor
-#        self.config = kwargs
-#        self.motor = hwFactory.getHardwareComponent("arm", "motor")
-#        self.encoder = hwFactory.getHardwareComponent("arm", "encoder")
-#        log.error("Robot Arm not done")
+        # TODO Fix factor
+        #        self.config = kwargs
+        #        self.motor = hwFactory.getHardwareComponent("arm", "motor")
+        #        self.encoder = hwFactory.getHardwareComponent("arm", "encoder")
+        #        log.error("Robot Arm not done")
         motorSettings = {
             "type":"SparkMax",
             "inverted": False,
@@ -45,7 +48,7 @@ class ArmRotation(commands2.PIDSubsystem):
             "sensorPhase": True,
             "channel": 40
         }
-        self.motor = utils.motorHelper.createMotor(motorSettings)
+        self.motor = motorHelper.createMotor(motorSettings)
         encoderSettings = {
             "type": "wpilib.DutyCycleEncoder",
             "channel": 0,
@@ -54,7 +57,7 @@ class ArmRotation(commands2.PIDSubsystem):
             "minDutyCycle": 0.0,
             "maxDutyCycle": 1.0}
 
-        self.encoder = utils.sensorFactory.create("wpilib.DutyCycleEncoder", encoderSettings)
+        self.encoder = sensorFactory.create("wpilib.DutyCycleEncoder", encoderSettings)
         self.encoder.setPositionOffset(0)
         self.encoder.reset()
 
@@ -81,7 +84,7 @@ class ArmRotation(commands2.PIDSubsystem):
         if self.getController().atSetpoint():
             self.motor.setVoltage(0)
             return
-        #if not self.disabled:
+        # if not self.disabled:
         else:
             self.motor.setVoltage((output + feedforward))
 
@@ -109,8 +112,7 @@ class ArmRotation(commands2.PIDSubsystem):
             log.info("Forward Limit hit")
             self.reverseHit = True
 
-
-        #below 0 sensor set point, we treat 0-kRolloverDeadZoneDeg for control purposes
+        # below 0 sensor set point, we treat 0-kRolloverDeadZoneDeg for control purposes
         if currDeg > self.kRolloverDeadZoneDeg:
             absPos = currPos - 2*math.pi
 
